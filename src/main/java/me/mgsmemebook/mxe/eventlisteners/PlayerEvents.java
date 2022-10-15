@@ -23,15 +23,15 @@ public class PlayerEvents implements Listener {
         lp.getUserManager().loadUser(p.getUniqueId());
         User u = lp.getUserManager().getUser(p.getUniqueId());
         if(u == null) { return; }
-        if(func.isPlayerInGroup(p,"default")) {
-            func.remNode(u, "group.default");
-        }
         if(u.getPrimaryGroup().equals("default")) {
             func.addNode(u, "group.user");
             u.setPrimaryGroup("user");
         }
+        if(func.isPlayerInGroup(p,"default")) {
+            func.remNode(u, "group.default");
+        }
         Group g = lp.getGroupManager().getGroup(u.getPrimaryGroup());
-        assert g != null;
+        if(g == null) { return; }
         String prefix = g.getCachedData().getMetaData().getPrefix();
         p.setDisplayName(prefix + " " + p.getName());
 
