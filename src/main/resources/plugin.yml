@@ -4,3 +4,7 @@ main: me.mgsmemebook.mxe.MXE
 api-version: 1.19
 authors: [ mgsmemebook ]
 description: Minecraft Spigot 1.18.2 Essentials Plugin
+commands:
+  tphere:
+    description: Teleportiere einen Spieler zu dir
+    usage: /<command> [Spieler]

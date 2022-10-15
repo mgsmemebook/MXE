@@ -39,16 +39,7 @@ public class PlayerEvents implements Listener {
         prefix = func.colCodes(prefix);
         p.setDisplayName(prefix + " " + p.getName() + ChatColor.RESET);
         p.setPlayerListName(p.getDisplayName());
-        for(Player otherp : Bukkit.getOnlinePlayers()){
-            if(p != otherp){
-                p.hidePlayer(MXE.getPlugin(MXE.class), otherp);
-            }
-        }
-        for(Player otherp : Bukkit.getOnlinePlayers()){
-            if(p != otherp){
-                p.showPlayer(MXE.getPlugin(MXE.class), otherp);
-            }
-        }
+
         e.setJoinMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + ChatColor.RESET + p.getDisplayName() + ChatColor.AQUA + " ist uns beigetreten!");
 
     }

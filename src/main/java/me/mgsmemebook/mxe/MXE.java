@@ -1,5 +1,6 @@
 package me.mgsmemebook.mxe;
 
+import me.mgsmemebook.mxe.commands.tphere;
 import me.mgsmemebook.mxe.eventlisteners.PlayerEvents;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,6 +22,9 @@ public final class MXE extends JavaPlugin {
 
         //EventListeners
         getServer().getPluginManager().registerEvents(new PlayerEvents(), this);
+
+        //Commands
+        getCommand("tphere").setExecutor(new tphere());
     }
 
     @Override

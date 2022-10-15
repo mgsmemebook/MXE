@@ -2,6 +2,7 @@ package me.mgsmemebook.mxe;
 
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -34,5 +35,11 @@ public class func {
     public static String colCodes(String s) {
         s = ChatColor.translateAlternateColorCodes('&', s);
         return s;
+    }
+
+    public static void sendMessageToAll(String msg) {
+        for(Player p : Bukkit.getOnlinePlayers()){
+            p.sendMessage(msg);
+        }
     }
 }
