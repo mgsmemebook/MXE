@@ -7,6 +7,7 @@ import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,16 +35,44 @@ public class fly implements CommandExecutor {
             p.sendMessage(error);
             return true;
         }
-        p.setAllowFlight(true);
-        p.setFlying(true);
-        if(args.length == 1) {
-            float speed = Float.parseFloat(args[0]);
-            if(speed == 0.0) speed = (float) 0.4;
-            p.setFlySpeed(speed);
+        float speed;
+        if (args.length >= 1) {
+            speed = Float.parseFloat(args[0]);
+            if(speed > 1) speed = 1;
+            if(speed > 0) {
+                if(!p.getAllowFlight()) {
+                    p.setAllowFlight(true);
+                    p.setFlying(true);
+                    p.setFlySpeed(speed);
+                    String msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du bist jetzt ein Ah-64 Apache Attack Helicopter!";
+                    p.sendMessage(msg);
+                } else {
+                    p.setFlySpeed(speed);
+                    String msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du fliegst mit einer geschwindigkeit von "+speed+"!";
+                    p.sendMessage(msg);
+                }
+            }
+            else {
+                p.setFlying(false);
+                p.setAllowFlight(false);
+                String msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Snap back to reality";
+                p.sendMessage(msg);
+            }
+        } else {
+            speed = (float) 0.1;
+            if(!p.getAllowFlight()) {
+                p.setAllowFlight(true);
+                p.setFlying(true);
+                p.setFlySpeed(speed);
+                String msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du bist jetzt ein Ah-64 Apache Attack Helicopter!";
+                p.sendMessage(msg);
+            } else {
+                p.setFlying(false);
+                p.setAllowFlight(false);
+                String msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Snap back to reality";
+                p.sendMessage(msg);
+            }
         }
-
-        String msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du bist jetzt ein Ah-64 Apache Attack Helicopter!";
-        p.sendMessage(msg);
         return true;
     }
 }
