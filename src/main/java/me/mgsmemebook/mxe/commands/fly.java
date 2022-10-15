@@ -34,10 +34,11 @@ public class fly implements CommandExecutor {
             p.sendMessage(error);
             return true;
         }
+        p.setAllowFlight(true);
         p.setFlying(true);
         if(args.length == 1) {
             float speed = Float.parseFloat(args[0]);
-            if(speed == 0) speed = 1;
+            if(speed == 0.0) speed = (float) 0.4;
             p.setFlySpeed(speed);
         }
 
