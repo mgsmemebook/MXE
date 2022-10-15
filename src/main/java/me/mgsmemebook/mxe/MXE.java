@@ -1,14 +1,11 @@
 package me.mgsmemebook.mxe;
 
 import me.mgsmemebook.mxe.eventlisteners.PlayerEvents;
-import net.luckperms.api.LuckPerms;
-import net.luckperms.api.LuckPermsProvider;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import static me.mgsmemebook.mxe.func.cMSG;
 
 public final class MXE extends JavaPlugin {
-    LuckPerms lp = LuckPermsProvider.get();
 
     @Override
     public void onEnable() {
