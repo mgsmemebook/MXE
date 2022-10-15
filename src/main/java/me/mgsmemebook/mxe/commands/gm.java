@@ -44,7 +44,7 @@ public class gm implements CommandExecutor {
 
         String msg;
         if(args.length >= 2) {
-            Player t = Bukkit.getPlayer(args[0]);
+            Player t = Bukkit.getPlayer(args[1]);
             if(t == null) {
                 error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Spieler nicht gefunden!";
                 p.sendMessage(error);

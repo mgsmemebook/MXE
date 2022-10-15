@@ -33,6 +33,14 @@ public final class MXE extends JavaPlugin {
         Objects.requireNonNull(getCommand("fly")).setExecutor(new fly());
         Objects.requireNonNull(getCommand("tpall")).setExecutor(new tpall());
         Objects.requireNonNull(getCommand("kill")).setExecutor(new kill());
+
+        //TabCompletion
+        Objects.requireNonNull(getCommand("tphere")).setTabCompleter(new TabCompletion());
+        Objects.requireNonNull(getCommand("setrank")).setTabCompleter(new TabCompletion());
+        Objects.requireNonNull(getCommand("gm")).setTabCompleter(new TabCompletion());
+        Objects.requireNonNull(getCommand("fly")).setTabCompleter(new TabCompletion());
+        Objects.requireNonNull(getCommand("tpall")).setTabCompleter(new TabCompletion());
+        Objects.requireNonNull(getCommand("kill")).setTabCompleter(new TabCompletion());
     }
 
     @Override
