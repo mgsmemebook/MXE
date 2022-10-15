@@ -1,5 +1,7 @@
 package me.mgsmemebook.mxe;
 
+import me.mgsmemebook.mxe.commands.fly;
+import me.mgsmemebook.mxe.commands.gm;
 import me.mgsmemebook.mxe.commands.setrank;
 import me.mgsmemebook.mxe.commands.tphere;
 import me.mgsmemebook.mxe.eventlisteners.PlayerEvents;
@@ -27,6 +29,8 @@ public final class MXE extends JavaPlugin {
         //Commands
         getCommand("tphere").setExecutor(new tphere());
         getCommand("setrank").setExecutor(new setrank());
+        getCommand("gm").setExecutor(new gm());
+        getCommand("fly").setExecutor(new fly());
     }
 
     @Override

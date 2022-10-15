@@ -5,6 +5,12 @@ api-version: 1.19
 authors: [ mgsmemebook ]
 description: Minecraft Spigot 1.18.2 Essentials Plugin
 commands:
+  fly:
+    description: Identifiziere dich als einen Ah-64 Apache Attack Helicopter
+    usage: /fly [Geschwindigkeit]
+  gm:
+    description: Setze deinen Gamemode
+    usage: /gm [Gamemode] [Spieler]
   tphere:
     description: Teleportiere einen Spieler zu dir
     usage: /<command> [Spieler]
