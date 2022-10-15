@@ -1,0 +1,6 @@
+name: MXE
+version: '${project.version}'
+main: me.mgsmemebook.mxe.MXE
+api-version: 1.19
+authors: [ mgsmemebook ]
+description: Minecraft Spigot 1.18.2 Essentials Plugin
