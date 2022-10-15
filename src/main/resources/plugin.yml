@@ -17,3 +17,9 @@ commands:
   setrank:
     description: Setze den Rang eines Spielers
     usage: /<command> [Spieler] [Rang]
+  tpall:
+    description: Teleportiere jeden zu dir
+    usage: /<command>
+  kill:
+    description: Töte einen Spieler
+    usage: /<command> [Spieler]

@@ -1,9 +1,6 @@
 package me.mgsmemebook.mxe;
 
-import me.mgsmemebook.mxe.commands.fly;
-import me.mgsmemebook.mxe.commands.gm;
-import me.mgsmemebook.mxe.commands.setrank;
-import me.mgsmemebook.mxe.commands.tphere;
+import me.mgsmemebook.mxe.commands.*;
 import me.mgsmemebook.mxe.eventlisteners.PlayerEvents;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -34,6 +31,8 @@ public final class MXE extends JavaPlugin {
         Objects.requireNonNull(getCommand("setrank")).setExecutor(new setrank());
         Objects.requireNonNull(getCommand("gm")).setExecutor(new gm());
         Objects.requireNonNull(getCommand("fly")).setExecutor(new fly());
+        Objects.requireNonNull(getCommand("tpall")).setExecutor(new tpall());
+        Objects.requireNonNull(getCommand("kill")).setExecutor(new kill());
     }
 
     @Override

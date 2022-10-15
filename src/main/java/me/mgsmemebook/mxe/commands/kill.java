@@ -12,11 +12,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class tphere implements CommandExecutor {
+public class kill implements CommandExecutor {
     LuckPerms lp = LuckPermsProvider.get();
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        String error;
+        String error; String msg;
         Player p = Bukkit.getPlayerExact(sender.getName());
         if(p == null) {
             error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[tphere]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
@@ -29,20 +29,8 @@ public class tphere implements CommandExecutor {
             p.sendMessage(error);
             return true;
         }
-        if(!u.getCachedData().getPermissionData().checkPermission("mxe.tphere").asBoolean()) {
+        if(!u.getCachedData().getPermissionData().checkPermission("mxe.kill").asBoolean()) {
             error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-            p.sendMessage(error);
-            return true;
-        }
-        Player t = Bukkit.getPlayer(args[0]);
-        if(t == null) {
-            error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Spieler nicht gefunden!";
-            p.sendMessage(error);
-            return true;
-        }
-        Group tg = lp.getGroupManager().getGroup(lp.getUserManager().getUser(t.getUniqueId()).getPrimaryGroup());
-        if(tg == null) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
             p.sendMessage(error);
             return true;
         }
@@ -52,21 +40,28 @@ public class tphere implements CommandExecutor {
             p.sendMessage(error);
             return true;
         }
-        if(tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-            p.sendMessage(error);
-            return true;
+        if(args.length > 0) {
+            Player t = Bukkit.getPlayer(args[0]);
+            if(t == null) {
+                error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Spieler nicht gefunden!";
+                p.sendMessage(error);
+                return true;
+            }
+            Group tg = lp.getGroupManager().getGroup(lp.getUserManager().getUser(t.getUniqueId()).getPrimaryGroup());
+            if(tg == null) {
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
+                p.sendMessage(error);
+                return true;
+            }
+            if(tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
+                p.sendMessage(error);
+                return true;
+            }
+            t.setHealth(0);
+        } else {
+            p.setHealth(0);
         }
-
-        if(args.length < 1) {
-            error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Syntax error: /tphere [Spieler]";
-            p.sendMessage(error);
-            return true;
-        }
-
-        t.teleport(p.getLocation());
-        t.sendMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_AQUA + "Du wurdest teleportiert!");
-        p.sendMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_AQUA + "Du hast " + t.getDisplayName() + ChatColor.RESET + ChatColor.DARK_AQUA + " zu dir teleportiert");
         return true;
     }
 }

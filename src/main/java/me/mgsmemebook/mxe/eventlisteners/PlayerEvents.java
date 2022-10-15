@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -52,5 +53,18 @@ public class PlayerEvents implements Listener {
         msg = p.getDisplayName() + ChatColor.GOLD + ChatColor.BOLD + " sagt: " + ChatColor.RESET + ChatColor.GRAY + msg;
         Bukkit.broadcastMessage(msg);
         e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent e) {
+        Player p = e.getEntity().getPlayer();
+        Player k = e.getEntity().getKiller();
+        String msg = e.getDeathMessage();
+        msg = msg.replaceAll(p.getName(), p.getDisplayName()+ChatColor.RESET+ChatColor.GRAY);
+        if(k != null) {
+            msg = msg.replaceAll(k.getName(), k.getDisplayName()+ChatColor.RESET+ChatColor.GRAY);
+        }
+        msg = ChatColor.GRAY + msg;
+        e.setDeathMessage(msg);
     }
 }
