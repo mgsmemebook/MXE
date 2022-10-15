@@ -27,18 +27,12 @@ public class PlayerEvents implements Listener {
         User u = lp.getUserManager().getUser(p.getUniqueId());
         if(u == null) { return; }
         if(u.getPrimaryGroup().equals("default")) {
-            func.addNode(u, "group.user");
-            u.setPrimaryGroup("user");
+            func.switchGroup(u, "user", "default");
         }
-        if(func.isPlayerInGroup(p,"default")) {
-            func.remNode(u, "group.default");
-        }
+        lp.getUserManager().saveUser(u);
         Group g = lp.getGroupManager().getGroup(u.getPrimaryGroup());
         if(g == null) { return; }
-        String prefix = g.getCachedData().getMetaData().getPrefix();
-        prefix = func.colCodes(prefix);
-        p.setDisplayName(prefix + " " + p.getName() + ChatColor.RESET);
-        p.setPlayerListName(p.getDisplayName());
+        func.updateUser(p, g);
 
         e.setJoinMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + ChatColor.RESET + p.getDisplayName() + ChatColor.AQUA + " ist uns beigetreten!");
 

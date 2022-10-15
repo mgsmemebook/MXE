@@ -8,3 +8,6 @@ commands:
   tphere:
     description: Teleportiere einen Spieler zu dir
     usage: /<command> [Spieler]
+  setrank:
+    description: Setze den Rang eines Spielers
+    usage: /<command> [Spieler] [Rang]

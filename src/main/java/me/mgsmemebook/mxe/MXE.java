@@ -1,5 +1,6 @@
 package me.mgsmemebook.mxe;
 
+import me.mgsmemebook.mxe.commands.setrank;
 import me.mgsmemebook.mxe.commands.tphere;
 import me.mgsmemebook.mxe.eventlisteners.PlayerEvents;
 import org.bukkit.ChatColor;
@@ -25,6 +26,7 @@ public final class MXE extends JavaPlugin {
 
         //Commands
         getCommand("tphere").setExecutor(new tphere());
+        getCommand("setrank").setExecutor(new setrank());
     }
 
     @Override
