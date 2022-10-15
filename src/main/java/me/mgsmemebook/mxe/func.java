@@ -2,6 +2,7 @@ package me.mgsmemebook.mxe;
 
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
@@ -28,5 +29,10 @@ public class func {
     }
     public static void remNode(User user, String node) {
         user.data().remove(Node.builder(node).build());
+    }
+
+    public static String colCodes(String s) {
+        s = ChatColor.translateAlternateColorCodes('&', s);
+        return s;
     }
 }
