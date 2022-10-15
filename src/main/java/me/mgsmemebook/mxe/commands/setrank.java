@@ -3,11 +3,8 @@ package me.mgsmemebook.mxe.commands;
 import me.mgsmemebook.mxe.func;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
-import net.luckperms.api.model.data.DataMutateResult;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
-import net.luckperms.api.node.Node;
-import net.luckperms.api.node.types.InheritanceNode;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -87,7 +84,7 @@ public class setrank implements CommandExecutor {
         func.switchGroup(tu, args[1], tg.getName());
         func.updateUser(t, tg);
 
-        if(tg.getWeight().getAsInt() >= lp.getGroupManager().getGroup(args[1]).getWeight().getAsInt()) {
+        if(tg.getWeight().getAsInt() >= ng.getWeight().getAsInt()) {
             String pmsg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getName() + " zum " + args[1] + " degradiert!";
             String tmsg = ChatColor.BLUE + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + p.getDisplayName() + ChatColor.RESET + ChatColor.BLUE + " hat dich zum " + args[1] + " degradiert!";
             p.sendMessage(pmsg);

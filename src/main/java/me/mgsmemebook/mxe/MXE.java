@@ -7,6 +7,9 @@ import me.mgsmemebook.mxe.commands.tphere;
 import me.mgsmemebook.mxe.eventlisteners.PlayerEvents;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Objects;
+
 import static me.mgsmemebook.mxe.func.cMSG;
 
 public final class MXE extends JavaPlugin {
@@ -27,10 +30,10 @@ public final class MXE extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerEvents(), this);
 
         //Commands
-        getCommand("tphere").setExecutor(new tphere());
-        getCommand("setrank").setExecutor(new setrank());
-        getCommand("gm").setExecutor(new gm());
-        getCommand("fly").setExecutor(new fly());
+        Objects.requireNonNull(getCommand("tphere")).setExecutor(new tphere());
+        Objects.requireNonNull(getCommand("setrank")).setExecutor(new setrank());
+        Objects.requireNonNull(getCommand("gm")).setExecutor(new gm());
+        Objects.requireNonNull(getCommand("fly")).setExecutor(new fly());
     }
 
     @Override

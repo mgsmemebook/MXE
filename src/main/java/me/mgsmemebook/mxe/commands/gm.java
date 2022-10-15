@@ -123,14 +123,12 @@ public class gm implements CommandExecutor {
             if (p.getGameMode().equals(GameMode.CREATIVE)) {
                 p.setGameMode(GameMode.SURVIVAL);
                 msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du bist jetzt im Survival-Mode!";
-                p.sendMessage(msg);
-                return true;
             } else {
                 p.setGameMode(GameMode.CREATIVE);
                 msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du bist jetzt im Creative-Mode!";
-                p.sendMessage(msg);
-                return true;
             }
+            p.sendMessage(msg);
+            return true;
         }
     }
 }

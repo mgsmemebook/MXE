@@ -58,7 +58,7 @@ public class tphere implements CommandExecutor {
             return true;
         }
 
-        if(args.length == 0) {
+        if(args.length < 1) {
             error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Syntax error: /tphere [Spieler]";
             p.sendMessage(error);
             return true;
