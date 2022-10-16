@@ -1,4 +1,4 @@
-package me.mgsmemebook.mxe.eventlisteners;
+package me.mgsmemebook.mxe;
 import me.mgsmemebook.mxe.func;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
