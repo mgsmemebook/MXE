@@ -1,7 +1,6 @@
 package me.mgsmemebook.mxe;
 
 import me.mgsmemebook.mxe.commands.*;
-import me.mgsmemebook.mxe.db.DB;
 import me.mgsmemebook.mxe.db.SQLite;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,7 +11,6 @@ import static me.mgsmemebook.mxe.func.cMSG;
 public final class MXE extends JavaPlugin {
 
     private static String plDir;
-    private DB db;
 
     @Override
     public void onEnable() {
@@ -34,9 +32,7 @@ public final class MXE extends JavaPlugin {
 
         //DB
         plDir = getDataFolder().getAbsolutePath();
-        this.db = new SQLite(this);
-        this.db.load();
-
+        SQLite.load();
 
         //Commands
         Objects.requireNonNull(getCommand("tphere")).setExecutor(new tphere());
@@ -62,9 +58,6 @@ public final class MXE extends JavaPlugin {
 
     public static String getPlDir() {
         return plDir;
-    }
-    public DB getRDatabase() {
-        return this.db;
     }
 }
 

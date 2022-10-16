@@ -10,25 +10,22 @@ import me.mgsmemebook.mxe.MXE;
 import me.mgsmemebook.mxe.func;
 import org.bukkit.ChatColor;
 
-public class SQLite extends DB {
-    String dbname;
-    public SQLite(MXE instance) {
-        super(instance);
-        dbname = plugin.getConfig().getString("SQLite.Filename", "users");
-    }
-    public String SQLiteCreateTokensTable = "CREATE TABLE IF NOT EXISTS users (" + // make sure to put your table name in here too.
+public class SQLite {
+
+    public static Connection conn = null;
+    public static String SQLiteCreateTokensTable = "CREATE TABLE IF NOT EXISTS users (" + // make sure to put your table name in here too.
             "`UUID` varchar(32) NOT NULL," +
             "`username` varchar(32) NOT NULL," +
             "PRIMARY KEY (`UUID`)" +  // This is creating 3 colums Player, Kills, Total. Primary key is what you are going to use as your indexer. Here we want to use player so
             ");"; // we can search by player, and get kills and total. If you some how were searching kills it would provide total and player.
 
-    public Connection getSQLConnection() {
-        File dataFolder = new File(plugin.getDataFolder(), dbname+".db");
+    public static Connection getSQLConnection() {
+        File dataFolder = new File(MXE.getPlDir(), "users.db");
         if(!dataFolder.exists()) {
             try {
                 dataFolder.createNewFile();
             } catch (IOException ex) {
-                func.cMSG(ChatColor.RED + "File write error (" + dbname + ".db): " + ex.getMessage());
+                func.cMSG(ChatColor.RED + "File write error " + ex.getMessage());
             }
         }
         try {
@@ -48,7 +45,7 @@ public class SQLite extends DB {
         return null;
     }
 
-    public void load() {
+    public static void load() {
         conn = getSQLConnection();
         try {
             Statement s = conn.createStatement();
@@ -57,6 +54,6 @@ public class SQLite extends DB {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        initialize();
+        //initialize();
     }
 }

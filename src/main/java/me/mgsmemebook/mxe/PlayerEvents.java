@@ -14,7 +14,11 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.sql.ResultSet;
 import java.util.Objects;
+
+import static me.mgsmemebook.mxe.db.DB.addDBPlayer;
+import static me.mgsmemebook.mxe.db.DB.getDBPlayer;
 
 public class PlayerEvents implements Listener {
     LuckPerms lp = LuckPermsProvider.get();
@@ -36,6 +40,12 @@ public class PlayerEvents implements Listener {
 
         e.setJoinMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + ChatColor.RESET + p.getDisplayName() + ChatColor.AQUA + " ist uns beigetreten!");
 
+        String res = getDBPlayer(String.valueOf(p.getUniqueId()));
+        func.cMSG(ChatColor.AQUA + "SQL: Gefundene Datenbankeinträge: " + res);
+        if(res == null) {
+            func.cMSG(ChatColor.AQUA + "SQL: Spieler nicht gefunden - Füge Datenbankeintrag hinzu");
+            addDBPlayer(String.valueOf(p.getUniqueId()), p.getName());
+        }
     }
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent e) {
