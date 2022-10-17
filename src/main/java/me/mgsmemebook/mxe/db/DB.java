@@ -1,11 +1,15 @@
 package me.mgsmemebook.mxe.db;
+import com.sun.tools.javac.code.Attribute;
 import me.mgsmemebook.mxe.MXE;
 import me.mgsmemebook.mxe.func;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+import static java.lang.String.valueOf;
 import static me.mgsmemebook.mxe.db.SQLite.getSQLConnection;
 
 public class DB {
@@ -44,10 +48,11 @@ public class DB {
             Connection conn = null;
             try {
                 conn = getSQLConnection();
-                String sql = "INSERT INTO users (UUID, username) VALUES (?, ?)";
+                String sql = "INSERT INTO users (UUID, username, banned) VALUES (?, ?, ?)";
                 ps = conn.prepareStatement(sql);
                 ps.setString(1, uuid);
                 ps.setString(2, username);
+                ps.setBoolean(3, false);
                 ps.execute();
             } catch (SQLException ex) {
                 func.cMSG(ChatColor.DARK_RED + "SQL error: Fehler beim Schreiben in die Datenbank");
@@ -99,4 +104,119 @@ public class DB {
         }
         return null;
     }
+    public static void banDBPlayer(UUID uuid, boolean tempban, String bantime, String reason) {
+        if(Bukkit.getPlayer(uuid) == null) {
+            func.cMSG(ChatColor.AQUA + "addPlayer: Spieler nicht gefunden.");
+        } else {
+            PreparedStatement ps = null;
+            Connection conn = null;
+            try {
+                conn = getSQLConnection();
+                String sql = "UPDATE users SET banned = ?, tempban = ?, bantime = ?, reason = ? WHERE UUID = ?";
+                ps = conn.prepareStatement(sql);
+                ps.setBoolean(1, true);
+                ps.setBoolean(2, tempban);
+                ps.setString(3, bantime);
+                ps.setString(4, reason);
+                ps.setString(5, uuid.toString());
+
+                ps.executeUpdate();
+            } catch (SQLException ex) {
+                func.cMSG(ChatColor.DARK_RED + "SQL error: Fehler beim Schreiben in die Datenbank");
+                func.cMSG(ChatColor.DARK_RED + "SQL error: " + ex.getMessage());
+            } finally {
+                try {
+                    if (ps != null) {
+                        ps.close();
+                    }
+                    if (conn != null) {
+                        conn.close();
+                    }
+                } catch (SQLException ex) {
+                    func.cMSG(ChatColor.DARK_RED + "SQL error: Fehler beim Schließen der Datenbank-Verbindung");
+                    func.cMSG(ChatColor.DARK_RED + "SQL error: " + ex.getMessage());
+                }
+            }
+        }
+    }
+
+    public static void unbanDBPlayer(UUID uuid) {
+        if(Bukkit.getPlayer(uuid) == null) {
+            func.cMSG(ChatColor.AQUA + "addPlayer: Spieler nicht gefunden.");
+        } else {
+            PreparedStatement ps = null;
+            Connection conn = null;
+            try {
+                conn = getSQLConnection();
+                String sql = "UPDATE users SET banned = ?, tempban = ?, bantime = ?, reason = ? WHERE UUID = ?";
+                ps = conn.prepareStatement(sql);
+                ps.setBoolean(1, false);
+                ps.setBoolean(2, false);
+                ps.setString(3, "");
+                ps.setString(4, "");
+                ps.setString(5, uuid.toString());
+                ps.executeUpdate();
+            } catch (SQLException ex) {
+                func.cMSG(ChatColor.DARK_RED + "SQL error: Fehler beim Schreiben in die Datenbank");
+                func.cMSG(ChatColor.DARK_RED + "SQL error: " + ex.getMessage());
+            } finally {
+                try {
+                    if (ps != null) {
+                        ps.close();
+                    }
+                    if (conn != null) {
+                        conn.close();
+                    }
+                } catch (SQLException ex) {
+                    func.cMSG(ChatColor.DARK_RED + "SQL error: Fehler beim Schließen der Datenbank-Verbindung");
+                    func.cMSG(ChatColor.DARK_RED + "SQL error: " + ex.getMessage());
+                }
+            }
+        }
+    }
+
+    public static ArrayList getPlayerBanInfo(UUID uuid) {
+        if(Bukkit.getPlayer(uuid) == null) {
+            func.cMSG(ChatColor.AQUA + "addPlayer: Spieler nicht gefunden.");
+        } else {
+            PreparedStatement ps = null;
+            Connection conn = null;
+            ResultSet rs;
+            try {
+                conn = getSQLConnection();
+                String sql = "SELECT * FROM users WHERE UUID = '"+uuid+"'";
+                ps = conn.prepareStatement(sql);
+                rs = ps.executeQuery();
+                ArrayList<String> baninf = new ArrayList<>();
+
+                if(rs.getBoolean("banned")) {
+                    baninf.add(valueOf(rs.getBoolean("tempban")));
+                    baninf.add(rs.getString("bantime"));
+                    if(rs.getString("reason") != null) {
+                        baninf.add(rs.getString("reason"));
+                    }
+                    return baninf;
+                } else {
+                    return null;
+                }
+            } catch (SQLException ex) {
+                func.cMSG(ChatColor.DARK_RED + "SQL error: Fehler beim Schreiben in die Datenbank");
+                func.cMSG(ChatColor.DARK_RED + "SQL error: " + ex.getMessage());
+            } finally {
+                try {
+                    if (ps != null) {
+                        ps.close();
+                    }
+                    if (conn != null) {
+                        conn.close();
+                    }
+                } catch (SQLException ex) {
+                    func.cMSG(ChatColor.DARK_RED + "SQL error: Fehler beim Schließen der Datenbank-Verbindung");
+                    func.cMSG(ChatColor.DARK_RED + "SQL error: " + ex.getMessage());
+                }
+            }
+        }
+        return null;
+    }
+
 }

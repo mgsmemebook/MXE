@@ -35,20 +35,24 @@ public final class MXE extends JavaPlugin {
         SQLite.load();
 
         //Commands
-        Objects.requireNonNull(getCommand("tphere")).setExecutor(new tphere());
-        Objects.requireNonNull(getCommand("setrank")).setExecutor(new setrank());
-        Objects.requireNonNull(getCommand("gm")).setExecutor(new gm());
+        Objects.requireNonNull(getCommand("ban")).setExecutor(new ban());
         Objects.requireNonNull(getCommand("fly")).setExecutor(new fly());
-        Objects.requireNonNull(getCommand("tpall")).setExecutor(new tpall());
+        Objects.requireNonNull(getCommand("gm")).setExecutor(new gm());
         Objects.requireNonNull(getCommand("kill")).setExecutor(new kill());
+        Objects.requireNonNull(getCommand("setrank")).setExecutor(new setrank());
+        Objects.requireNonNull(getCommand("tpall")).setExecutor(new tpall());
+        Objects.requireNonNull(getCommand("tphere")).setExecutor(new tphere());
+        Objects.requireNonNull(getCommand("unban")).setExecutor(new unban());
 
         //TabCompletion
-        Objects.requireNonNull(getCommand("tphere")).setTabCompleter(new TabCompletion());
-        Objects.requireNonNull(getCommand("setrank")).setTabCompleter(new TabCompletion());
-        Objects.requireNonNull(getCommand("gm")).setTabCompleter(new TabCompletion());
+        Objects.requireNonNull(getCommand("ban")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("fly")).setTabCompleter(new TabCompletion());
-        Objects.requireNonNull(getCommand("tpall")).setTabCompleter(new TabCompletion());
+        Objects.requireNonNull(getCommand("gm")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("kill")).setTabCompleter(new TabCompletion());
+        Objects.requireNonNull(getCommand("setrank")).setTabCompleter(new TabCompletion());
+        Objects.requireNonNull(getCommand("tpall")).setTabCompleter(new TabCompletion());
+        Objects.requireNonNull(getCommand("tphere")).setTabCompleter(new TabCompletion());
+        Objects.requireNonNull(getCommand("unban")).setTabCompleter(new TabCompletion());
     }
 
     @Override

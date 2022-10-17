@@ -25,12 +25,24 @@ public class TabCompletion implements TabCompleter {
         }
 
         switch (command.getName()) {
-            case "tphere":
-            case "kill":
+            case "ban":
                 if(args.length == 1) {
                     return playerNames;
-                } else {
-                    return null;
+                } else if(args.length == 2) {
+                    List<String> options = new ArrayList<>();
+                    options.add("Grund");
+                    options.add("Zeit(in s/m/h/D/M/Y)");
+                    return options;
+                } else if(args.length == 3) {
+                    List<String> options = new ArrayList<>();
+                    options.add("Grund");
+                    return options;
+                }
+            case "fly":
+                if(args.length == 1) {
+                    List<String> options = new ArrayList<>();
+                    options.add("Geschwindigkeit");
+                    return options;
                 }
             case "gm":
                 if(args.length == 1) {
@@ -42,8 +54,10 @@ public class TabCompletion implements TabCompleter {
                     return gameModes;
                 } else if(args.length == 2) {
                     return playerNames;
-                } else {
-                    return null;
+                }
+            case "kill":
+                if(args.length == 1) {
+                    return playerNames;
                 }
             case "setrank":
                 if(args.length == 1) {
@@ -55,11 +69,19 @@ public class TabCompletion implements TabCompleter {
                         ranks.add(group.getName());
                     }
                     return ranks;
-                } else {
-                    return null;
+                }
+            case "tpall":
+            case "tphere":
+                if(args.length == 1) {
+                    return playerNames;
+                }
+            case "unban":
+                if(args.length == 1) {
+                    return playerNames;
                 }
             default:
-                return null;
+                List<String> options = new ArrayList<>();
+                return options;
         }
     }
 }

@@ -23,3 +23,9 @@ commands:
   kill:
     description: Töte einen Spieler
     usage: /<command> [Spieler]
+  ban:
+    description: Banne einen Spieler
+    usage: /<command> [Spieler] [Zeit/Grund] [Grund]
+  unban:
+    description: Entbanne einen Spieler
+    usage: /<command> [Spieler]
