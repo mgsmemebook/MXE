@@ -12,6 +12,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Objects;
+
 public class tpall implements CommandExecutor {
     LuckPerms lp = LuckPermsProvider.get();
     @Override
@@ -19,7 +21,7 @@ public class tpall implements CommandExecutor {
         String error; String msg;
         Player p = Bukkit.getPlayerExact(sender.getName());
         if(p == null) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[tphere]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
+            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE tpall]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
             func.cMSG(error);
             return true;
         }
@@ -42,10 +44,10 @@ public class tpall implements CommandExecutor {
         }
 
         for(Player t : Bukkit.getOnlinePlayers()){
-            Group tg = lp.getGroupManager().getGroup(lp.getUserManager().getUser(t.getUniqueId()).getPrimaryGroup());
+            Group tg = lp.getGroupManager().getGroup(Objects.requireNonNull(lp.getUserManager().getUser(t.getUniqueId())).getPrimaryGroup());
             if(tg == null) {
                 continue;
-            } else if(tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {
+            } else if(pg.getWeight().isPresent() && tg.getWeight().isPresent() && tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {
                 continue;
             }
             if(tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {

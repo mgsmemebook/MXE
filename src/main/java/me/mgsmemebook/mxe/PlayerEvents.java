@@ -1,6 +1,6 @@
 package me.mgsmemebook.mxe;
+
 import me.mgsmemebook.mxe.db.DB;
-import me.mgsmemebook.mxe.func;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
@@ -16,11 +16,12 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.sql.ResultSet;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Objects;
 
 import static me.mgsmemebook.mxe.db.DB.addDBPlayer;
 import static me.mgsmemebook.mxe.db.DB.getDBPlayer;
@@ -61,7 +62,6 @@ public class PlayerEvents implements Listener {
                     p.kickPlayer(msg);
                     e.setJoinMessage("");
                 } else {
-                    func.cMSG(ChatColor.RED + "[MXE] Spieler entbannt: " + p.getName());
                     DB.unbanDBPlayer(p.getUniqueId());
                     playerJoin(p, e);
                 }
@@ -91,11 +91,11 @@ public class PlayerEvents implements Listener {
         e.setJoinMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + ChatColor.RESET + p.getDisplayName() + ChatColor.AQUA + " ist uns beigetreten!");
 
         //Check DB
-        String res = getDBPlayer(String.valueOf(p.getUniqueId()));
-        func.cMSG(ChatColor.AQUA + "SQL: Gefundene Datenbankeinträge: " + res);
+        String res = getDBPlayer(p.getUniqueId());
+        func.cMSG(ChatColor.AQUA + "[MXE] SQL: Found database entries: " + res);
         if(res == null) {
-            func.cMSG(ChatColor.AQUA + "SQL: Spieler nicht gefunden - Füge Datenbankeintrag hinzu");
-            addDBPlayer(String.valueOf(p.getUniqueId()), p.getName());
+            func.cMSG(ChatColor.AQUA + "[MXE] SQL: Player not found - Adding to database");
+            addDBPlayer(p.getUniqueId(), p.getName());
         }
     }
 
@@ -108,7 +108,7 @@ public class PlayerEvents implements Listener {
     @EventHandler
     public void onPlayerKick(PlayerKickEvent e) {
         Player p = e.getPlayer();
-        lp.getUserManager().saveUser(lp.getUserManager().getUser(p.getUniqueId()));
+        lp.getUserManager().saveUser(Objects.requireNonNull(lp.getUserManager().getUser(p.getUniqueId())));
     }
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent e) {
@@ -126,7 +126,7 @@ public class PlayerEvents implements Listener {
         Player p = e.getEntity().getPlayer();
         Player k = e.getEntity().getKiller();
         String msg = e.getDeathMessage();
-        msg = msg.replaceAll(p.getName(), p.getDisplayName()+ChatColor.RESET+ChatColor.GRAY);
+        msg = Objects.requireNonNull(msg).replaceAll(Objects.requireNonNull(p).getName(), p.getDisplayName()+ChatColor.RESET+ChatColor.GRAY);
         if(k != null) {
             msg = msg.replaceAll(k.getName(), k.getDisplayName()+ChatColor.RESET+ChatColor.GRAY);
         }

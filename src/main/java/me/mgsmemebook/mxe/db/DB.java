@@ -1,62 +1,39 @@
 package me.mgsmemebook.mxe.db;
-import com.sun.tools.javac.code.Attribute;
-import me.mgsmemebook.mxe.MXE;
+
 import me.mgsmemebook.mxe.func;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import java.sql.*;
+import org.bukkit.entity.Player;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import static java.lang.String.valueOf;
 import static me.mgsmemebook.mxe.db.SQLite.getSQLConnection;
 
 public class DB {
-    private static String connurl = "jdbc:h2:" + MXE.getPlDir() + "/data/database";
-    public static Connection conn;
-
-    public static void initialize() {
-        conn = getSQLConnection();
-        try {
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM users WHERE UUID = ?");
-            ResultSet rs = ps.executeQuery();
-            close(ps,rs);
-        } catch (SQLException ex) {
-            func.cMSG(ChatColor.DARK_RED + "SQL error: Feler beim Herstellen der Verbindung");
-            func.cMSG(ChatColor.DARK_RED + "SQL error: " + ex.getMessage());
-        }
-    }
-    public static void close(PreparedStatement ps, ResultSet rs) {
-        try {
-            if(ps != null) {
-                ps.close();
-            } if(rs != null) {
-                rs.close();
-            }
-        } catch (SQLException ex) {
-            func.cMSG(ChatColor.DARK_RED + "SQL error: Fehler beim Schließen der Datenbank-Verbindung");
-            func.cMSG(ChatColor.DARK_RED + "SQL error: " + ex.getMessage());
-        }
-    }
-
-    public static void addDBPlayer(String uuid, String username) {
-        if(Bukkit.getPlayer(UUID.fromString(uuid)) == null || Bukkit.getPlayer(username) == null) {
-            func.cMSG(ChatColor.AQUA + "addPlayer: Spieler " + username + " nicht gefunden.");
+    public static void addDBPlayer(UUID uuid, String username) {
+        if(Bukkit.getPlayer(uuid) == null || Bukkit.getPlayer(username) == null) {
+            func.cMSG(ChatColor.AQUA + "[MXE DB addPlayer] Player " + username + " not found.");
         } else {
             PreparedStatement ps = null;
             Connection conn = null;
             try {
                 conn = getSQLConnection();
                 String sql = "INSERT INTO users (UUID, username, banned) VALUES (?, ?, ?)";
-                ps = conn.prepareStatement(sql);
-                ps.setString(1, uuid);
+                ps = Objects.requireNonNull(conn).prepareStatement(sql);
+                ps.setString(1, uuid.toString());
                 ps.setString(2, username);
                 ps.setBoolean(3, false);
                 ps.execute();
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "SQL error: Fehler beim Schreiben in die Datenbank");
-                func.cMSG(ChatColor.DARK_RED + "SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't insert into database");
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
             } finally {
                 try {
                     if (ps != null) {
@@ -66,28 +43,29 @@ public class DB {
                         conn.close();
                     }
                 } catch (SQLException ex) {
-                    func.cMSG(ChatColor.DARK_RED + "SQL error: Fehler beim Schließen der Datenbank-Verbindung");
-                    func.cMSG(ChatColor.DARK_RED + "SQL error: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
                 }
             }
         }
     }
-    public static String getDBPlayer(String uuid) {
-        if(Bukkit.getPlayer(UUID.fromString(uuid)) == null) {
-            func.cMSG(ChatColor.AQUA + "getPlayer: Spieler nicht gefunden.");
+    public static String getDBPlayer(UUID uuid) {
+        if(Bukkit.getPlayer(uuid) == null) {
+            func.cMSG(ChatColor.AQUA + "[MXE DB getPlayer] Player not found.");
         } else {
             Connection conn = null;
             PreparedStatement ps = null;
             ResultSet rs;
             try {
                 conn = getSQLConnection();
-                String sql = "SELECT * FROM users WHERE UUID = '"+uuid+"'";
-                ps = conn.prepareStatement(sql);
+                String sql = "SELECT * FROM users WHERE UUID = ?";
+                ps = Objects.requireNonNull(conn).prepareStatement(sql);
+                ps.setString(1, uuid.toString());
                 rs = ps.executeQuery();
                 return rs.getString("username");
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "SQL error: Fehler beim lesen der Datenbank-Daten");
-                func.cMSG(ChatColor.DARK_RED + "SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data");
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
             } finally {
                 try {
                     if (ps != null) {
@@ -97,33 +75,63 @@ public class DB {
                         conn.close();
                     }
                 } catch (SQLException ex) {
-                    func.cMSG(ChatColor.DARK_RED + "SQL error: Fehler beim Schließen der Datenbank-Verbindung");
-                    func.cMSG(ChatColor.DARK_RED + "SQL error: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
                 }
             }
         }
         return null;
     }
+    public static String getPlayerUUID(String name) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs;
+        try {
+            conn = getSQLConnection();
+            String sql = "SELECT UUID FROM users WHERE username = ?";
+            ps = Objects.requireNonNull(conn).prepareStatement(sql);
+            ps.setString(1, name);
+            rs = ps.executeQuery();
+            return rs.getString("UUID");
+        } catch (SQLException ex) {
+            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data");
+            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+            }
+        }
+        return null;
+    }
     public static void banDBPlayer(UUID uuid, boolean tempban, String bantime, String reason) {
-        if(Bukkit.getPlayer(uuid) == null) {
-            func.cMSG(ChatColor.AQUA + "addPlayer: Spieler nicht gefunden.");
+        Player p = Bukkit.getPlayer(uuid);
+        if(p == null) {
+            func.cMSG(ChatColor.AQUA + "[MXE DB addPlayer] Player not found.");
         } else {
             PreparedStatement ps = null;
             Connection conn = null;
             try {
                 conn = getSQLConnection();
                 String sql = "UPDATE users SET banned = ?, tempban = ?, bantime = ?, reason = ? WHERE UUID = ?";
-                ps = conn.prepareStatement(sql);
+                ps = Objects.requireNonNull(conn).prepareStatement(sql);
                 ps.setBoolean(1, true);
                 ps.setBoolean(2, tempban);
                 ps.setString(3, bantime);
                 ps.setString(4, reason);
                 ps.setString(5, uuid.toString());
-
                 ps.executeUpdate();
+                func.cMSG(ChatColor.RED + "[MXE] Banned player: " + p.getName());
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "SQL error: Fehler beim Schreiben in die Datenbank");
-                func.cMSG(ChatColor.DARK_RED + "SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't update database");
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
             } finally {
                 try {
                     if (ps != null) {
@@ -133,32 +141,34 @@ public class DB {
                         conn.close();
                     }
                 } catch (SQLException ex) {
-                    func.cMSG(ChatColor.DARK_RED + "SQL error: Fehler beim Schließen der Datenbank-Verbindung");
-                    func.cMSG(ChatColor.DARK_RED + "SQL error: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
                 }
             }
         }
     }
 
     public static void unbanDBPlayer(UUID uuid) {
-        if(Bukkit.getPlayer(uuid) == null) {
-            func.cMSG(ChatColor.AQUA + "addPlayer: Spieler nicht gefunden.");
+        Player p = Bukkit.getPlayer(uuid);
+        if(p == null) {
+            func.cMSG(ChatColor.AQUA + "[MXE DB unbanDBPlayer] Player not found.");
         } else {
             PreparedStatement ps = null;
             Connection conn = null;
             try {
                 conn = getSQLConnection();
                 String sql = "UPDATE users SET banned = ?, tempban = ?, bantime = ?, reason = ? WHERE UUID = ?";
-                ps = conn.prepareStatement(sql);
+                ps = Objects.requireNonNull(conn).prepareStatement(sql);
                 ps.setBoolean(1, false);
                 ps.setBoolean(2, false);
                 ps.setString(3, "");
                 ps.setString(4, "");
                 ps.setString(5, uuid.toString());
                 ps.executeUpdate();
+                func.cMSG(ChatColor.RED + "[MXE] Unbanned player: " + p.getName());
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "SQL error: Fehler beim Schreiben in die Datenbank");
-                func.cMSG(ChatColor.DARK_RED + "SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't update database");
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
             } finally {
                 try {
                     if (ps != null) {
@@ -168,16 +178,16 @@ public class DB {
                         conn.close();
                     }
                 } catch (SQLException ex) {
-                    func.cMSG(ChatColor.DARK_RED + "SQL error: Fehler beim Schließen der Datenbank-Verbindung");
-                    func.cMSG(ChatColor.DARK_RED + "SQL error: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
                 }
             }
         }
     }
 
-    public static ArrayList getPlayerBanInfo(UUID uuid) {
+    public static ArrayList<String> getPlayerBanInfo(UUID uuid) {
         if(Bukkit.getPlayer(uuid) == null) {
-            func.cMSG(ChatColor.AQUA + "addPlayer: Spieler nicht gefunden.");
+            func.cMSG(ChatColor.AQUA + "[MXE DB getDBPlayer] Player not found.");
         } else {
             PreparedStatement ps = null;
             Connection conn = null;
@@ -185,7 +195,7 @@ public class DB {
             try {
                 conn = getSQLConnection();
                 String sql = "SELECT * FROM users WHERE UUID = '"+uuid+"'";
-                ps = conn.prepareStatement(sql);
+                ps = Objects.requireNonNull(conn).prepareStatement(sql);
                 rs = ps.executeQuery();
                 ArrayList<String> baninf = new ArrayList<>();
 
@@ -200,8 +210,8 @@ public class DB {
                     return null;
                 }
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "SQL error: Fehler beim Schreiben in die Datenbank");
-                func.cMSG(ChatColor.DARK_RED + "SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data");
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
             } finally {
                 try {
                     if (ps != null) {
@@ -211,8 +221,8 @@ public class DB {
                         conn.close();
                     }
                 } catch (SQLException ex) {
-                    func.cMSG(ChatColor.DARK_RED + "SQL error: Fehler beim Schließen der Datenbank-Verbindung");
-                    func.cMSG(ChatColor.DARK_RED + "SQL error: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
                 }
             }
         }

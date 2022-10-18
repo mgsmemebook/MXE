@@ -1,10 +1,8 @@
 package me.mgsmemebook.mxe.db;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.Objects;
 
 import me.mgsmemebook.mxe.MXE;
 import me.mgsmemebook.mxe.func;
@@ -27,7 +25,9 @@ public class SQLite {
         File dataFolder = new File(MXE.getPlDir(), "users.db");
         if(!dataFolder.exists()) {
             try {
-                dataFolder.createNewFile();
+                if(!dataFolder.createNewFile()) {
+                    func.cMSG(ChatColor.RED + "[MXE] Couldn't create database file");
+                }
             } catch (IOException ex) {
                 func.cMSG(ChatColor.RED + "File write error " + ex.getMessage());
             }
@@ -40,19 +40,19 @@ public class SQLite {
             conn = DriverManager.getConnection("jdbc:sqlite:" + dataFolder);
             return conn;
         } catch (SQLException ex) {
-            func.cMSG(ChatColor.DARK_RED + "SQL error: SQLite Fehler beim Iniziieren");
-            func.cMSG(ChatColor.DARK_RED + "SQL error: " + ex.getMessage());
+            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't initialize SQLite");
+            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
         } catch (ClassNotFoundException ex) {
-            func.cMSG(ChatColor.DARK_RED + "SQL error: SQLite JBDC Library nicht gefunden. (/lib Ordner)");
-            func.cMSG(ChatColor.DARK_RED + "SQL error: " + ex.getMessage());
+            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: SQLite JBDC Library not found. (insert into /plugins/MXE/lib/)");
+            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
         }
         return null;
     }
 
     public static void load() {
-        conn = getSQLConnection();
         try {
-            Statement s = conn.createStatement();
+            conn = getSQLConnection();
+            Statement s = Objects.requireNonNull(conn).createStatement();
             s.executeUpdate(SQLiteCreateTokensTable);
             s.close();
         } catch (SQLException ex) {

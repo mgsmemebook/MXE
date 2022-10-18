@@ -6,7 +6,6 @@ import net.luckperms.api.model.data.DataMutateResult;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.types.InheritanceNode;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -14,6 +13,7 @@ import static org.bukkit.Bukkit.getServer;
 
 public class func {
     static LuckPerms lp = LuckPermsProvider.get();
+
     public static void cMSG(String message) {
         getServer().getConsoleSender().sendMessage(message);
     }
@@ -21,12 +21,6 @@ public class func {
     public static String colCodes(String s) {
         s = ChatColor.translateAlternateColorCodes('&', s);
         return s;
-    }
-
-    public static void sendMessageToAll(String msg) {
-        for(Player p : Bukkit.getOnlinePlayers()){
-            p.sendMessage(msg);
-        }
     }
     public static void updateUser(Player p, Group g) {
 
@@ -37,28 +31,23 @@ public class func {
     }
     public static void switchGroup(User u, String group, String oldgroup) {
         DataMutateResult result = u.data().add(InheritanceNode.builder(group).build());
-        System.out.println("NodeBuilder (add " + group + "): " + result);
+        System.out.println("[MXE] NodeBuilder (add " + group + "): " + result);
         u.setPrimaryGroup(group);
         result = u.data().remove(InheritanceNode.builder(oldgroup).build());
-        System.out.println("NodeBuilder (remove " + oldgroup + "): " + result);
+        System.out.println("[MXE] NodeBuilder (remove " + oldgroup + "): " + result);
         lp.getUserManager().saveUser(u);
     }
 
     public static boolean isNumeric(String string) {
-        int intValue;
-
-        System.out.println(String.format("Parsing string: \"%s\"", string));
-
         if (string == null || string.equals("")) {
-            System.out.println("String cannot be parsed, it is null or empty.");
+            System.out.println("[MXE] String cannot be parsed, it is null or empty.");
             return false;
         }
 
         try {
-            intValue = Integer.parseInt(string);
             return true;
         } catch (NumberFormatException e) {
-            System.out.println("Input String cannot be parsed to Integer.");
+            System.out.println("[MXE] Input String cannot be parsed to Integer.");
         }
         return false;
     }

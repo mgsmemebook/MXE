@@ -38,12 +38,14 @@ public class TabCompletion implements TabCompleter {
                     options.add("Grund");
                     return options;
                 }
+
             case "fly":
                 if(args.length == 1) {
                     List<String> options = new ArrayList<>();
                     options.add("Geschwindigkeit");
                     return options;
                 }
+
             case "gm":
                 if(args.length == 1) {
                     List<String> gameModes = new ArrayList<>();
@@ -55,10 +57,17 @@ public class TabCompletion implements TabCompleter {
                 } else if(args.length == 2) {
                     return playerNames;
                 }
+
+            case "kick":
+                if(args.length == 1) {
+                    return playerNames;
+                }
+
             case "kill":
                 if(args.length == 1) {
                     return playerNames;
                 }
+
             case "setrank":
                 if(args.length == 1) {
                     return playerNames;
@@ -70,18 +79,21 @@ public class TabCompletion implements TabCompleter {
                     }
                     return ranks;
                 }
+
             case "tpall":
+
             case "tphere":
                 if(args.length == 1) {
                     return playerNames;
                 }
+
             case "unban":
                 if(args.length == 1) {
                     return playerNames;
                 }
+
             default:
-                List<String> options = new ArrayList<>();
-                return options;
+                return new ArrayList<>();
         }
     }
 }

@@ -19,7 +19,7 @@ public class setrank implements CommandExecutor {
         String error;
         Player p = Bukkit.getPlayerExact(sender.getName());
         if(p == null) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[setrank]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
+            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE setrank]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
             func.cMSG(error);
             return true;
         }
@@ -71,11 +71,11 @@ public class setrank implements CommandExecutor {
             return true;
         }
 
-        if(ng.getWeight().getAsInt() > pg.getWeight().getAsInt()) {
+        if(pg.getWeight().isPresent() && ng.getWeight().isPresent() && ng.getWeight().getAsInt() > pg.getWeight().getAsInt()) {
             error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
             p.sendMessage(error);
             return true;
-        } else if(tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {
+        } else if(pg.getWeight().isPresent() && tg.getWeight().isPresent() && tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {
             error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
             p.sendMessage(error);
             return true;

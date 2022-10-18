@@ -12,14 +12,16 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Objects;
+
 public class kill implements CommandExecutor {
     LuckPerms lp = LuckPermsProvider.get();
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        String error; String msg;
+        String error;
         Player p = Bukkit.getPlayerExact(sender.getName());
         if(p == null) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[tphere]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
+            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE kill]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
             func.cMSG(error);
             return true;
         }
@@ -47,13 +49,13 @@ public class kill implements CommandExecutor {
                 p.sendMessage(error);
                 return true;
             }
-            Group tg = lp.getGroupManager().getGroup(lp.getUserManager().getUser(t.getUniqueId()).getPrimaryGroup());
+            Group tg = lp.getGroupManager().getGroup(Objects.requireNonNull(lp.getUserManager().getUser(t.getUniqueId())).getPrimaryGroup());
             if(tg == null) {
                 error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
                 p.sendMessage(error);
                 return true;
             }
-            if(tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {
+            if(pg.getWeight().isPresent() && tg.getWeight().isPresent() && tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {
                 error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
                 p.sendMessage(error);
                 return true;

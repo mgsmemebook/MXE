@@ -5,27 +5,38 @@ api-version: 1.19
 authors: [ mgsmemebook ]
 description: Minecraft Spigot 1.18.2 Essentials Plugin
 commands:
-  fly:
-    description: Identifiziere dich als einen Ah-64 Apache Attack Helicopter
-    usage: /fly [Geschwindigkeit]
-  gm:
-    description: Setze deinen Gamemode
-    usage: /gm [Gamemode] [Spieler]
-  tphere:
-    description: Teleportiere einen Spieler zu dir
-    usage: /<command> [Spieler]
-  setrank:
-    description: Setze den Rang eines Spielers
-    usage: /<command> [Spieler] [Rang]
-  tpall:
-    description: Teleportiere jeden zu dir
-    usage: /<command>
-  kill:
-    description: Töte einen Spieler
-    usage: /<command> [Spieler]
   ban:
     description: Banne einen Spieler
     usage: /<command> [Spieler] [Zeit/Grund] [Grund]
+
+  fly:
+    description: Identifiziere dich als einen Ah-64 Apache Attack Helicopter
+    usage: /fly [Geschwindigkeit]
+
+  gm:
+    description: Setze deinen Gamemode
+    usage: /gm [Gamemode] [Spieler]
+
+  kick:
+    description: Kicke einen Spieler
+    usage: /<command> [Spieler] [Grund]
+
+  kill:
+    description: Töte einen Spieler
+    usage: /<command> [Spieler]
+
+  setrank:
+    description: Setze den Rang eines Spielers
+    usage: /<command> [Spieler] [Rang]
+
+  tpall:
+    description: Teleportiere jeden zu dir
+    usage: /<command>
+
+  tphere:
+    description: Teleportiere einen Spieler zu dir
+    usage: /<command> [Spieler]
+
   unban:
     description: Entbanne einen Spieler
     usage: /<command> [Spieler]

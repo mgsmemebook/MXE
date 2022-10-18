@@ -15,15 +15,17 @@ import org.bukkit.entity.Player;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
+import java.util.UUID;
 
 public class ban implements CommandExecutor {
     LuckPerms lp = LuckPermsProvider.get();
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        String error; String msg = null;
+        String error; String msg;
         Player p = Bukkit.getPlayerExact(sender.getName());
         if(p == null) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[tphere]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
+            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE tphere]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
             func.cMSG(error);
             return true;
         }
@@ -45,8 +47,8 @@ public class ban implements CommandExecutor {
             return true;
         }
 
-        String reason = "null";
-        String kickmsg = "";
+        String reason;
+        String kickmsg;
 
         if(args.length < 1) {
             error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Syntax error: /ban [Spieler] [Zeit/Grund] [Grund]";
@@ -55,21 +57,24 @@ public class ban implements CommandExecutor {
         }
         Player t = Bukkit.getPlayerExact(args[0]);
         if(t == null) {
-            error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Spieler nicht gefunden!";
-            p.sendMessage(error);
-            return true;
+            t = (Player) Bukkit.getOfflinePlayer(UUID.fromString(DB.getPlayerUUID(args[0])));
+            if(t == null) {
+                error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Spieler nicht gefunden!";
+                p.sendMessage(error);
+                return true;
+            }
         }
-        Group tg = lp.getGroupManager().getGroup(lp.getUserManager().getUser(t.getUniqueId()).getPrimaryGroup());
+        Group tg = lp.getGroupManager().getGroup(Objects.requireNonNull(lp.getUserManager().getUser(t.getUniqueId())).getPrimaryGroup());
         if(tg == null) {
             error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
             p.sendMessage(error);
             return true;
         }
-        /*if(tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {
+        if(pg.getWeight().isPresent() && tg.getWeight().isPresent() && tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {
             error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
             p.sendMessage(error);
             return true;
-        }*/
+        }
 
         if(args.length == 1) {
             //Permabann ohne Grund
@@ -128,9 +133,7 @@ public class ban implements CommandExecutor {
                 msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getName() + " für " + zeit + " gebannt!";
             } else {
                 //Permabann mit Grund
-                if(args.length == 2) {
-                    reason = args[1];
-                }
+                reason = args[1];
                 DB.banDBPlayer(p.getUniqueId(), false, null, reason);
 
                 kickmsg = ChatColor.RED+"Du wurdest " + ChatColor.BOLD + "permanent" + ChatColor.RESET + ChatColor.RED + " von " + p.getDisplayName() + ChatColor.RESET + ChatColor.RED + " gebannt! Grund: " + reason;

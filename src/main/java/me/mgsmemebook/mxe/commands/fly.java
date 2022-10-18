@@ -18,7 +18,7 @@ public class fly implements CommandExecutor {
         String error;
         Player p = Bukkit.getPlayerExact(sender.getName());
         if(p == null) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[tphere]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
+            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE fly]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
             func.cMSG(error);
             return true;
         }
