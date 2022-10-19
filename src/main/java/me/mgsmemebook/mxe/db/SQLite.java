@@ -1,28 +1,38 @@
 package me.mgsmemebook.mxe.db;
-import java.io.File;
-import java.io.IOException;
-import java.sql.*;
-import java.util.Objects;
 
 import me.mgsmemebook.mxe.MXE;
 import me.mgsmemebook.mxe.func;
 import org.bukkit.ChatColor;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Objects;
+
 public class SQLite {
 
     public static Connection conn = null;
-    public static String SQLiteCreateTokensTable = "CREATE TABLE IF NOT EXISTS users (" + // make sure to put your table name in here too.
-            "`UUID` varchar(32) NOT NULL," +
-            "`username` varchar(32) NOT NULL," +
-            "`banned` BOOL NOT NULL," +
-            "`tempban` BOOL," +
-            "`bantime` varchar(512)," +
-            "`reason` varchar(512)," +
-            "PRIMARY KEY (`UUID`)" +  // This is creating 3 colums Player, Kills, Total. Primary key is what you are going to use as your indexer. Here we want to use player so
-            ");"; // we can search by player, and get kills and total. If you some how were searching kills it would provide total and player.
+    public static String SQLiteCreateTable(String tablename) {
+        String sql = null;
+        if (tablename.equalsIgnoreCase("users")) {
+            sql = "CREATE TABLE IF NOT EXISTS users (" + // make sure to put your table name in here too.
+                    "`UUID` varchar(32) NOT NULL," +
+                    "`username` varchar(32) NOT NULL," +
+                    "PRIMARY KEY (`UUID`)" +  // This is creating 3 colums Player, Kills, Total. Primary key is what you are going to use as your indexer. Here we want to use player so
+                    ");"; // we can search by player, and get kills and total. If you some how were searching kills it would provide total and player.
+        } //else if(tablename.equalsIgnoreCase()) { }
+        else {
+            func.cMSG(ChatColor.RED + "[MXE] Couldn't find db table");
+        }
+        return sql;
+    }
 
-    public static Connection getSQLConnection() {
-        File dataFolder = new File(MXE.getPlDir(), "users.db");
+    public static Connection getSQLConnection(String dbname) {
+        File dataFolder = new File(MXE.getPlDir(), dbname+".db");
         if(!dataFolder.exists()) {
             try {
                 if(!dataFolder.createNewFile()) {
@@ -49,15 +59,34 @@ public class SQLite {
         return null;
     }
 
-    public static void load() {
+    public static void load(String dbname) {
         try {
-            conn = getSQLConnection();
+            conn = getSQLConnection(dbname);
             Statement s = Objects.requireNonNull(conn).createStatement();
-            s.executeUpdate(SQLiteCreateTokensTable);
+            s.executeUpdate(SQLiteCreateTable(dbname));
+
+            if(dbname.equals("users")) {
+                ArrayList<String> col = new ArrayList<>();
+                col.add("ALTER TABLE users ADD COLUMN muted BOOL NOT NULL");
+                col.add("ALTER TABLE users ADD COLUMN banned BOOL NOT NULL");
+                col.add("ALTER TABLE users ADD COLUMN tempmute BOOL");
+                col.add("ALTER TABLE users ADD COLUMN tempban BOOL");
+                col.add("ALTER TABLE users ADD COLUMN mutetime varchar(64)");
+                col.add("ALTER TABLE users ADD COLUMN bantime varchar(64)");
+
+                for(int i = 0; i < col.size(); i++) {
+                    try {
+                        s.executeUpdate(col.get(i));
+                    } catch(SQLException ex) {
+                        func.cMSG(ChatColor.BLACK + "[MXE] SQL warn: Failed to create column " + i + ". Ignore this if said column already exists.");
+                    }
+                }
+                s = Objects.requireNonNull(conn).createStatement();
+            }
             s.close();
+            conn.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        //initialize();
     }
 }

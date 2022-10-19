@@ -21,6 +21,10 @@ commands:
     description: Kicke einen Spieler
     usage: /<command> [Spieler] [Grund]
 
+  mute:
+    description: Mute einen Spieler
+    usage: /<command> [Spieler] [Zeit]
+
   kill:
     description: Töte einen Spieler
     usage: /<command> [Spieler]
@@ -39,4 +43,8 @@ commands:
 
   unban:
     description: Entbanne einen Spieler
+    usage: /<command> [Spieler]
+
+  unmute:
+    description: Entmute einen Spieler
     usage: /<command> [Spieler]

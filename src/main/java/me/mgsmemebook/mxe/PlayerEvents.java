@@ -77,24 +77,23 @@ public class PlayerEvents implements Listener {
         }
     }
     public void playerJoin(Player p, PlayerJoinEvent e) {
-        lp.getUserManager().loadUser(p.getUniqueId());
         User u = lp.getUserManager().getUser(p.getUniqueId());
-        if(u == null) { return; }
-        if(u.getPrimaryGroup().equals("default")) {
-            func.switchGroup(u, "user", "default");
+        if(u != null) {
+            lp.getUserManager().loadUser(p.getUniqueId());
+            String group = u.getPrimaryGroup();
+            Group g = lp.getGroupManager().getGroup(group);
+            if(g != null) {
+                func.updateUser(p, g);
+            }
         }
-        lp.getUserManager().saveUser(u);
-        Group g = lp.getGroupManager().getGroup(u.getPrimaryGroup());
-        if(g == null) { return; }
-        func.updateUser(p, g);
 
         e.setJoinMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + ChatColor.RESET + p.getDisplayName() + ChatColor.AQUA + " ist uns beigetreten!");
 
         //Check DB
         String res = getDBPlayer(p.getUniqueId());
-        func.cMSG(ChatColor.AQUA + "[MXE] SQL: Found database entries: " + res);
+        func.cMSG(ChatColor.DARK_AQUA + "[MXE] SQL: Found database entries: " + res);
         if(res == null) {
-            func.cMSG(ChatColor.AQUA + "[MXE] SQL: Player not found - Adding to database");
+            func.cMSG(ChatColor.DARK_AQUA + "[MXE] SQL: Player not found - Adding to database");
             addDBPlayer(p.getUniqueId(), p.getName());
         }
     }
@@ -113,11 +112,42 @@ public class PlayerEvents implements Listener {
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent e) {
         Player p = e.getPlayer();
-        String msg = e.getMessage();
 
-        msg = func.colCodes(msg);
-        msg = p.getDisplayName() + ChatColor.GOLD + ChatColor.BOLD + " sagt: " + ChatColor.RESET + ChatColor.GRAY + msg;
-        Bukkit.broadcastMessage(msg);
+        boolean muted = Boolean.parseBoolean(DB.getDBVar("users", "muted", "username", p.getName()));
+        boolean tempmute = Boolean.parseBoolean(DB.getDBVar("users", "tempmute", "username", p.getName()));
+        long mutetime = Long.parseLong(Objects.requireNonNull(DB.getDBVar("users", "mutetime", "username", p.getName())));
+
+        if(muted) {
+            if(tempmute) {
+                Calendar cl = Calendar.getInstance();
+                Calendar now = Calendar.getInstance();
+
+                now.setTime(new Date());
+                cl.setTimeInMillis(mutetime);
+
+                long timeleft = mutetime-now.getTimeInMillis();
+
+                if(timeleft > 0) {
+                    LocalDateTime ldt = LocalDateTime.ofInstant(cl.toInstant(), cl.getTimeZone().toZoneId());
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+                    String unmutedate = ldt.format(dtf);
+
+                    String mutemsg = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dir wurde für " + ChatColor.BOLD + unmutedate + ChatColor.RESET + ChatColor.DARK_RED + " das Rederecht genommen!";
+                    p.sendMessage(mutemsg);
+                } else {
+                    DB.setDBPlayerMute(false, false, null, p.getUniqueId());
+                }
+            } else {
+                String mutemsg = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Du hast kein Recht zu reden!";
+                p.sendMessage(mutemsg);
+            }
+        } else {
+            String msg = e.getMessage();
+            msg = func.colCodes(msg);
+            msg = p.getDisplayName() + ChatColor.GOLD + ChatColor.BOLD + " sagt: " + ChatColor.RESET + ChatColor.GRAY + msg;
+            Bukkit.broadcastMessage(msg);
+        }
+
         e.setCancelled(true);
     }
 

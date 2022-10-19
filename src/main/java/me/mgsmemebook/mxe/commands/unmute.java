@@ -16,15 +16,14 @@ import org.bukkit.entity.Player;
 import java.util.Objects;
 import java.util.UUID;
 
-public class unban implements CommandExecutor {
-    LuckPerms lp = LuckPermsProvider.get();
-
+public class unmute implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        LuckPerms lp = LuckPermsProvider.get();
         String error;
         Player p = Bukkit.getPlayerExact(sender.getName());
         if(p == null) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE unban]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
+            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE unmute]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
             func.cMSG(error);
             return true;
         }
@@ -34,7 +33,7 @@ public class unban implements CommandExecutor {
             p.sendMessage(error);
             return true;
         }
-        if(!u.getCachedData().getPermissionData().checkPermission("mxe.unban").asBoolean()) {
+        if(!u.getCachedData().getPermissionData().checkPermission("mxe.unmute").asBoolean()) {
             error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
             p.sendMessage(error);
             return true;
@@ -47,7 +46,7 @@ public class unban implements CommandExecutor {
         }
 
         if(args.length < 1) {
-            error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Syntax error: /unban [Spieler]";
+            error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Syntax error: /unmute [Spieler]";
             p.sendMessage(error);
             return true;
         }
@@ -70,9 +69,11 @@ public class unban implements CommandExecutor {
             return true;
         }
 
-        DB.unbanDBPlayer(t.getUniqueId());
-        String msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getName() + " entbannt!";
+        DB.setDBPlayerMute(false, false, null, t.getUniqueId());
+        String msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getDisplayName() + " entmutet!";
+        String unmutemsg = ChatColor.DARK_GREEN + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GREEN + "Du wurdest von " + p.getDisplayName() + ChatColor.RESET + ChatColor.GREEN + " entmutet!";
         p.sendMessage(msg);
+        t.sendMessage(unmutemsg);
         return true;
     }
 }

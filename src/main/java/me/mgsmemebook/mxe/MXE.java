@@ -22,7 +22,7 @@ public final class MXE extends JavaPlugin {
         cMSG(ChatColor.WHITE + "[MXE] " + ChatColor.BLUE + ChatColor.BOLD + "| |  | |  / . \\  " + ChatColor.GOLD + "| |____     ");
         cMSG(ChatColor.WHITE + "[MXE] " + ChatColor.BLUE + ChatColor.BOLD + "|_|  |_| /_/ \\_\\ " + ChatColor.GOLD + "|______|   ");
         cMSG(ChatColor.WHITE + "[MXE] -------------------------");
-        cMSG(ChatColor.GREEN + "[MXE] MXEssentials started! ");
+        cMSG(ChatColor.GREEN + "[MXE] initializing MXEssentials ");
 
         //plugin files
         if (!getDataFolder().exists()) {
@@ -36,7 +36,7 @@ public final class MXE extends JavaPlugin {
 
         //DB
         plDir = getDataFolder().getAbsolutePath();
-        SQLite.load();
+        SQLite.load("users");
 
         //Commands
         Objects.requireNonNull(getCommand("ban")).setExecutor(new ban());
@@ -44,10 +44,12 @@ public final class MXE extends JavaPlugin {
         Objects.requireNonNull(getCommand("gm")).setExecutor(new gm());
         Objects.requireNonNull(getCommand("kick")).setExecutor(new kick());
         Objects.requireNonNull(getCommand("kill")).setExecutor(new kill());
+        Objects.requireNonNull(getCommand("mute")).setExecutor(new mute());
         Objects.requireNonNull(getCommand("setrank")).setExecutor(new setrank());
         Objects.requireNonNull(getCommand("tpall")).setExecutor(new tpall());
         Objects.requireNonNull(getCommand("tphere")).setExecutor(new tphere());
         Objects.requireNonNull(getCommand("unban")).setExecutor(new unban());
+        Objects.requireNonNull(getCommand("unmute")).setExecutor(new unmute());
 
         //TabCompletion
         Objects.requireNonNull(getCommand("ban")).setTabCompleter(new TabCompletion());
@@ -55,10 +57,12 @@ public final class MXE extends JavaPlugin {
         Objects.requireNonNull(getCommand("gm")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("kick")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("kill")).setTabCompleter(new TabCompletion());
+        Objects.requireNonNull(getCommand("mute")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("setrank")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("tpall")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("tphere")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("unban")).setTabCompleter(new TabCompletion());
+        Objects.requireNonNull(getCommand("unmute")).setTabCompleter(new TabCompletion());
     }
 
     @Override

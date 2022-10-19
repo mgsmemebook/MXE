@@ -23,11 +23,12 @@ public class func {
         return s;
     }
     public static void updateUser(Player p, Group g) {
-
         String prefix = g.getCachedData().getMetaData().getPrefix();
-        prefix = func.colCodes(prefix);
-        p.setDisplayName(prefix + " " + p.getName() + ChatColor.RESET);
-        p.setPlayerListName(p.getDisplayName());
+        if (prefix != null) {
+            prefix = func.colCodes(prefix);
+            p.setDisplayName(prefix + " " + p.getName() + ChatColor.RESET);
+            p.setPlayerListName(p.getDisplayName());
+        }
     }
     public static void switchGroup(User u, String group, String oldgroup) {
         DataMutateResult result = u.data().add(InheritanceNode.builder(group).build());

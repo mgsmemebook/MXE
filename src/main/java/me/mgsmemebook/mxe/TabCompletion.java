@@ -68,6 +68,15 @@ public class TabCompletion implements TabCompleter {
                     return playerNames;
                 }
 
+            case "mute":
+                if(args.length == 1) {
+                    return playerNames;
+                } else if(args.length == 2) {
+                    List<String> options = new ArrayList<>();
+                    options.add("Zeit(in s/m/h/D/M/Y)");
+                    return options;
+                }
+
             case "setrank":
                 if(args.length == 1) {
                     return playerNames;
@@ -88,6 +97,11 @@ public class TabCompletion implements TabCompleter {
                 }
 
             case "unban":
+                if(args.length == 1) {
+                    return playerNames;
+                }
+
+            case "unmute":
                 if(args.length == 1) {
                     return playerNames;
                 }
