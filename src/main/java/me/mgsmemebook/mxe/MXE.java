@@ -39,27 +39,41 @@ public final class MXE extends JavaPlugin {
         SQLite.load("users");
 
         //Commands
+        Objects.requireNonNull(getCommand("back")).setExecutor(new back());
         Objects.requireNonNull(getCommand("ban")).setExecutor(new ban());
         Objects.requireNonNull(getCommand("fly")).setExecutor(new fly());
         Objects.requireNonNull(getCommand("gm")).setExecutor(new gm());
+        Objects.requireNonNull(getCommand("god")).setExecutor(new god());
+        Objects.requireNonNull(getCommand("home")).setExecutor(new home());
         Objects.requireNonNull(getCommand("kick")).setExecutor(new kick());
         Objects.requireNonNull(getCommand("kill")).setExecutor(new kill());
         Objects.requireNonNull(getCommand("mute")).setExecutor(new mute());
         Objects.requireNonNull(getCommand("setrank")).setExecutor(new setrank());
+        Objects.requireNonNull(getCommand("tpa")).setExecutor(new tpa());
+        Objects.requireNonNull(getCommand("tpaccept")).setExecutor(new tpaccept());
+        Objects.requireNonNull(getCommand("tpahere")).setExecutor(new tpahere());
         Objects.requireNonNull(getCommand("tpall")).setExecutor(new tpall());
+        Objects.requireNonNull(getCommand("tpdeny")).setExecutor(new tpdeny());
         Objects.requireNonNull(getCommand("tphere")).setExecutor(new tphere());
         Objects.requireNonNull(getCommand("unban")).setExecutor(new unban());
         Objects.requireNonNull(getCommand("unmute")).setExecutor(new unmute());
 
         //TabCompletion
+        Objects.requireNonNull(getCommand("back")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("ban")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("fly")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("gm")).setTabCompleter(new TabCompletion());
+        Objects.requireNonNull(getCommand("god")).setTabCompleter(new TabCompletion());
+        Objects.requireNonNull(getCommand("home")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("kick")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("kill")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("mute")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("setrank")).setTabCompleter(new TabCompletion());
+        Objects.requireNonNull(getCommand("tpa")).setTabCompleter(new TabCompletion());
+        Objects.requireNonNull(getCommand("tpaccept")).setTabCompleter(new TabCompletion());
+        Objects.requireNonNull(getCommand("tpahere")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("tpall")).setTabCompleter(new TabCompletion());
+        Objects.requireNonNull(getCommand("tpdeny")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("tphere")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("unban")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("unmute")).setTabCompleter(new TabCompletion());

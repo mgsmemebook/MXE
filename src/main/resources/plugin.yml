@@ -5,6 +5,10 @@ api-version: 1.19
 authors: [ mgsmemebook ]
 description: Minecraft Spigot 1.18.2 Essentials Plugin
 commands:
+  back:
+    description: Drehe die Zeit zurück
+    usage: /<command>
+
   ban:
     description: Banne einen Spieler
     usage: /<command> [Spieler] [Zeit/Grund] [Grund]
@@ -17,24 +21,48 @@ commands:
     description: Setze deinen Gamemode
     usage: /gm [Gamemode] [Spieler]
 
+  god:
+    description: Werde ein Gott
+    usage: /<command>
+
+  home:
+    description: Setze oder Lade ein Home
+    usage: /<command>
+
   kick:
     description: Kicke einen Spieler
     usage: /<command> [Spieler] [Grund]
-
-  mute:
-    description: Mute einen Spieler
-    usage: /<command> [Spieler] [Zeit]
 
   kill:
     description: Töte einen Spieler
     usage: /<command> [Spieler]
 
+  mute:
+    description: Mute einen Spieler
+    usage: /<command> [Spieler] [Zeit]
+
   setrank:
     description: Setze den Rang eines Spielers
     usage: /<command> [Spieler] [Rang]
 
+  tpa:
+    description: Gehe zu deinen Freunden!
+    usage: /<command> [Spieler]
+
+  tpaccept:
+    description: Akzeptiere.
+    usage: /<command>
+
+  tpahere:
+    description: Hol deine Freunde her!
+    usage: /<command> [Spieler]
+
   tpall:
     description: Teleportiere jeden zu dir
+    usage: /<command>
+
+  tpdeny:
+    description: Lehne ab.
     usage: /<command>
 
   tphere:

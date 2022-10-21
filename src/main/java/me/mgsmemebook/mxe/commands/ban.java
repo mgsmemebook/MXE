@@ -76,7 +76,7 @@ public class ban implements CommandExecutor {
 
         if(args.length == 1) {
             //Permabann ohne Grund
-            DB.banDBPlayer(p.getUniqueId(), false, null, null);
+            DB.banDBPlayer(t.getUniqueId(), false, null, null);
 
             kickmsg = ChatColor.RED+"Du wurdest " + ChatColor.BOLD + "permanent" + ChatColor.RESET + ChatColor.RED + " von " + p.getDisplayName() + ChatColor.RESET + ChatColor.RED + " gebannt!";
             msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getName() + " permanent gebannt!";
@@ -125,14 +125,14 @@ public class ban implements CommandExecutor {
                         break;
                 }
                 String timestamp = cl.getTimeInMillis()+"";
-                DB.banDBPlayer(p.getUniqueId(), true, timestamp, null);
+                DB.banDBPlayer(t.getUniqueId(), true, timestamp, null);
 
                 kickmsg = ChatColor.RED+"Du wurdest für " + ChatColor.BOLD + args[1] + ChatColor.RESET + ChatColor.RED + " von " + p.getDisplayName() + ChatColor.RESET + ChatColor.RED + " gebannt!";
                 msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getName() + " für " + zeit + " gebannt!";
             } else {
                 //Permabann mit Grund
                 reason = args[1];
-                DB.banDBPlayer(p.getUniqueId(), false, null, reason);
+                DB.banDBPlayer(t.getUniqueId(), false, null, reason);
 
                 kickmsg = ChatColor.RED+"Du wurdest " + ChatColor.BOLD + "permanent" + ChatColor.RESET + ChatColor.RED + " von " + p.getDisplayName() + ChatColor.RESET + ChatColor.RED + " gebannt! Grund: " + reason;
                 msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getName() + " permanent gebannt! Grund: " + reason;
@@ -184,7 +184,7 @@ public class ban implements CommandExecutor {
             }
             String timestamp = cl.getTimeInMillis()+"";
 
-            DB.banDBPlayer(p.getUniqueId(), true, timestamp, reason);
+            DB.banDBPlayer(t.getUniqueId(), true, timestamp, reason);
 
             kickmsg = ChatColor.RED+"Du wurdest für " + ChatColor.BOLD + args[1] + ChatColor.RESET + ChatColor.RED + " von " + p.getDisplayName() + ChatColor.RESET + ChatColor.RED + " gebannt! Grund: " + reason;
             msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getName() + " für " + zeit + " gebannt! Grund: " + reason;

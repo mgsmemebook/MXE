@@ -1,5 +1,6 @@
 package me.mgsmemebook.mxe.commands;
 
+import me.mgsmemebook.mxe.db.DB;
 import me.mgsmemebook.mxe.func;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -65,6 +66,11 @@ public class tphere implements CommandExecutor {
             return true;
         }
 
+        if(DB.getBackCoords(p.getUniqueId()) == null) {
+            DB.addBackCoords(p.getUniqueId());
+        } else {
+            DB.setBackCoords(p.getUniqueId());
+        }
 
         t.teleport(p.getLocation());
         t.sendMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_AQUA + "Du wurdest teleportiert!");

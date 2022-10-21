@@ -11,10 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -37,7 +34,7 @@ public class PlayerEvents implements Listener {
         ArrayList<String> baninf = DB.getPlayerBanInfo(p.getUniqueId());
         if(baninf != null) {
             //Banned
-            String reason = "";
+            String reason = null;
             if(baninf.size() == 3) {
                 reason = baninf.get(2);
             }
@@ -101,8 +98,13 @@ public class PlayerEvents implements Listener {
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent e) {
         Player p = e.getPlayer();
-        e.setQuitMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave] " + ChatColor.RESET + p.getDisplayName() + ChatColor.AQUA + " ist Milch holen gegangen!");
-        lp.getUserManager().saveUser(Objects.requireNonNull(lp.getUserManager().getUser(p.getUniqueId())));
+        ArrayList<String> baninf = DB.getPlayerBanInfo(p.getUniqueId());
+        if(baninf == null) {
+            e.setQuitMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave] " + ChatColor.RESET + p.getDisplayName() + ChatColor.AQUA + " ist Milch holen gegangen!");
+            lp.getUserManager().saveUser(Objects.requireNonNull(lp.getUserManager().getUser(p.getUniqueId())));
+        } else {
+            e.setQuitMessage("");
+        }
     }
     @EventHandler
     public void onPlayerKick(PlayerKickEvent e) {
@@ -113,12 +115,18 @@ public class PlayerEvents implements Listener {
     public void onPlayerChat(AsyncPlayerChatEvent e) {
         Player p = e.getPlayer();
 
-        boolean muted = Boolean.parseBoolean(DB.getDBVar("users", "muted", "username", p.getName()));
-        boolean tempmute = Boolean.parseBoolean(DB.getDBVar("users", "tempmute", "username", p.getName()));
-        long mutetime = Long.parseLong(Objects.requireNonNull(DB.getDBVar("users", "mutetime", "username", p.getName())));
+        ArrayList<String> muteinf = DB.getPlayerMuteInfo(p.getUniqueId());
+        long mutetime;
 
-        if(muted) {
+        if(muteinf != null) {
+            boolean tempmute = Boolean.parseBoolean(muteinf.get(0));
             if(tempmute) {
+                String timestring = muteinf.get(1);
+                if(timestring == null) {
+                    mutetime = 0;
+                } else {
+                    mutetime = Long.parseLong(timestring);
+                }
                 Calendar cl = Calendar.getInstance();
                 Calendar now = Calendar.getInstance();
 
@@ -147,7 +155,6 @@ public class PlayerEvents implements Listener {
             msg = p.getDisplayName() + ChatColor.GOLD + ChatColor.BOLD + " sagt: " + ChatColor.RESET + ChatColor.GRAY + msg;
             Bukkit.broadcastMessage(msg);
         }
-
         e.setCancelled(true);
     }
 
@@ -162,5 +169,14 @@ public class PlayerEvents implements Listener {
         }
         msg = ChatColor.GRAY + msg;
         e.setDeathMessage(msg);
+
+        if(DB.getBackCoords(p.getUniqueId()) == null) {
+            DB.addBackCoords(p.getUniqueId());
+        } else {
+            DB.setBackCoords(p.getUniqueId());
+        }
+        msg = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Info: Kehre mit " + ChatColor.YELLOW + "/back" + ChatColor.GOLD + " wieder an deinen Totespunkt zurück!";
+        p.sendMessage(msg);
     }
+
 }

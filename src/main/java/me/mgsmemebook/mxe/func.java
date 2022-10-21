@@ -46,10 +46,11 @@ public class func {
         }
 
         try {
-            return true;
+            double d = Double.parseDouble(string);
         } catch (NumberFormatException e) {
-            System.out.println("[MXE] Input String cannot be parsed to Integer.");
+            System.out.println("[MXE] "+string+" cannot be parsed to double.");
+            return false;
         }
-        return false;
+        return true;
     }
 }

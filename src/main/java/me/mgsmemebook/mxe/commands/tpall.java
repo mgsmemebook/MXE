@@ -1,5 +1,6 @@
 package me.mgsmemebook.mxe.commands;
 
+import me.mgsmemebook.mxe.db.DB;
 import me.mgsmemebook.mxe.func;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -53,6 +54,13 @@ public class tpall implements CommandExecutor {
             if(tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {
                 msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_AQUA + "Du wurdest teleportiert!";
                 t.sendMessage(msg);
+
+                if(DB.getBackCoords(t.getUniqueId()) == null) {
+                    DB.addBackCoords(t.getUniqueId());
+                } else {
+                    DB.setBackCoords(t.getUniqueId());
+                }
+                t.teleport(p.getLocation());
             }
         }
         return true;

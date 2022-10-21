@@ -24,39 +24,68 @@ public class TabCompletion implements TabCompleter {
             playerNames.add(player.getName());
         }
 
+        List<String> options;
         switch (command.getName()) {
+            case "back":
+                return new ArrayList<>();
+
             case "ban":
                 if(args.length == 1) {
                     return playerNames;
                 } else if(args.length == 2) {
-                    List<String> options = new ArrayList<>();
+                    options = new ArrayList<>();
                     options.add("Grund");
                     options.add("Zeit(in s/m/h/D/M/Y)");
                     return options;
                 } else if(args.length == 3) {
-                    List<String> options = new ArrayList<>();
+                    options = new ArrayList<>();
                     options.add("Grund");
                     return options;
                 }
+                break;
 
             case "fly":
                 if(args.length == 1) {
-                    List<String> options = new ArrayList<>();
+                    options = new ArrayList<>();
                     options.add("Geschwindigkeit");
                     return options;
                 }
+                break;
 
             case "gm":
                 if(args.length == 1) {
-                    List<String> gameModes = new ArrayList<>();
-                    gameModes.add("Survival");
-                    gameModes.add("Creative");
-                    gameModes.add("Adventure");
-                    gameModes.add("Spectator");
-                    return gameModes;
+                    options = new ArrayList<>();
+                    options.add("Survival");
+                    options.add("Creative");
+                    options.add("Adventure");
+                    options.add("Spectator");
+                    return options;
                 } else if(args.length == 2) {
                     return playerNames;
                 }
+                break;
+
+            case "god":
+                if(args.length == 1) {
+                    options = new ArrayList<>();
+                    options.add("an");
+                    options.add("aus");
+                    return options;
+                }
+
+            case "home":
+                options = new ArrayList<>();
+                if(args.length == 1) {
+                    options.add("name");
+                    options.add("set");
+                    options.add("list");
+                    options.add("remove");
+                    options.add("rename");
+                    return options;
+                } else if(args.length == 2) {
+                    options.add("name");
+                }
+                return options;
 
             case "kick":
                 if(args.length == 1) {
@@ -72,7 +101,7 @@ public class TabCompletion implements TabCompleter {
                 if(args.length == 1) {
                     return playerNames;
                 } else if(args.length == 2) {
-                    List<String> options = new ArrayList<>();
+                    options = new ArrayList<>();
                     options.add("Zeit(in s/m/h/D/M/Y)");
                     return options;
                 }
@@ -88,8 +117,26 @@ public class TabCompletion implements TabCompleter {
                     }
                     return ranks;
                 }
+                return new ArrayList<>();
+
+            case "tpa":
+                if(args.length == 1) {
+                    return playerNames;
+                } break;
+
+            case "tpaccept":
+                return new ArrayList<>();
+
+            case "tpahere":
+                if(args.length == 1) {
+                    return playerNames;
+                }
 
             case "tpall":
+                return new ArrayList<>();
+
+            case "tpdeny":
+                return new ArrayList<>();
 
             case "tphere":
                 if(args.length == 1) {
@@ -109,5 +156,6 @@ public class TabCompletion implements TabCompleter {
             default:
                 return new ArrayList<>();
         }
+        return new ArrayList<>();
     }
 }

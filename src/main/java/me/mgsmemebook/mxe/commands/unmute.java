@@ -70,7 +70,7 @@ public class unmute implements CommandExecutor {
         }
 
         DB.setDBPlayerMute(false, false, null, t.getUniqueId());
-        String msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getDisplayName() + " entmutet!";
+        String msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " entmutet!";
         String unmutemsg = ChatColor.DARK_GREEN + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GREEN + "Du wurdest von " + p.getDisplayName() + ChatColor.RESET + ChatColor.GREEN + " entmutet!";
         p.sendMessage(msg);
         t.sendMessage(unmutemsg);

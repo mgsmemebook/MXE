@@ -8,6 +8,7 @@ import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -57,21 +58,15 @@ public class unban implements CommandExecutor {
             p.sendMessage(error);
             return true;
         }
-        Player t = (Player) Bukkit.getOfflinePlayer(UUID.fromString(tuuid));
-        Group tg = lp.getGroupManager().getGroup(Objects.requireNonNull(lp.getUserManager().getUser(t.getUniqueId())).getPrimaryGroup());
-        if(tg == null) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-            p.sendMessage(error);
-            return true;
-        }
-        if(pg.getWeight().isPresent() && tg.getWeight().isPresent() && tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
+        OfflinePlayer t = Bukkit.getOfflinePlayer(UUID.fromString(tuuid));
+        if(t.equals(null)) {
+            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Spieler nicht gefunden.";
             p.sendMessage(error);
             return true;
         }
 
-        DB.unbanDBPlayer(t.getUniqueId());
-        String msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getName() + " entbannt!";
+        DB.unbanDBPlayer(UUID.fromString(tuuid));
+        String msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getPlayerProfile().getName() + " entbannt!";
         p.sendMessage(msg);
         return true;
     }

@@ -74,7 +74,7 @@ public class mute  implements CommandExecutor {
             DB.setDBPlayerMute(true, false, null, t.getUniqueId());
 
             mutemsg = ChatColor.RED+"Du wurdest von " + p.getDisplayName() + ChatColor.RESET + ChatColor.RED + " gemutet!";
-            msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getDisplayName() + " permanent gemutet!";
+            msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " permanent gemutet!";
         } else {
             //Tempmute
             String unit = args[1].substring(args[1].length() - 1);
@@ -123,7 +123,7 @@ public class mute  implements CommandExecutor {
                 DB.setDBPlayerMute(true, true, timestamp, t.getUniqueId());
 
                 mutemsg = ChatColor.RED+"Du wurdest für " + ChatColor.BOLD + zeit + ChatColor.RESET + ChatColor.RED + " von " + p.getDisplayName() + ChatColor.RESET + ChatColor.RED + " gemutet!";
-                msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getDisplayName() + " für " + zeit + " gemutet!";
+                msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " für " + zeit + " gemutet!";
             } else {
                 error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Invalide Zeit!";
                 p.sendMessage(error);
