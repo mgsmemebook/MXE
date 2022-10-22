@@ -815,4 +815,113 @@ public class DB {
             }
         }
     }
+
+    public static boolean getVanish(UUID uuid) {
+        if(Bukkit.getPlayer(uuid) == null) {
+            func.cMSG(ChatColor.AQUA + "[MXE DB renamePlayerHome] Player not found.");
+        } else {
+            PreparedStatement ps = null;
+            Connection conn = null;
+            ResultSet rs = null;
+            try {
+                conn = getSQLConnection("users");
+                String sql = "SELECT vanished FROM users WHERE UUID = ?";
+                ps = Objects.requireNonNull(conn).prepareStatement(sql);
+                ps.setString(1, uuid.toString());
+                rs = ps.executeQuery();
+
+                if(rs.getBoolean("vanished")) return true;
+            } catch (SQLException ex) {
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't recieve table data");
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+            } finally {
+                try {
+                    if (ps != null) {
+                        ps.close();
+                    }
+                    if (conn != null) {
+                        conn.close();
+                    }
+                    if (rs != null) {
+                        rs.close();
+                    }
+                } catch (SQLException ex) {
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                }
+            }
+        }
+        return false;
+    }
+    public static ArrayList<String> getAllVanished() {
+        PreparedStatement ps = null;
+        Connection conn = null;
+        ResultSet rs = null;
+        try {
+            conn = getSQLConnection("users");
+            String sql = "SELECT username FROM users WHERE vanished = ?";
+            ps = Objects.requireNonNull(conn).prepareStatement(sql);
+            ps.setBoolean(1, true);
+            rs = ps.executeQuery();
+
+            ArrayList<String> res = null;
+            while(rs.next()) {
+                res.add("username");
+            }
+            return res;
+        } catch (SQLException ex) {
+            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't recieve table data");
+            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException ex) {
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+            }
+        }
+        return null;
+    }
+    public static void setVanish(UUID uuid, Boolean vanished) {
+        if(Bukkit.getPlayer(uuid) == null) {
+            func.cMSG(ChatColor.AQUA + "[MXE DB renamePlayerHome] Player not found.");
+        } else {
+            PreparedStatement ps = null;
+            Connection conn = null;
+            try {
+                Location loc = Objects.requireNonNull(Bukkit.getPlayer(uuid)).getLocation();
+                conn = getSQLConnection("users");
+                String sql = "UPDATE users SET vanished = ? WHERE UUID = ?";
+                ps = Objects.requireNonNull(conn).prepareStatement(sql);
+                ps.setBoolean(1, vanished);
+                ps.setString(2, uuid.toString());
+                ps.execute();
+
+            } catch (SQLException ex) {
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't recieve table data");
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+            } finally {
+                try {
+                    if (ps != null) {
+                        ps.close();
+                    }
+                    if (conn != null) {
+                        conn.close();
+                    }
+                } catch (SQLException ex) {
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                }
+            }
+        }
+    }
+
 }

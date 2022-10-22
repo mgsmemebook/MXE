@@ -76,3 +76,8 @@ commands:
   unmute:
     description: Entmute einen Spieler
     usage: /<command> [Spieler]
+
+  vanish:
+    description: Verschwinde!
+    usage: /<command>
+    aliases: van

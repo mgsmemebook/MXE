@@ -20,8 +20,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
-import static me.mgsmemebook.mxe.db.DB.addDBPlayer;
-import static me.mgsmemebook.mxe.db.DB.getDBPlayer;
+import static me.mgsmemebook.mxe.db.DB.*;
 
 public class PlayerEvents implements Listener {
     LuckPerms lp = LuckPermsProvider.get();
@@ -92,6 +91,15 @@ public class PlayerEvents implements Listener {
         if(res == null) {
             func.cMSG(ChatColor.DARK_AQUA + "[MXE] SQL: Player not found - Adding to database");
             addDBPlayer(p.getUniqueId(), p.getName());
+        }
+
+        //Get vanished Players
+        ArrayList<String> van = DB.getAllVanished();
+        if(van != null) {
+            for(String user:van) {
+                Player t = Bukkit.getPlayerExact(user);
+                p.hidePlayer(MXE.getPlugin(), t);
+            }
         }
     }
 

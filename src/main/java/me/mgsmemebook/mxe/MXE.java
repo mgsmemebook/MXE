@@ -1,8 +1,10 @@
 package me.mgsmemebook.mxe;
 
+import jdk.javadoc.internal.tool.Main;
 import me.mgsmemebook.mxe.commands.*;
 import me.mgsmemebook.mxe.db.SQLite;
 import org.bukkit.ChatColor;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
@@ -11,6 +13,7 @@ import static me.mgsmemebook.mxe.func.cMSG;
 public final class MXE extends JavaPlugin {
 
     private static String plDir;
+    private static Plugin plugin;
 
     @Override
     public void onEnable() {
@@ -36,6 +39,7 @@ public final class MXE extends JavaPlugin {
 
         //DB
         plDir = getDataFolder().getAbsolutePath();
+        plugin = this;
         SQLite.load("users");
 
         //Commands
@@ -57,6 +61,7 @@ public final class MXE extends JavaPlugin {
         Objects.requireNonNull(getCommand("tphere")).setExecutor(new tphere());
         Objects.requireNonNull(getCommand("unban")).setExecutor(new unban());
         Objects.requireNonNull(getCommand("unmute")).setExecutor(new unmute());
+        Objects.requireNonNull(getCommand("vanish")).setExecutor(new vanish());
 
         //TabCompletion
         Objects.requireNonNull(getCommand("back")).setTabCompleter(new TabCompletion());
@@ -77,6 +82,7 @@ public final class MXE extends JavaPlugin {
         Objects.requireNonNull(getCommand("tphere")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("unban")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("unmute")).setTabCompleter(new TabCompletion());
+        Objects.requireNonNull(getCommand("vanish")).setTabCompleter(new TabCompletion());
     }
 
     @Override
@@ -86,6 +92,9 @@ public final class MXE extends JavaPlugin {
 
     public static String getPlDir() {
         return plDir;
+    }
+    public static Plugin getPlugin() {
+        return plugin;
     }
 }
 

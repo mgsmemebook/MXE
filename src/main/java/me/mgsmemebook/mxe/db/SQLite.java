@@ -108,6 +108,7 @@ public class SQLite {
             col.add("ALTER TABLE users ADD COLUMN mutetime varchar(64)");
             col.add("ALTER TABLE users ADD COLUMN bantime varchar(64)");
             col.add("ALTER TABLE users ADD COLUMN reason varchar(128)");
+            col.add("ALTER TABLE users ADD COLUMN vanished BOOL");
 
             for(int i = 0; i < col.size(); i++) {
                 try {

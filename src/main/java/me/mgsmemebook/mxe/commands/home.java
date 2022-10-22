@@ -71,7 +71,8 @@ public class home implements CommandExecutor {
                         msg = ChatColor.YELLOW + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.YELLOW + home;
                         p.sendMessage(msg);
                     }
-                    msg = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "--------    " + homes.size() + "/5 Homes    --------";
+                    int homesize = homes.size();
+                    msg = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "--------    " + homesize + "/5 Homes    --------";
                     p.sendMessage(msg);
                 }
             } else {
@@ -88,20 +89,20 @@ public class home implements CommandExecutor {
         } else if(args.length == 2) {
             if(args[0].equalsIgnoreCase("remove")) {
                 if(DB.remPlayerHome(p.getUniqueId(), args[1])) {
-                    msg = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Home \""+args[0]+"\" gelöscht!";
+                    msg = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Home \""+args[1]+"\" gelöscht!";
                     p.sendMessage(msg);
                 } else {
-                    msg = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Konnte Home " + args[0] + " nicht löschen.";
+                    msg = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Konnte Home " + args[1] + " nicht löschen.";
                     p.sendMessage(msg);
                 }
             } else if(args[0].equalsIgnoreCase("set")) {
                 if (homes != null) {
                     if(homes.size() <= 5) {
                         if(DB.addPlayerHome(p.getUniqueId(), args[1], p.getLocation())) {
-                            msg = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Home \"" + args[0] + "\" gesetzt!";
+                            msg = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Home \"" + args[1] + "\" gesetzt!";
                             p.sendMessage(msg);
                         } else {
-                            msg = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Konnte Home " + args[0] + " nicht setzen.";
+                            msg = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Konnte Home " + args[1] + " nicht setzen.";
                             p.sendMessage(msg);
                         }
                     } else {
@@ -110,21 +111,21 @@ public class home implements CommandExecutor {
                     }
                 } else {
                     if(DB.addPlayerHome(p.getUniqueId(), args[1], p.getLocation())) {
-                        msg = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Home \"" + args[0] + "\" gesetzt!";
+                        msg = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Home \"" + args[1] + "\" gesetzt!";
                         p.sendMessage(msg);
                     } else {
-                        msg = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Konnte Home " + args[0] + " nicht setzen.";
+                        msg = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Konnte Home " + args[1] + " nicht setzen.";
                         p.sendMessage(msg);
                     }
                 }
             } else {
-                Location loc = DB.getPlayerHome(p.getUniqueId(), args[0]);
+                Location loc = DB.getPlayerHome(p.getUniqueId(), args[1]);
                 if(loc == null) {
-                    msg = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Home " + args[0] + " nicht gefunden.";
+                    msg = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Home " + args[1] + " nicht gefunden.";
                     p.sendMessage(msg);
                 } else {
                     p.teleport(loc);
-                    msg = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Home \""+args[0]+"\" geladen!";
+                    msg = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Home \""+args[1]+"\" geladen!";
                     p.sendMessage(msg);
                 }
             }
@@ -134,7 +135,7 @@ public class home implements CommandExecutor {
                     msg = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Home \"" + args[1] + "\" in \""+args[2]+"\" umbenannt.";
                     p.sendMessage(msg);
                 } else {
-                    msg = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Konnte Home " + args[0] + " nicht umbenennen.";
+                    msg = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Konnte Home " + args[1] + " nicht umbenennen.";
                     p.sendMessage(msg);
                 }
             }

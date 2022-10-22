@@ -133,7 +133,6 @@ public class TabCompletion implements TabCompleter {
                 }
 
             case "tpall":
-                return new ArrayList<>();
 
             case "tpdeny":
                 return new ArrayList<>();
@@ -152,6 +151,9 @@ public class TabCompletion implements TabCompleter {
                 if(args.length == 1) {
                     return playerNames;
                 }
+
+            case "vanish":
+                return new ArrayList<>();
 
             default:
                 return new ArrayList<>();
