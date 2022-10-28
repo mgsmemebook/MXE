@@ -16,38 +16,6 @@ import static java.lang.String.valueOf;
 import static me.mgsmemebook.mxe.db.SQLite.getSQLConnection;
 
 public class DB {
-    public static String getDBVar(String table, String wanted, String wherevar, String whereval) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            conn = getSQLConnection(table);
-            String sql = "SELECT * FROM "+table+" WHERE `"+wherevar+"` = ?";
-            ps = Objects.requireNonNull(conn).prepareStatement(sql);
-            ps.setString(1, whereval);
-            rs = ps.executeQuery();
-            return rs.getString(wanted);
-        } catch (SQLException ex) {
-            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data");
-            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
-        } finally {
-            try {
-                if (ps != null) {
-                    ps.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
-            }
-        }
-        return null;
-    }
     public static void setDBPlayerMute(boolean muted, boolean tempmute, String mutetime, UUID uuid) {
         if(Bukkit.getPlayer(uuid) == null) {
             func.cMSG(ChatColor.AQUA + "[MXE DB addPlayer] Player not found.");
@@ -128,7 +96,10 @@ public class DB {
                 ps = Objects.requireNonNull(conn).prepareStatement(sql);
                 ps.setString(1, uuid.toString());
                 rs = ps.executeQuery();
-                return rs.getString("username");
+
+                if(!rs.isClosed()) {
+                    return rs.getString("username");
+                }
             } catch (SQLException ex) {
                 func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data");
                 func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
@@ -161,7 +132,10 @@ public class DB {
             ps = Objects.requireNonNull(conn).prepareStatement(sql);
             ps.setString(1, name);
             rs = ps.executeQuery();
-            return rs.getString("UUID");
+
+            if(!rs.isClosed()) {
+                return rs.getString("UUID");
+            }
         } catch (SQLException ex) {
             func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data");
             func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
@@ -272,15 +246,17 @@ public class DB {
                 rs = ps.executeQuery();
                 ArrayList<String> baninf = new ArrayList<>();
 
-                if(rs.getBoolean("banned")) {
-                    baninf.add(valueOf(rs.getBoolean("tempban")));
-                    baninf.add(rs.getString("bantime"));
-                    if(rs.getString("reason") != null) {
-                        baninf.add(rs.getString("reason"));
+                if(!rs.isClosed()) {
+                    if (rs.getBoolean("banned")) {
+                        baninf.add(valueOf(rs.getBoolean("tempban")));
+                        baninf.add(rs.getString("bantime"));
+                        if (rs.getString("reason") != null) {
+                            baninf.add(rs.getString("reason"));
+                        }
+                        return baninf;
+                    } else {
+                        return null;
                     }
-                    return baninf;
-                } else {
-                    return null;
                 }
             } catch (SQLException ex) {
                 func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data");
@@ -320,12 +296,14 @@ public class DB {
                 rs = ps.executeQuery();
                 ArrayList<String> baninf = new ArrayList<>();
 
-                if(rs.getBoolean("muted")) {
-                    baninf.add(valueOf(rs.getBoolean("tempmute")));
-                    baninf.add(rs.getString("mutetime"));
-                    return baninf;
-                } else {
-                    return null;
+                if(!rs.isClosed()) {
+                    if (rs.getBoolean("muted")) {
+                        baninf.add(valueOf(rs.getBoolean("tempmute")));
+                        baninf.add(rs.getString("mutetime"));
+                        return baninf;
+                    } else {
+                        return null;
+                    }
                 }
             } catch (SQLException ex) {
                 func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data");
@@ -364,8 +342,10 @@ public class DB {
                 rs = ps.executeQuery();
                 ArrayList<Integer> query = new ArrayList<>();
 
-                while(rs.next()) {
-                    query.add(rs.getInt("id"));
+                if(!rs.isClosed()) {
+                    while (rs.next()) {
+                        query.add(rs.getInt("id"));
+                    }
                 }
                 return query;
             } catch (SQLException ex) {
@@ -402,11 +382,13 @@ public class DB {
             rs = ps.executeQuery();
             ArrayList<String> query = new ArrayList<>();
 
-            query.add(rs.getString("from"));
-            query.add(rs.getString("to"));
-            query.add(rs.getString("time"));
-            query.add(valueOf(rs.getBoolean("tpahere")));
-            query.add(valueOf(rs.getInt("id")));
+            if(!rs.isClosed()) {
+                query.add(rs.getString("from"));
+                query.add(rs.getString("to"));
+                query.add(rs.getString("time"));
+                query.add(valueOf(rs.getBoolean("tpahere")));
+                query.add(valueOf(rs.getInt("id")));
+            }
             return query;
         } catch (SQLException ex) {
             func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data");
@@ -500,12 +482,12 @@ public class DB {
             ResultSet rs = null;
             try {
                 conn = getSQLConnection("users");
-                String sql = "SELECT * FROM homes WHERE UUID = ? AND `home` = '"+home+"'";
+                String sql = "SELECT * FROM homes WHERE UUID = '"+uuid+"' AND `home` = '"+home+"'";
                 ps = Objects.requireNonNull(conn).prepareStatement(sql);
-                ps.setString(1, uuid.toString());
                 rs = ps.executeQuery();
-
-                return new Location(Bukkit.getWorld(rs.getString("world")), rs.getDouble("x"), rs.getDouble("y"), rs.getDouble("z"));
+                if(!rs.isClosed()) {
+                    return new Location(Bukkit.getWorld(rs.getString("world")), rs.getDouble("x"), rs.getDouble("y"), rs.getDouble("z"));
+                }
             } catch (SQLException ex) {
                 func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data");
                 func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
@@ -542,8 +524,10 @@ public class DB {
                 ps.setString(1, uuid.toString());
                 rs = ps.executeQuery();
                 ArrayList<String> homes = new ArrayList<>();
-                while(rs.next()) {
-                    homes.add(rs.getString("home"));
+                if(!rs.isClosed()) {
+                    while(rs.next()) {
+                        homes.add(rs.getString("home"));
+                    }
                 }
                 return homes;
             } catch (SQLException ex) {
@@ -606,7 +590,7 @@ public class DB {
         }
         return true;
     }
-    public static boolean renamePlayerHome(UUID uuid, String oldhome, String newhome) {
+    public static boolean changePlayerHome(UUID uuid, String home, String name, Location loc) {
         if(Bukkit.getPlayer(uuid) == null) {
             func.cMSG(ChatColor.AQUA + "[MXE DB renamePlayerHome] Player not found.");
         } else {
@@ -614,11 +598,16 @@ public class DB {
             Connection conn = null;
             try {
                 conn = getSQLConnection("users");
-                String sql = "UPDATE homes SET home = ? WHERE UUID = ? AND home = ?";
+                String sql = "UPDATE homes SET home = ?, x = ?, y = ?, z = ?, yaw = ?, world = ? WHERE UUID = ? AND home = ?";
                 ps = Objects.requireNonNull(conn).prepareStatement(sql);
-                ps.setString(1, newhome);
-                ps.setString(2, uuid.toString());
-                ps.setString(3, oldhome);
+                ps.setString(1, name);
+                ps.setDouble(2, loc.getBlockX());
+                ps.setDouble(3, loc.getBlockY());
+                ps.setDouble(4, loc.getBlockZ());
+                ps.setDouble(5, loc.getYaw());
+                ps.setString(6, Objects.requireNonNull(loc.getWorld()).getName());
+                ps.setString(7, uuid.toString());
+                ps.setString(8, home);
                 ps.executeUpdate();
                 return true;
             } catch (SQLException ex) {
@@ -755,7 +744,9 @@ public class DB {
                 ps.setString(1, uuid.toString());
                 rs = ps.executeQuery();
 
-                return new Location(Bukkit.getWorld(rs.getString("world")), rs.getDouble("x"), rs.getDouble("y"), rs.getDouble("z"));
+                if(!rs.isClosed()) {
+                    return new Location(Bukkit.getWorld(rs.getString("world")), rs.getDouble("x"), rs.getDouble("y"), rs.getDouble("z"));
+                }
             } catch (SQLException ex) {
                 func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't recieve table data");
                 func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
@@ -830,7 +821,9 @@ public class DB {
                 ps.setString(1, uuid.toString());
                 rs = ps.executeQuery();
 
-                if(rs.getBoolean("vanished")) return true;
+                if(!rs.isClosed()) {
+                    if (rs.getBoolean("vanished")) return true;
+                }
             } catch (SQLException ex) {
                 func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't recieve table data");
                 func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
@@ -864,9 +857,11 @@ public class DB {
             ps.setBoolean(1, true);
             rs = ps.executeQuery();
 
-            ArrayList<String> res = null;
-            while(rs.next()) {
-                res.add("username");
+            ArrayList<String> res = new ArrayList<>();
+            if(!rs.isClosed()) {
+                while(rs.next()) {
+                    res.add(rs.getString("username"));
+                }
             }
             return res;
         } catch (SQLException ex) {
@@ -897,7 +892,6 @@ public class DB {
             PreparedStatement ps = null;
             Connection conn = null;
             try {
-                Location loc = Objects.requireNonNull(Bukkit.getPlayer(uuid)).getLocation();
                 conn = getSQLConnection("users");
                 String sql = "UPDATE users SET vanished = ? WHERE UUID = ?";
                 ps = Objects.requireNonNull(conn).prepareStatement(sql);

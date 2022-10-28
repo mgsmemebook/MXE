@@ -1,5 +1,6 @@
 package me.mgsmemebook.mxe.commands;
 
+import me.mgsmemebook.mxe.MXE;
 import me.mgsmemebook.mxe.db.DB;
 import me.mgsmemebook.mxe.func;
 import net.luckperms.api.LuckPerms;
@@ -78,7 +79,7 @@ public class ban implements CommandExecutor {
             //Permabann ohne Grund
             DB.banDBPlayer(t.getUniqueId(), false, null, null);
 
-            kickmsg = ChatColor.RED+"Du wurdest " + ChatColor.BOLD + "permanent" + ChatColor.RESET + ChatColor.RED + " von " + p.getDisplayName() + ChatColor.RESET + ChatColor.RED + " gebannt!";
+            kickmsg = ChatColor.RED+"Du wurdest " + ChatColor.BOLD + "permanent" + ChatColor.RESET + ChatColor.RED + " von " + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.RED + " gebannt!";
             msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getName() + " permanent gebannt!";
         } else if(args.length == 2) {
             //Tempban ohne Grund oder Permabann mit Grund
@@ -127,14 +128,14 @@ public class ban implements CommandExecutor {
                 String timestamp = cl.getTimeInMillis()+"";
                 DB.banDBPlayer(t.getUniqueId(), true, timestamp, null);
 
-                kickmsg = ChatColor.RED+"Du wurdest für " + ChatColor.BOLD + args[1] + ChatColor.RESET + ChatColor.RED + " von " + p.getDisplayName() + ChatColor.RESET + ChatColor.RED + " gebannt!";
+                kickmsg = ChatColor.RED+"Du wurdest für " + ChatColor.BOLD + args[1] + ChatColor.RESET + ChatColor.RED + " von " + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.RED + " gebannt!";
                 msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getName() + " für " + zeit + " gebannt!";
             } else {
                 //Permabann mit Grund
                 reason = args[1];
                 DB.banDBPlayer(t.getUniqueId(), false, null, reason);
 
-                kickmsg = ChatColor.RED+"Du wurdest " + ChatColor.BOLD + "permanent" + ChatColor.RESET + ChatColor.RED + " von " + p.getDisplayName() + ChatColor.RESET + ChatColor.RED + " gebannt! Grund: " + reason;
+                kickmsg = ChatColor.RED+"Du wurdest " + ChatColor.BOLD + "permanent" + ChatColor.RESET + ChatColor.RED + " von " + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.RED + " gebannt! Grund: " + reason;
                 msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getName() + " permanent gebannt! Grund: " + reason;
             }
         } else {
@@ -186,7 +187,7 @@ public class ban implements CommandExecutor {
 
             DB.banDBPlayer(t.getUniqueId(), true, timestamp, reason);
 
-            kickmsg = ChatColor.RED+"Du wurdest für " + ChatColor.BOLD + args[1] + ChatColor.RESET + ChatColor.RED + " von " + p.getDisplayName() + ChatColor.RESET + ChatColor.RED + " gebannt! Grund: " + reason;
+            kickmsg = ChatColor.RED+"Du wurdest für " + ChatColor.BOLD + args[1] + ChatColor.RESET + ChatColor.RED + " von " + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.RED + " gebannt! Grund: " + reason;
             msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getName() + " für " + zeit + " gebannt! Grund: " + reason;
         }
         if(t.isOnline()) {

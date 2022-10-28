@@ -1,5 +1,6 @@
 package me.mgsmemebook.mxe.commands;
 
+import me.mgsmemebook.mxe.MXE;
 import me.mgsmemebook.mxe.func;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -71,10 +72,10 @@ public class kick implements CommandExecutor {
 
         if(args.length == 2) {
             String reason = args[1];
-            kickmsg = ChatColor.RED+"Du wurdest von " + p.getDisplayName() + ChatColor.RESET + ChatColor.RED + " gekickt! Grund: " + reason;
+            kickmsg = ChatColor.RED+"Du wurdest von " + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.RED + " gekickt! Grund: " + reason;
             msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getName() + " gekickkt! Grund: " + reason;
         } else {
-            kickmsg = ChatColor.RED+"Du wurdest von " + p.getDisplayName() + ChatColor.RESET + ChatColor.RED + " gekickt!";
+            kickmsg = ChatColor.RED+"Du wurdest von " + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.RED + " gekickt!";
             msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getName() + " gekickkt!";
         }
         p.sendMessage(msg);

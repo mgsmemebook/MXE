@@ -1,5 +1,6 @@
 package me.mgsmemebook.mxe.commands;
 
+import me.mgsmemebook.mxe.MXE;
 import me.mgsmemebook.mxe.func;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -70,22 +71,22 @@ public class gm implements CommandExecutor {
             }
             if(args[0].equalsIgnoreCase("creative") || args[0].equals("1")) {
                 t.setGameMode(GameMode.CREATIVE);
-                msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " ist bist jetzt im Creative-Mode!";
+                msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " ist bist jetzt im Creative-Mode!";
                 p.sendMessage(msg);
                 return true;
             } else if(args[0].equalsIgnoreCase("survival") || args[0].equals("0")) {
                 t.setGameMode(GameMode.SURVIVAL);
-                msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " ist bist jetzt im Survival-Mode!";
+                msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " ist bist jetzt im Survival-Mode!";
                 p.sendMessage(msg);
                 return true;
             } else if(args[0].equalsIgnoreCase("adventure") || args[0].equals("2")) {
                 t.setGameMode(GameMode.ADVENTURE);
-                msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " ist jetzt im Adventure-Mode!";
+                msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " ist jetzt im Adventure-Mode!";
                 p.sendMessage(msg);
                 return true;
             } else if(args[0].equalsIgnoreCase("spectator") || args[0].equals("3")) {
                 t.setGameMode(GameMode.SPECTATOR);
-                msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " ist jetzt im Spectator-Mode!";
+                msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " ist jetzt im Spectator-Mode!";
                 p.sendMessage(msg);
                 return true;
             } else {

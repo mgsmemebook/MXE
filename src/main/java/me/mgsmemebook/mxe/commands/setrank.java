@@ -1,5 +1,6 @@
 package me.mgsmemebook.mxe.commands;
 
+import me.mgsmemebook.mxe.MXE;
 import me.mgsmemebook.mxe.func;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -86,12 +87,12 @@ public class setrank implements CommandExecutor {
 
         if(tg.getWeight().getAsInt() >= ng.getWeight().getAsInt()) {
             String pmsg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getName() + " zum " + args[1] + " degradiert!";
-            String tmsg = ChatColor.BLUE + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + p.getDisplayName() + ChatColor.RESET + ChatColor.BLUE + " hat dich zum " + args[1] + " degradiert!";
+            String tmsg = ChatColor.BLUE + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.BLUE + " hat dich zum " + args[1] + " degradiert!";
             p.sendMessage(pmsg);
             t.sendMessage(tmsg);
         } else {
             String pmsg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getName() + " zum " + args[1] + " befördert!";
-            String tmsg = ChatColor.BLUE + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + p.getDisplayName() + ChatColor.RESET + ChatColor.BLUE + " hat dich zum " + args[1] + " befördert!";
+            String tmsg = ChatColor.BLUE + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.BLUE + " hat dich zum " + args[1] + " befördert!";
             p.sendMessage(pmsg);
             t.sendMessage(tmsg);
         }

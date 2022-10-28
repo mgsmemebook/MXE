@@ -1,5 +1,6 @@
 package me.mgsmemebook.mxe.commands;
 
+import me.mgsmemebook.mxe.MXE;
 import me.mgsmemebook.mxe.db.DB;
 import me.mgsmemebook.mxe.func;
 import net.luckperms.api.LuckPerms;
@@ -74,7 +75,7 @@ public class tphere implements CommandExecutor {
 
         t.teleport(p.getLocation());
         t.sendMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_AQUA + "Du wurdest teleportiert!");
-        p.sendMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_AQUA + "Du hast " + t.getDisplayName() + ChatColor.RESET + ChatColor.DARK_AQUA + " zu dir teleportiert");
+        p.sendMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_AQUA + "Du hast " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.DARK_AQUA + " zu dir teleportiert");
         return true;
     }
 }

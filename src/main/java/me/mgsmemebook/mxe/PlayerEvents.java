@@ -75,7 +75,6 @@ public class PlayerEvents implements Listener {
     public void playerJoin(Player p, PlayerJoinEvent e) {
         User u = lp.getUserManager().getUser(p.getUniqueId());
         if(u != null) {
-            lp.getUserManager().loadUser(p.getUniqueId());
             String group = u.getPrimaryGroup();
             Group g = lp.getGroupManager().getGroup(group);
             if(g != null) {
@@ -83,7 +82,7 @@ public class PlayerEvents implements Listener {
             }
         }
 
-        e.setJoinMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + ChatColor.RESET + p.getDisplayName() + ChatColor.AQUA + " ist uns beigetreten!");
+        e.setJoinMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " ist uns beigetreten!");
 
         //Check DB
         String res = getDBPlayer(p.getUniqueId());
@@ -95,20 +94,32 @@ public class PlayerEvents implements Listener {
 
         //Get vanished Players
         ArrayList<String> van = DB.getAllVanished();
-        if(van != null) {
+        if(!van.isEmpty()) {
             for(String user:van) {
                 Player t = Bukkit.getPlayerExact(user);
-                p.hidePlayer(MXE.getPlugin(), t);
+                Group tg = lp.getGroupManager().getGroup(Objects.requireNonNull(lp.getUserManager().getUser(t.getUniqueId())).getPrimaryGroup());
+                Group pg = lp.getGroupManager().getGroup(u.getPrimaryGroup());
+                if(pg != null && tg != null) {
+                    if(pg.getWeight().isPresent() && tg.getWeight().isPresent() && tg.getWeight().getAsInt() > pg.getWeight().getAsInt()) {
+                        t.hidePlayer(MXE.getPlugin(), p);
+                    }
+                }
             }
         }
+
+        p.setPlayerListHeader(ChatColor.GOLD+""+ChatColor.BOLD+"     -- Wilkommen "+p.getName()+" --     ");
+        p.setPlayerListFooter(ChatColor.YELLOW + "MXE V."+MXE.getPlugin().getDescription().getVersion());
     }
+    /*TO DO:
+    * Player NameTags
+    */
 
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent e) {
         Player p = e.getPlayer();
         ArrayList<String> baninf = DB.getPlayerBanInfo(p.getUniqueId());
         if(baninf == null) {
-            e.setQuitMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave] " + ChatColor.RESET + p.getDisplayName() + ChatColor.AQUA + " ist Milch holen gegangen!");
+            e.setQuitMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave] " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " ist Milch holen gegangen!");
             lp.getUserManager().saveUser(Objects.requireNonNull(lp.getUserManager().getUser(p.getUniqueId())));
         } else {
             e.setQuitMessage("");
@@ -160,7 +171,7 @@ public class PlayerEvents implements Listener {
         } else {
             String msg = e.getMessage();
             msg = func.colCodes(msg);
-            msg = p.getDisplayName() + ChatColor.GOLD + ChatColor.BOLD + " sagt: " + ChatColor.RESET + ChatColor.GRAY + msg;
+            msg = MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.GOLD + ChatColor.BOLD + " sagt: " + ChatColor.RESET + ChatColor.GRAY + msg;
             Bukkit.broadcastMessage(msg);
         }
         e.setCancelled(true);
@@ -171,9 +182,9 @@ public class PlayerEvents implements Listener {
         Player p = e.getEntity().getPlayer();
         Player k = e.getEntity().getKiller();
         String msg = e.getDeathMessage();
-        msg = Objects.requireNonNull(msg).replaceAll(Objects.requireNonNull(p).getName(), p.getDisplayName()+ChatColor.RESET+ChatColor.GRAY);
+        msg = Objects.requireNonNull(msg).replaceAll(Objects.requireNonNull(p).getName(), MXE.getPlayerPrefix(p) + p.getDisplayName()+ChatColor.RESET+ChatColor.GRAY);
         if(k != null) {
-            msg = msg.replaceAll(k.getName(), k.getDisplayName()+ChatColor.RESET+ChatColor.GRAY);
+            msg = msg.replaceAll(k.getName(), MXE.getPlayerPrefix(k)+k.getDisplayName()+ChatColor.RESET+ChatColor.GRAY);
         }
         msg = ChatColor.GRAY + msg;
         e.setDeathMessage(msg);

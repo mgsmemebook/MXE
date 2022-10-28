@@ -3,81 +3,91 @@ version: '${project.version}'
 main: me.mgsmemebook.mxe.MXE
 api-version: 1.19
 authors: [ mgsmemebook ]
-description: Minecraft Spigot 1.18.2 Essentials Plugin
+description: Minecraft Spigot 1.19.2 Essentials Plugin
+depend: [ LuckPerms ]
+softdepend: [ ProtocolLib ]
 commands:
   back:
-    description: Drehe die Zeit zurück
-    usage: /<command>
+    description: Kehre an deinen Todespunkt zurück.
+    usage: /help <command>
 
   ban:
-    description: Banne einen Spieler
-    usage: /<command> [Spieler] [Zeit/Grund] [Grund]
+    description: Banne einen Spieler.
+    usage: /help <command>
 
   fly:
-    description: Identifiziere dich als einen Ah-64 Apache Attack Helicopter
-    usage: /fly [Geschwindigkeit]
+    description: Werde zu einem AH-64 Apache Attack Helicopter.
+    usage: /help <command>
 
   gm:
-    description: Setze deinen Gamemode
-    usage: /gm [Gamemode] [Spieler]
+    description: Wechsle deinen Gamemode.
+    usage: /help <command>
 
   god:
-    description: Werde ein Gott
-    usage: /<command>
+    description: Werde zum Gott.
+    usage: /help <command>
+
+  help:
+    description: Dieser Befehl.
+    usage: /help mxe
 
   home:
-    description: Setze oder Lade ein Home
-    usage: /<command>
+    description: Verwalte deine Homes.
+    usage: /help <command>
 
   kick:
-    description: Kicke einen Spieler
-    usage: /<command> [Spieler] [Grund]
+    description: Kicke einen Spieler vom Server.
+    usage: /help <command>
 
   kill:
-    description: Töte einen Spieler
-    usage: /<command> [Spieler]
+    description: Töte einen Spieler.
+    usage: /help <command>
 
   mute:
-    description: Mute einen Spieler
-    usage: /<command> [Spieler] [Zeit]
+    description: Stumme einen Spieler.
+    usage: /help <command>
+
+  nick:
+    description: Ändere deine Identität.
+    usage: /help <command>
 
   setrank:
-    description: Setze den Rang eines Spielers
-    usage: /<command> [Spieler] [Rang]
+    description: Setze den Rang eines Spielers.
+    usage: /help <command>
 
   tpa:
-    description: Gehe zu deinen Freunden!
-    usage: /<command> [Spieler]
+    description: Teleportiere dich zu deinen Freunden.
+    usage: /help <command>
 
   tpaccept:
-    description: Akzeptiere.
-    usage: /<command>
+    description: Akzeptiere die letzte tp-Anfrage.
+    usage: /help <command>
 
   tpahere:
-    description: Hol deine Freunde her!
-    usage: /<command> [Spieler]
+    description: Teleportiere einen Freund zu dir.
+    usage: /help <command>
 
   tpall:
-    description: Teleportiere jeden zu dir
-    usage: /<command>
+    description: Teleportiere alle Spieler zu dir.
+    usage: /help <command>
 
   tpdeny:
-    description: Lehne ab.
-    usage: /<command>
+    description: Lehne die letzte tp-Anfrage ab.
+    usage: /help <command>
 
   tphere:
-    description: Teleportiere einen Spieler zu dir
-    usage: /<command> [Spieler]
+    description: Teleportiere einen Spieler zu dir.
+    usage: /help <command>
 
   unban:
-    description: Entbanne einen Spieler
-    usage: /<command> [Spieler]
+    description: Vergebe einem Spieler.
+    usage: /help <command>
 
   unmute:
-    description: Entmute einen Spieler
-    usage: /<command> [Spieler]
+    description: Entmute einen Spieler.
+    usage: /help <command>
 
   vanish:
-    description: Verschwinde!
-    usage: /<command>
+    description: Tauche unter.
+    usage: /help <command>
     aliases: van

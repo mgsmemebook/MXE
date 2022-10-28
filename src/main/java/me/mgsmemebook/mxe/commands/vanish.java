@@ -55,7 +55,7 @@ public class vanish implements CommandExecutor {
             } else if(!pg.getWeight().isPresent() && !tg.getWeight().isPresent() && tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {
                 continue;
             }
-            if(tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {
+            if(tg.getWeight().getAsInt() < pg.getWeight().getAsInt()) {
                 if(vanish) {
                     t.showPlayer(MXE.getPlugin(), p);
                 } else {
@@ -68,12 +68,13 @@ public class vanish implements CommandExecutor {
             msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_AQUA + "Du bist jetzt nicht mehr vanished!";
             p.sendMessage(msg);
             p.removePotionEffect(PotionEffectType.INVISIBILITY);
+            Bukkit.broadcastMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " ist uns beigetreten!");
         } else {
             DB.setVanish(p.getUniqueId(), true);
             msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_AQUA + "Du bist jetzt vanished!";
             p.sendMessage(msg);
             p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999999, 2, true, true));
-
+            Bukkit.broadcastMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave] " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " ist Milch holen gegangen!");
         }
         return true;
     }

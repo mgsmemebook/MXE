@@ -1,5 +1,6 @@
 package me.mgsmemebook.mxe.commands;
 
+import me.mgsmemebook.mxe.MXE;
 import me.mgsmemebook.mxe.db.DB;
 import me.mgsmemebook.mxe.func;
 import org.bukkit.Bukkit;
@@ -57,7 +58,7 @@ public class tpdeny implements CommandExecutor {
             func.cMSG(error);
             return true;
         }
-        t.sendMessage(ChatColor.GOLD + "[Server]: " + ChatColor.RESET + p.getDisplayName() + ChatColor.RESET + ChatColor.GOLD + " hat deine Anfrage " + ChatColor.DARK_RED + "abgelehnt" + ChatColor.RESET + ChatColor.BOLD + "!");
+        t.sendMessage(ChatColor.GOLD + "[Server]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.GOLD + " hat deine Anfrage " + ChatColor.DARK_RED + "abgelehnt" + ChatColor.RESET + ChatColor.BOLD + "!");
         return true;
     }
 }

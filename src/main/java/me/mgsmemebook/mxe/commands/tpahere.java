@@ -1,5 +1,6 @@
 package me.mgsmemebook.mxe.commands;
 
+import me.mgsmemebook.mxe.MXE;
 import me.mgsmemebook.mxe.db.DB;
 import me.mgsmemebook.mxe.func;
 import net.luckperms.api.LuckPerms;
@@ -77,10 +78,10 @@ public class tpahere implements CommandExecutor {
         }
 
         t.sendMessage(" ");
-        String tmsg = ChatColor.GOLD+"--------------------------------";
+        String tmsg = ChatColor.GOLD+"--------------------------------------------";
         t.sendMessage(tmsg);
         t.sendMessage(" ");
-        tmsg = p.getDisplayName() + ChatColor.RESET + ChatColor.GOLD + " will dich zu ihm teleportieren.";
+        tmsg = MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.GOLD + " will dich zu ihm teleportieren.";
         t.sendMessage(tmsg);
         t.sendMessage(" ");
 
@@ -91,7 +92,7 @@ public class tpahere implements CommandExecutor {
         t.spigot().sendMessage(bas, atc, bet, dtc);
 
         t.sendMessage(" ");
-        tmsg = ChatColor.GOLD+"--------------------------------";
+        tmsg = ChatColor.GOLD+"--------------------------------------------";
         t.sendMessage(tmsg);
         t.sendMessage(" ");
 

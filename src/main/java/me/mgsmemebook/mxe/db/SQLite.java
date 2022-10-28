@@ -63,11 +63,13 @@ public class SQLite {
     }
 
     public static Connection getSQLConnection(String dbname) {
-        File dataFolder = new File(MXE.getPlDir(), dbname+".db");
+        File dataFolder = new File(MXE.getPlDir()+"/db", dbname+".db");
         if(!dataFolder.exists()) {
             try {
                 if(!dataFolder.createNewFile()) {
                     func.cMSG(ChatColor.RED + "[MXE] Couldn't create database file");
+                } else {
+                    func.cMSG(ChatColor.BLUE + "[MXE] Created new database");
                 }
             } catch (IOException ex) {
                 func.cMSG(ChatColor.RED + "File write error " + ex.getMessage());

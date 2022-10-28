@@ -9,6 +9,12 @@ import net.luckperms.api.node.types.InheritanceNode;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.Team;
+
+import java.util.ArrayList;
+import java.util.Set;
 
 import static org.bukkit.Bukkit.getServer;
 
@@ -20,15 +26,17 @@ public class func {
     }
 
     public static String colCodes(String s) {
-        s = ChatColor.translateAlternateColorCodes('&', s);
+        if(s != null) s = ChatColor.translateAlternateColorCodes('&', s);
         return s;
     }
     public static void updateUser(Player p, Group g) {
-        String prefix = g.getCachedData().getMetaData().getPrefix();
-        if (prefix != null) {
-            prefix = func.colCodes(prefix);
-            p.setDisplayName(prefix + " " + p.getName() + ChatColor.RESET);
-            p.setPlayerListName(p.getDisplayName());
+        Scoreboard sb = MXE.getPlayerSB();
+        Team team = sb.getTeam(g.getName());
+        if(team != null) {
+            team.addEntry(p.getName());
+            p.setPlayerListName(team.getPrefix() + p.getName());
+            Nametag.resetName(p);
+            Nametag.setName(p, p.getName());
         }
     }
     public static void switchGroup(User u, String group, String oldgroup) {

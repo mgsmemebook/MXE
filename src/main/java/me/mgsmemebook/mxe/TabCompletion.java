@@ -1,9 +1,11 @@
 package me.mgsmemebook.mxe;
 
+import me.mgsmemebook.mxe.db.DB;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -17,6 +19,12 @@ public class TabCompletion implements TabCompleter {
     LuckPerms lp = LuckPermsProvider.get();
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        Player p = Bukkit.getPlayerExact(sender.getName());
+        if(p == null) {
+            String error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE home]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
+            func.cMSG(error);
+            return null;
+        }
         List<String> playerNames = new ArrayList<>();
         Player[] players = new Player[Bukkit.getServer().getOnlinePlayers().size()];
         Bukkit.getServer().getOnlinePlayers().toArray(players);
@@ -26,9 +34,6 @@ public class TabCompletion implements TabCompleter {
 
         List<String> options;
         switch (command.getName()) {
-            case "back":
-                return new ArrayList<>();
-
             case "ban":
                 if(args.length == 1) {
                     return playerNames;
@@ -42,7 +47,6 @@ public class TabCompletion implements TabCompleter {
                     options.add("Grund");
                     return options;
                 }
-                break;
 
             case "fly":
                 if(args.length == 1) {
@@ -50,7 +54,6 @@ public class TabCompletion implements TabCompleter {
                     options.add("Geschwindigkeit");
                     return options;
                 }
-                break;
 
             case "gm":
                 if(args.length == 1) {
@@ -63,7 +66,6 @@ public class TabCompletion implements TabCompleter {
                 } else if(args.length == 2) {
                     return playerNames;
                 }
-                break;
 
             case "god":
                 if(args.length == 1) {
@@ -83,7 +85,11 @@ public class TabCompletion implements TabCompleter {
                     options.add("rename");
                     return options;
                 } else if(args.length == 2) {
-                    options.add("name");
+                    if(args[0].equalsIgnoreCase("rename") || args[0].equalsIgnoreCase("remove")) {
+                        return DB.getPlayerHomes(p.getUniqueId());
+                    } else if(args[0].equalsIgnoreCase("set")) {
+                        options.add("name");
+                    }
                 }
                 return options;
 
@@ -117,25 +123,16 @@ public class TabCompletion implements TabCompleter {
                     }
                     return ranks;
                 }
-                return new ArrayList<>();
 
             case "tpa":
                 if(args.length == 1) {
                     return playerNames;
                 } break;
 
-            case "tpaccept":
-                return new ArrayList<>();
-
             case "tpahere":
                 if(args.length == 1) {
                     return playerNames;
                 }
-
-            case "tpall":
-
-            case "tpdeny":
-                return new ArrayList<>();
 
             case "tphere":
                 if(args.length == 1) {
@@ -151,9 +148,6 @@ public class TabCompletion implements TabCompleter {
                 if(args.length == 1) {
                     return playerNames;
                 }
-
-            case "vanish":
-                return new ArrayList<>();
 
             default:
                 return new ArrayList<>();
