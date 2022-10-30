@@ -37,8 +37,6 @@ Older versions are most likely not usable so don't bother trying them out.
 - More settings
 - Make every feature optional
 
-
-
 ## Installation
 
 ### Installing MXE
@@ -93,8 +91,5 @@ If you need help you can always contact me on Discord *(mgsmemebook#2636)*. Have
 /tpdeny /tphere /unban /unmute /vanish
 ```
 
-#### Known Issues on V.1.3
-- Most commands don't work in console
-- When using /nick the prefix gets lost in chat
-- /setrank doesn't work
+#### Known Issues on V.1.3.1
 - When players don't see you /nick doesn't work
