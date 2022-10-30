@@ -12,10 +12,10 @@ Older versions are most likely not usable so don't bother trying them out.
 - Changes default **player join/leave/chat messages**
 - **Chat coloring** using &-Color-Codes ([Image](https://camo.skyblock.net/4898234defc4ebd6680475bc7729223d3ba78577?url=https:%2F%2Fi.imgur.com%2FxkgOs7u.jpg))
 - Uses SQLite Database
-- Uses and depends on **LuckPerms** *(api)*
+- Uses and depends on [LuckPerms](https://github.com/LuckPerms/LuckPerms) as well as [ProtocolLib](https://github.com/dmulloy2/ProtocolLib) *(api)*
 - **Ban and mute system** with ban messages and temporary bans/mutes
-- **Role prefixes** using [LuckPerms](https://github.com/LuckPerms/LuckPerms) and **colored names**
-- **/nick command** using [ProtocolLib](https://github.com/dmulloy2/ProtocolLib) *(depend)*
+- **Role prefixes** using LuckPerms and **colored names**
+- **/nick command** using ProtocolLib
 - 10 **homes** for each player
 - **/back command** for when a player dies
 - Replaces default /help command
