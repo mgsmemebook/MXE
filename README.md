@@ -92,3 +92,6 @@ If you need help you can always contact me on Discord *(mgsmemebook#2636)*. Have
 /mute /nick /setrank /tpa /tpaccept /tpahere /tpall
 /tpdeny /tphere /unban /unmute /vanish
 ```
+
+#### Known Issues
+- Most commands don't work in console
