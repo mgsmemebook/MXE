@@ -5,6 +5,7 @@ import me.mgsmemebook.mxe.db.SQLite;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
+import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -140,6 +141,15 @@ public final class MXE extends JavaPlugin {
         Objects.requireNonNull(getCommand("unban")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("unmute")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("vanish")).setTabCompleter(new TabCompletion());
+
+        //In case of reload
+        for(Player t:Bukkit.getOnlinePlayers()) {
+            User tu = lp.getUserManager().getUser(t.getUniqueId());
+            if(tu == null) continue;
+            Group tg = lp.getGroupManager().getGroup(tu.getPrimaryGroup());
+            if(tg == null) continue;
+            func.updateUser(t, tg);
+        }
     }
 
     @Override
@@ -157,7 +167,7 @@ public final class MXE extends JavaPlugin {
         return playersb;
     }
     public static String getPlayerPrefix(Player p) {
-        Team team = playersb.getEntryTeam(p.getName());
+        Team team = playersb.getEntryTeam(p.getDisplayName());
         if(team == null) {
             return "";
         }

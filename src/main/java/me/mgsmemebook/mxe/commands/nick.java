@@ -47,25 +47,40 @@ public class nick implements CommandExecutor {
                 return true;
             }
             if(args.length == 0) {
+                Bukkit.broadcastMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " ist Milch holen gegangen!");
+
                 if(MXE.getPlayerSB().getEntryTeam(p.getDisplayName()) != null) MXE.getPlayerSB().getEntryTeam(p.getDisplayName()).removeEntry(p.getDisplayName());
                 func.updateUser(p,pg);
                 msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du bist wieder \""+ p.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + "\"!";
                 p.sendMessage(msg);
+
+                Bukkit.broadcastMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " ist uns beigetreten!");
             } else {
-                if(args[0].equals(p.getName())) {
+                String name = args[0];
+                for(int i = 1; i < args.length; i++) {
+                    name = name + " " + args[i];
+                }
+                if(name.length() > 16) {
+                    name.substring(0, 15);
+                }
+                if(name.equals(p.getName())) {
                     p.performCommand("nick");
                     return true;
                 }
+                Bukkit.broadcastMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " ist Milch holen gegangen!");
+
                 if(MXE.getPlayerSB().getEntryTeam(p.getDisplayName()) != null) MXE.getPlayerSB().getEntryTeam(p.getDisplayName()).removeEntry(p.getDisplayName());
-                Nametag.setName(p, args[0]);
-                MXE.getPlayerSB().getTeam("default").addEntry(args[0]);
-                p.setDisplayName(args[0]);
+                Nametag.setName(p, name);
+                MXE.getPlayerSB().getTeam("default").addEntry(name);
+                p.setDisplayName(name);
                 String prefix = Objects.requireNonNull(lp.getGroupManager().getGroup("default")).getCachedData().getMetaData().getPrefix();
                 p.setPlayerListName(func.colCodes(prefix) + p.getDisplayName());
 
                 MXE.updatePlayerSB();
                 msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du bist jetzt \""+ p.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + "\"!";
                 p.sendMessage(msg);
+
+                Bukkit.broadcastMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " ist uns beigetreten!");
             }
         } else {
             error = ChatColor.RED + "[MXE] Das kannst du nur als Spieler!";

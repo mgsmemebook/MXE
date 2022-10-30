@@ -24,14 +24,13 @@ public class func {
     }
     public static void updateUser(Player p, Group g) {
         Nametag.resetName(p);
-
-        String prefix = g.getCachedData().getMetaData().getPrefix();
         if(MXE.getPlayerSB().getEntryTeam(p.getName()) != null) MXE.getPlayerSB().getEntryTeam(p.getName()).removeEntry(p.getName());
-        MXE.getPlayerSB().getTeam(g.getName()).addEntry(p.getName());
+        if(MXE.getPlayerSB().getEntryTeam(p.getDisplayName()) != null) MXE.getPlayerSB().getEntryTeam(p.getDisplayName()).removeEntry(p.getDisplayName());
+        p.setDisplayName(p.getName());
+        MXE.getPlayerSB().getTeam(g.getName()).addEntry(p.getDisplayName());
         MXE.updatePlayerSB();
 
         p.setPlayerListName(MXE.getPlayerPrefix(p)+p.getName());
-        p.setDisplayName(p.getName());
     }
     public static void switchGroup(User u, String group, String oldgroup) {
         DataMutateResult result = u.data().add(InheritanceNode.builder(group).build());
