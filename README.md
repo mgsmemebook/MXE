@@ -97,3 +97,4 @@ If you need help you can always contact me on Discord *(mgsmemebook#2636)*. Have
 - Most commands don't work in console
 - When using /nick the prefix gets lost in chat
 - /setrank doesn't work
+- When players don't see you /nick doesn't work
