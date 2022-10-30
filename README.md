@@ -25,6 +25,7 @@ Older versions are most likely not usable so don't bother trying them out.
 - **Make /nick using ProtocolLib optional**
 - **Changable language**
 - Fix many bugs
+- Make /nick also change a players skin
 - Make Permissions using LuckPerms optional
 - More utilities
 - Add support for other databases such as MySQL
