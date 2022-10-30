@@ -123,8 +123,8 @@ public class setrank implements CommandExecutor {
             }
         }
 
-        func.switchGroup(tu, args[1], tg.getName());
-        func.updateUser(t, tg);
+        func.switchGroup(tu, ng.getName(), tg.getName());
+        func.updateUser(t, ng);
         return true;
     }
 }
