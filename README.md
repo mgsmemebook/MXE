@@ -93,5 +93,6 @@ If you need help you can always contact me on Discord *(mgsmemebook#2636)*. Have
 /tpdeny /tphere /unban /unmute /vanish
 ```
 
-#### Known Issues
+#### Known Issues on V.1.3
 - Most commands don't work in console
+- When using /nick the prefix gets lost in chat
