@@ -83,3 +83,12 @@ For additional help on LuckPerms visit their official [Wiki](https://luckperms.n
 After configuring LuckPerms and restarting the Server you should be good to go!
 
 If you need help you can always contact me on Discord *(mgsmemebook#2636)*. Have fun!
+
+
+
+##### Commands
+```
+/back /ban /fly /gm /god /help /home /kick /kill
+/mute /nick /setrank /tpa /tpaccept /tpall
+/tpdeny /tphere /unban /unmute /vanish
+```
