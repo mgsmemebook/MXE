@@ -65,7 +65,7 @@ public class unban implements CommandExecutor {
             }
         }
         DB.unbanDBPlayer(UUID.fromString(tuuid));
-        String msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getPlayerProfile().getName() + " entbannt!";
+        String msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getName() + " entbannt!";
         sender.sendMessage(msg);
         return true;
     }
