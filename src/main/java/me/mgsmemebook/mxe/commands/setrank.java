@@ -98,16 +98,28 @@ public class setrank implements CommandExecutor {
                 t.sendMessage(tmsg);
             }
         } else {
-            if(tg.getWeight().getAsInt() >= ng.getWeight().getAsInt()) {
+            if(!tg.getWeight().isPresent()) {
+                String pmsg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getName() + " zum " + args[1] + " befördert!";
+                String tmsg = ChatColor.BLUE + "" + ChatColor.BOLD + "[Server]: " + ChatColor.DARK_RED + ChatColor.BOLD + "Konsole" + ChatColor.RESET + ChatColor.BLUE + " hat dich zum " + args[1] + " befördert!";
+                sender.sendMessage(pmsg);
+                t.sendMessage(tmsg);
+            } else if(!ng.getWeight().isPresent()) {
                 String pmsg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getName() + " zum " + args[1] + " degradiert!";
                 String tmsg = ChatColor.BLUE + "" + ChatColor.BOLD + "[Server]: " + ChatColor.DARK_RED + ChatColor.BOLD + "Konsole" + ChatColor.RESET + ChatColor.BLUE + " hat dich zum " + args[1] + " degradiert!";
                 sender.sendMessage(pmsg);
                 t.sendMessage(tmsg);
             } else {
-                String pmsg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getName() + " zum " + args[1] + " befördert!";
-                String tmsg = ChatColor.BLUE + "" + ChatColor.BOLD + "[Server]: " + ChatColor.DARK_RED + ChatColor.BOLD + "Konsole" + ChatColor.RESET + ChatColor.BLUE + " hat dich zum " + args[1] + " befördert!";
-                sender.sendMessage(pmsg);
-                t.sendMessage(tmsg);
+                if (tg.getWeight().getAsInt() >= ng.getWeight().getAsInt()) {
+                    String pmsg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getName() + " zum " + args[1] + " degradiert!";
+                    String tmsg = ChatColor.BLUE + "" + ChatColor.BOLD + "[Server]: " + ChatColor.DARK_RED + ChatColor.BOLD + "Konsole" + ChatColor.RESET + ChatColor.BLUE + " hat dich zum " + args[1] + " degradiert!";
+                    sender.sendMessage(pmsg);
+                    t.sendMessage(tmsg);
+                } else {
+                    String pmsg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getName() + " zum " + args[1] + " befördert!";
+                    String tmsg = ChatColor.BLUE + "" + ChatColor.BOLD + "[Server]: " + ChatColor.DARK_RED + ChatColor.BOLD + "Konsole" + ChatColor.RESET + ChatColor.BLUE + " hat dich zum " + args[1] + " befördert!";
+                    sender.sendMessage(pmsg);
+                    t.sendMessage(tmsg);
+                }
             }
         }
 

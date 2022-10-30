@@ -4,6 +4,7 @@ import me.mgsmemebook.mxe.func;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
@@ -159,7 +160,7 @@ public class DB {
         return null;
     }
     public static void banDBPlayer(UUID uuid, boolean tempban, String bantime, String reason) {
-        Player p = Bukkit.getPlayer(uuid);
+        OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
         if(p == null) {
             func.cMSG(ChatColor.AQUA + "[MXE DB addPlayer] Player not found.");
         } else {
@@ -196,9 +197,8 @@ public class DB {
     }
 
     public static void unbanDBPlayer(UUID uuid) {
-        Player p = Bukkit.getPlayer(uuid);
+        OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
         if(p == null) {
-            func.cMSG(ChatColor.AQUA + "[MXE DB unbanDBPlayer] Player not found.");
         } else {
             PreparedStatement ps = null;
             Connection conn = null;

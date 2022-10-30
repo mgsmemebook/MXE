@@ -19,12 +19,6 @@ public class TabCompletion implements TabCompleter {
     LuckPerms lp = LuckPermsProvider.get();
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        Player p = Bukkit.getPlayerExact(sender.getName());
-        if(p == null) {
-            String error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE home]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
-            func.cMSG(error);
-            return null;
-        }
         List<String> playerNames = new ArrayList<>();
         Player[] players = new Player[Bukkit.getServer().getOnlinePlayers().size()];
         Bukkit.getServer().getOnlinePlayers().toArray(players);
@@ -85,7 +79,13 @@ public class TabCompletion implements TabCompleter {
                     options.add("rename");
                     return options;
                 } else if(args.length == 2) {
-                    if(args[0].equalsIgnoreCase("rename") || args[0].equalsIgnoreCase("remove")) {
+                    if(args[0].equalsIgnoreCase("rename") || args[0].equalsIgnoreCase("remove") && sender instanceof Player) {
+                        Player p = Bukkit.getPlayerExact(sender.getName());
+                        if(p == null) {
+                            String error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE home]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
+                            func.cMSG(error);
+                            return null;
+                        }
                         return DB.getPlayerHomes(p.getUniqueId());
                     } else if(args[0].equalsIgnoreCase("set")) {
                         options.add("name");

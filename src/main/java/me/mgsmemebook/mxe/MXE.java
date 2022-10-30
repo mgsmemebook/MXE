@@ -86,11 +86,11 @@ public final class MXE extends JavaPlugin {
             if(prefix == null) continue;
             team.setPrefix(func.colCodes(prefix));
             String color = g.getCachedData().getMetaData().getMetaValue("color");
-            cMSG("Group: " + g.getName());
+            cMSG(ChatColor.DARK_GRAY + "[MXE] Group found: " + g.getName());
             if (color != null) {
                 ChatColor chatColor = ChatColor.getByChar(color.replaceAll("&", ""));
                 if(chatColor.isColor()) {
-                    cMSG("Color: " + chatColor.name());
+                    cMSG(ChatColor.DARK_GRAY + "[MXE] Color found: " + chatColor.name());
                     team.setColor(chatColor);
                 }
             }

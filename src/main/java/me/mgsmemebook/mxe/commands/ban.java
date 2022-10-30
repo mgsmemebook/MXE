@@ -9,15 +9,18 @@ import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class ban implements CommandExecutor {
     LuckPerms lp = LuckPermsProvider.get();
@@ -37,14 +40,37 @@ public class ban implements CommandExecutor {
             sender.sendMessage(error);
             return true;
         }
-        Player t = (Player) Bukkit.getOfflinePlayer(UUID.fromString(tuuid));
-        Group tg = lp.getGroupManager().getGroup(Objects.requireNonNull(lp.getUserManager().getUser(t.getUniqueId())).getPrimaryGroup());
+        OfflinePlayer t = Bukkit.getOfflinePlayer(UUID.fromString(tuuid));
+        if(!t.hasPlayedBefore()) {
+            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Spieler nicht gefunden.";
+            sender.sendMessage(error);
+            return true;
+        }
+        CompletableFuture<User> userFuture = lp.getUserManager().loadUser(t.getUniqueId(), t.getName());
+        User tu = null;
+        try {
+            tu = userFuture.get();
+        } catch (InterruptedException ex) {
+            func.cMSG(ChatColor.GOLD + "[MXE ban] Error while getting offline User");
+            func.cMSG(ChatColor.GOLD + "[MXE ban] " + ex.getMessage());
+        } catch (ExecutionException ex) {
+            func.cMSG(ChatColor.GOLD + "[MXE ban] Error while getting offline User");
+            func.cMSG(ChatColor.GOLD + "[MXE ban] " + ex.getMessage());
+        }
+        if(tu == null) {
+            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Spieler nicht gefunden.";
+            sender.sendMessage(error);
+            return true;
+        }
+        lp.getGroupManager().loadAllGroups();
+        Group tg = lp.getGroupManager().getGroup(tu.getPrimaryGroup());
         if(tg == null) {
             error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
             sender.sendMessage(error);
             return true;
         }
-        if(sender instanceof Player) {Player p = Bukkit.getPlayerExact(sender.getName());
+        if(sender instanceof Player) {
+            Player p = Bukkit.getPlayerExact(sender.getName());
             if(p == null) {
                 error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE ban]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
                 func.cMSG(error);
@@ -198,7 +224,10 @@ public class ban implements CommandExecutor {
             msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getName() + " für " + zeit + " gebannt! Grund: " + reason;
         }
         if(t.isOnline()) {
-            t.kickPlayer(kickmsg);
+            Player tplayer = Bukkit.getPlayer(t.getUniqueId());
+            if(tplayer != null) {
+                tplayer.kickPlayer(kickmsg);
+            }
         }
         sender.sendMessage(msg);
         return true;

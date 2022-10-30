@@ -53,15 +53,13 @@ public class nick implements CommandExecutor {
                 func.updateUser(p,pg);
                 msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du bist wieder \""+ p.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + "\"!";
                 p.sendMessage(msg);
-
-                Bukkit.broadcastMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " ist uns beigetreten!");
             } else {
                 String name = args[0];
                 for(int i = 1; i < args.length; i++) {
                     name = name + " " + args[i];
                 }
                 if(name.length() > 16) {
-                    name.substring(0, 15);
+                    name = name.substring(0, 15);
                 }
                 if(name.equals(p.getName())) {
                     p.performCommand("nick");
@@ -79,9 +77,8 @@ public class nick implements CommandExecutor {
                 MXE.updatePlayerSB();
                 msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du bist jetzt \""+ p.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + "\"!";
                 p.sendMessage(msg);
-
-                Bukkit.broadcastMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " ist uns beigetreten!");
             }
+            Bukkit.broadcastMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " ist uns beigetreten!");
         } else {
             error = ChatColor.RED + "[MXE] Das kannst du nur als Spieler!";
             sender.sendMessage(error);
