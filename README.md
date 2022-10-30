@@ -89,6 +89,6 @@ If you need help you can always contact me on Discord *(mgsmemebook#2636)*. Have
 ##### Commands
 ```
 /back /ban /fly /gm /god /help /home /kick /kill
-/mute /nick /setrank /tpa /tpaccept /tpall
+/mute /nick /setrank /tpa /tpaccept /tpahere /tpall
 /tpdeny /tphere /unban /unmute /vanish
 ```
