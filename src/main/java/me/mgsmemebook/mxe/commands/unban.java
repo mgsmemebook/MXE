@@ -14,7 +14,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Objects;
 import java.util.UUID;
 
 public class unban implements CommandExecutor {
@@ -23,51 +22,53 @@ public class unban implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String error;
-        Player p = Bukkit.getPlayerExact(sender.getName());
-        if(p == null) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE unban]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
-            func.cMSG(error);
-            return true;
-        }
-        User u = lp.getUserManager().getUser(p.getUniqueId());
-        if(u == null) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-            p.sendMessage(error);
-            return true;
-        }
-        if(!u.getCachedData().getPermissionData().checkPermission("mxe.unban").asBoolean()) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-            p.sendMessage(error);
-            return true;
-        }
-        Group pg = lp.getGroupManager().getGroup(u.getPrimaryGroup());
-        if(pg == null) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-            p.sendMessage(error);
-            return true;
-        }
-
         if(args.length < 1) {
             error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Syntax error: /unban [Spieler]";
-            p.sendMessage(error);
+            sender.sendMessage(error);
             return true;
         }
         String tuuid = DB.getPlayerUUID(args[0]);
         if(tuuid == null) {
             error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Spieler nicht gefunden!";
-            p.sendMessage(error);
+            sender.sendMessage(error);
             return true;
         }
         OfflinePlayer t = Bukkit.getOfflinePlayer(UUID.fromString(tuuid));
-        if(t.equals(null)) {
+        if(!t.hasPlayedBefore()) {
             error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Spieler nicht gefunden.";
-            p.sendMessage(error);
+            sender.sendMessage(error);
             return true;
         }
-
+        if(sender instanceof Player) {
+            Player p = Bukkit.getPlayerExact(sender.getName());
+            if(p == null) {
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE unban]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
+                func.cMSG(error);
+                return true;
+            }
+            User u = lp.getUserManager().getUser(p.getUniqueId());
+            if(u == null) {
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
+                p.sendMessage(error);
+                return true;
+            }
+            if(!u.getCachedData().getPermissionData().checkPermission("mxe.unban").asBoolean()) {
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
+                p.sendMessage(error);
+                return true;
+            }
+            Group pg = lp.getGroupManager().getGroup(u.getPrimaryGroup());
+            if(pg == null) {
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
+                p.sendMessage(error);
+                return true;
+            }
+        } else {
+            return true;
+        }
         DB.unbanDBPlayer(UUID.fromString(tuuid));
         String msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + t.getPlayerProfile().getName() + " entbannt!";
-        p.sendMessage(msg);
+        sender.sendMessage(msg);
         return true;
     }
 }

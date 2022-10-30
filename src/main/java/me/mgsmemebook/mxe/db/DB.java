@@ -82,6 +82,7 @@ public class DB {
                 }
             }
         }
+        DB.setBackCoords(uuid);
     }
     public static String getDBPlayer(UUID uuid) {
         if(Bukkit.getPlayer(uuid) == null) {

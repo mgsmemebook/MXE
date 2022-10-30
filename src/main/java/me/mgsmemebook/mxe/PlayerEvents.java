@@ -94,25 +94,26 @@ public class PlayerEvents implements Listener {
 
         //Get vanished Players
         ArrayList<String> van = DB.getAllVanished();
-        if(!van.isEmpty()) {
+        if(van != null) {
+            Group pg = lp.getGroupManager().getGroup(u.getPrimaryGroup());
             for(String user:van) {
-                Player t = Bukkit.getPlayerExact(user);
-                Group tg = lp.getGroupManager().getGroup(Objects.requireNonNull(lp.getUserManager().getUser(t.getUniqueId())).getPrimaryGroup());
-                Group pg = lp.getGroupManager().getGroup(u.getPrimaryGroup());
-                if(pg != null && tg != null) {
-                    if(pg.getWeight().isPresent() && tg.getWeight().isPresent() && tg.getWeight().getAsInt() > pg.getWeight().getAsInt()) {
-                        t.hidePlayer(MXE.getPlugin(), p);
+                Player v = Bukkit.getPlayerExact(user);
+                Group vg = lp.getGroupManager().getGroup(Objects.requireNonNull(lp.getUserManager().getUser(v.getUniqueId())).getPrimaryGroup());
+                if(pg != null && vg != null) {
+                    if(!pg.getWeight().isPresent() || vg.getWeight().isPresent() && vg.getWeight().getAsInt() > pg.getWeight().getAsInt()) {
+                        p.hidePlayer(MXE.getPlugin(), v);
                     }
+                } else if(pg == null && vg != null) {
+                    p.hidePlayer(MXE.getPlugin(), v);
                 }
             }
         }
 
+        p.setScoreboard(MXE.getPlayerSB());
+
         p.setPlayerListHeader(ChatColor.GOLD+""+ChatColor.BOLD+"     -- Wilkommen "+p.getName()+" --     ");
         p.setPlayerListFooter(ChatColor.YELLOW + "MXE V."+MXE.getPlugin().getDescription().getVersion());
     }
-    /*TO DO:
-    * Player NameTags
-    */
 
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent e) {
@@ -189,9 +190,7 @@ public class PlayerEvents implements Listener {
         msg = ChatColor.GRAY + msg;
         e.setDeathMessage(msg);
 
-        if(DB.getBackCoords(p.getUniqueId()) == null) {
-            DB.addBackCoords(p.getUniqueId());
-        } else {
+        if(DB.getBackCoords(p.getUniqueId()) != null) {
             DB.setBackCoords(p.getUniqueId());
         }
         msg = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Info: Kehre mit " + ChatColor.YELLOW + "/back" + ChatColor.GOLD + " wieder an deinen Totespunkt zurück!";

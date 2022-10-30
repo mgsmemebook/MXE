@@ -19,51 +19,70 @@ public class kill implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String error;
-        Player p = Bukkit.getPlayerExact(sender.getName());
-        if(p == null) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE kill]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
-            func.cMSG(error);
-            return true;
-        }
-        User u = lp.getUserManager().getUser(p.getUniqueId());
-        if(u == null) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-            p.sendMessage(error);
-            return true;
-        }
-        if(!u.getCachedData().getPermissionData().checkPermission("mxe.kill").asBoolean()) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-            p.sendMessage(error);
-            return true;
-        }
-        Group pg = lp.getGroupManager().getGroup(u.getPrimaryGroup());
-        if(pg == null) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-            p.sendMessage(error);
-            return true;
-        }
-        if(args.length > 0) {
-            Player t = Bukkit.getPlayer(args[0]);
+        Player t;
+        if(sender instanceof Player) {
+            Player p = Bukkit.getPlayerExact(sender.getName());
+            if(p == null) {
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE kill]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
+                func.cMSG(error);
+                return true;
+            }
+            User u = lp.getUserManager().getUser(p.getUniqueId());
+            if(u == null) {
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
+                p.sendMessage(error);
+                return true;
+            }
+            if(!u.getCachedData().getPermissionData().checkPermission("mxe.kill").asBoolean()) {
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
+                p.sendMessage(error);
+                return true;
+            }
+            Group pg = lp.getGroupManager().getGroup(u.getPrimaryGroup());
+            if(pg == null) {
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
+                p.sendMessage(error);
+                return true;
+            }
+            if(args.length == 0) {
+                p.setHealth(0);
+                return true;
+            }
+            t = Bukkit.getPlayer(args[0]);
             if(t == null) {
                 error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Spieler nicht gefunden!";
-                p.sendMessage(error);
+                sender.sendMessage(error);
                 return true;
             }
             Group tg = lp.getGroupManager().getGroup(Objects.requireNonNull(lp.getUserManager().getUser(t.getUniqueId())).getPrimaryGroup());
             if(tg == null) {
                 error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-                p.sendMessage(error);
+                sender.sendMessage(error);
                 return true;
             }
-            if(pg.getWeight().isPresent() && tg.getWeight().isPresent() && tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {
+            if(!pg.getWeight().isPresent()) {
                 error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
                 p.sendMessage(error);
                 return true;
             }
-            t.setHealth(0);
+            if(tg.getWeight().isPresent() && tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
+                p.sendMessage(error);
+                return true;
+            }
         } else {
-            p.setHealth(0);
+            if(args.length < 1) {
+                return true;
+            } else {
+                t = Bukkit.getPlayer(args[0]);
+                if(t == null) {
+                    error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Spieler nicht gefunden!";
+                    sender.sendMessage(error);
+                    return true;
+                }
+            }
         }
+        t.setHealth(0);
         return true;
     }
 }

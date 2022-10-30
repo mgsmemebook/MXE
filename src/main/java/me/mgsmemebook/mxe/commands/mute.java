@@ -23,58 +23,67 @@ public class mute  implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String error; String msg; String mutemsg;
-        Player p = Bukkit.getPlayerExact(sender.getName());
-        if(p == null) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE mute]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
-            func.cMSG(error);
-            return true;
-        }
-        User u = lp.getUserManager().getUser(p.getUniqueId());
-        if(u == null) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-            p.sendMessage(error);
-            return true;
-        }
-        if(!u.getCachedData().getPermissionData().checkPermission("mxe.mute").asBoolean()) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-            p.sendMessage(error);
-            return true;
-        }
-        Group pg = lp.getGroupManager().getGroup(u.getPrimaryGroup());
-        if(pg == null) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-            p.sendMessage(error);
-            return true;
-        }
-
+        String name;
         if(args.length < 1) {
             error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Syntax error: /mute [Spieler] [Zeit]";
-            p.sendMessage(error);
+            sender.sendMessage(error);
             return true;
         }
         Player t = Bukkit.getPlayerExact(args[0]);
         if(t == null) {
             error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Spieler nicht gefunden!";
-            p.sendMessage(error);
+            sender.sendMessage(error);
             return true;
         }
-        Group tg = lp.getGroupManager().getGroup(Objects.requireNonNull(lp.getUserManager().getUser(t.getUniqueId())).getPrimaryGroup());
-        if(tg == null) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-            p.sendMessage(error);
-            return true;
-        }
-        if(pg.getWeight().isPresent() && tg.getWeight().isPresent() && tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-            p.sendMessage(error);
-            return true;
+        if(sender instanceof Player) {Player p = Bukkit.getPlayerExact(sender.getName());
+            if(p == null) {
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE mute]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
+                func.cMSG(error);
+                return true;
+            }
+            User u = lp.getUserManager().getUser(p.getUniqueId());
+            if(u == null) {
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
+                p.sendMessage(error);
+                return true;
+            }
+            if(!u.getCachedData().getPermissionData().checkPermission("mxe.mute").asBoolean()) {
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
+                p.sendMessage(error);
+                return true;
+            }
+            Group pg = lp.getGroupManager().getGroup(u.getPrimaryGroup());
+            if(pg == null) {
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
+                p.sendMessage(error);
+                return true;
+            }
+            Group tg = lp.getGroupManager().getGroup(Objects.requireNonNull(lp.getUserManager().getUser(t.getUniqueId())).getPrimaryGroup());
+            if(tg == null) {
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
+                p.sendMessage(error);
+                return true;
+            }
+            if(!pg.getWeight().isPresent()) {
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
+                p.sendMessage(error);
+                return true;
+            }
+            if(tg.getWeight().isPresent() && tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
+                p.sendMessage(error);
+                return true;
+            }
+            name = MXE.getPlayerPrefix(p) + p.getDisplayName();
+        } else {
+            name = ChatColor.DARK_RED + "" + ChatColor.BOLD + "Konsole";
         }
 
         if(args.length == 1) {
             //Permamute
             DB.setDBPlayerMute(true, false, null, t.getUniqueId());
 
-            mutemsg = ChatColor.RED+"Du wurdest von " + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.RED + " gemutet!";
+            mutemsg = ChatColor.RED+"Du wurdest von " + name + ChatColor.RESET + ChatColor.RED + " gemutet!";
             msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " permanent gemutet!";
         } else {
             //Tempmute
@@ -123,15 +132,15 @@ public class mute  implements CommandExecutor {
                 String timestamp = cl.getTimeInMillis()+"";
                 DB.setDBPlayerMute(true, true, timestamp, t.getUniqueId());
 
-                mutemsg = ChatColor.RED+"Du wurdest für " + ChatColor.BOLD + zeit + ChatColor.RESET + ChatColor.RED + " von " + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.RED + " gemutet!";
+                mutemsg = ChatColor.RED+"Du wurdest für " + ChatColor.BOLD + zeit + ChatColor.RESET + ChatColor.RED + " von " + name + ChatColor.RESET + ChatColor.RED + " gemutet!";
                 msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du hast " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " für " + zeit + " gemutet!";
             } else {
                 error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Invalide Zeit!";
-                p.sendMessage(error);
+                sender.sendMessage(error);
                 return true;
             }
         }
-        p.sendMessage(msg);
+        sender.sendMessage(msg);
         t.sendMessage(mutemsg);
         return true;
     }

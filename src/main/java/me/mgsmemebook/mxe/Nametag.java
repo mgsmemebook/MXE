@@ -3,9 +3,11 @@ package me.mgsmemebook.mxe;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.PlayerInfoData;
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,11 +15,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class Nametag {
     private static Plugin plugin = MXE.getPlugin();
-    private static final Map<Player, String> fakeNames = new WeakHashMap<Player, String>();
+    private static final Map<Player, String> fakeNames = new WeakHashMap<>();
 
     public static void NameChanger() {
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(plugin, PacketType.Play.Server.PLAYER_INFO) {
@@ -58,6 +61,7 @@ public class Nametag {
     public static void setName(final Player player, String fakeName) {
         fakeNames.put(player, fakeName);
         refresh(player);
+        func.cMSG("fakeNames test: " + fakeNames);
     }
 
     /**
@@ -68,7 +72,7 @@ public class Nametag {
      * @param player player whos name to change back to the original value
      */
     public static void resetName(Player player) {
-        if (!fakeNames.containsKey(player)) {
+        if(fakeNames.containsKey(player)) {
             fakeNames.remove(player);
         }
         refresh(player);
@@ -76,15 +80,13 @@ public class Nametag {
 
     private static void refresh(final Player player) {
         for (final Player forWhom : player.getWorld().getPlayers()) {
-            if (player.equals(forWhom) || !player.getWorld().equals(forWhom.getWorld()) || !forWhom.canSee(player)) {
-                forWhom.hidePlayer(plugin, player);
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        forWhom.showPlayer(plugin, player);
-                    }
-                }.runTaskLater(plugin, 2);
-            }
+            forWhom.hidePlayer(plugin, player);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    forWhom.showPlayer(plugin, player);
+                }
+            }.runTaskLater(plugin, 2);
         }
     }
 }

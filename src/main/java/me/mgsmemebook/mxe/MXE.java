@@ -1,11 +1,5 @@
 package me.mgsmemebook.mxe;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.ListenerPriority;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketEvent;
 import me.mgsmemebook.mxe.commands.*;
 import me.mgsmemebook.mxe.db.SQLite;
 import net.luckperms.api.LuckPerms;
@@ -21,7 +15,6 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Objects;
 import java.util.Set;
 
@@ -31,9 +24,7 @@ public final class MXE extends JavaPlugin {
 
     private static String plDir;
     private static Plugin plugin;
-    private static ScoreboardManager sbman;
     private static Scoreboard playersb;
-    //private ProtocolManager protocolManager;
     @Override
     public void onEnable() {
 
@@ -72,7 +63,6 @@ public final class MXE extends JavaPlugin {
             }
         }
 
-
         //ProtocolLib
         Nametag.NameChanger();
 
@@ -85,16 +75,24 @@ public final class MXE extends JavaPlugin {
         //Scoreboard
         LuckPerms lp = LuckPermsProvider.get();
 
-        sbman = Bukkit.getScoreboardManager();
+        ScoreboardManager sbman = Bukkit.getScoreboardManager();
         playersb = Objects.requireNonNull(sbman).getNewScoreboard();
         lp.getGroupManager().loadAllGroups();
         Set<Group> groupset = lp.getGroupManager().getLoadedGroups();
         for(Group g:groupset) {
             Team team = playersb.registerNewTeam(g.getName());
             String prefix = g.getCachedData().getMetaData().getPrefix();
-            //cMSG(ChatColor.RED + "OnEnable: Goup " + g.getName() + " prefix: " + prefix);
             if(prefix == null) continue;
             team.setPrefix(func.colCodes(prefix));
+            String color = g.getCachedData().getMetaData().getMetaValue("color");
+            cMSG("Group: " + g.getName());
+            if (color != null) {
+                ChatColor chatColor = ChatColor.getByChar(color.replaceAll("&", ""));
+                if(chatColor.isColor()) {
+                    cMSG("Color: " + chatColor.name());
+                    team.setColor(chatColor);
+                }
+            }
         }
 
         //Commands
@@ -164,6 +162,11 @@ public final class MXE extends JavaPlugin {
             return "";
         }
         return team.getPrefix();
+    }
+    public static void updatePlayerSB() {
+        for(Player t:Bukkit.getOnlinePlayers()) {
+            t.setScoreboard(playersb);
+        }
     }
 }
 
