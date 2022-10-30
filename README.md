@@ -41,7 +41,7 @@ Older versions are most likely not usable so don't bother trying them out.
 
 ### Installing MXE
 
-To install MXE simply download the [Latest Version](https://github.com/mgsmemebook/MXE/releases/tag/Latest) and place the .jar file inside your server's /plugins folder.
+To install MXE simply download the [Latest Version](https://github.com/mgsmemebook/MXE/releases/latest) and place the .jar file inside your server's /plugins folder.
 
 As for now you will also need to download the latest [LuckPerms](https://luckperms.net/) version and the latest [ProtocolLib](https://ci.dmulloy2.net/job/ProtocolLib/lastSuccessfulBuild/) dev build *(ProtocolLib doesn't fully support 1.19 yet)* and place both .jar files inside your /plugins folder as well. 
 
