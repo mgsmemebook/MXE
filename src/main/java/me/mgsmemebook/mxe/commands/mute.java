@@ -19,7 +19,6 @@ import java.util.Date;
 import java.util.Objects;
 
 public class mute  implements CommandExecutor {
-    LuckPerms lp = LuckPermsProvider.get();
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String error; String msg; String mutemsg;
@@ -35,44 +34,56 @@ public class mute  implements CommandExecutor {
             sender.sendMessage(error);
             return true;
         }
-        if(sender instanceof Player) {Player p = Bukkit.getPlayerExact(sender.getName());
+        if(sender instanceof Player) {
+            Player p = Bukkit.getPlayerExact(sender.getName());
             if(p == null) {
                 error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE mute]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
                 func.cMSG(error);
                 return true;
             }
-            User u = lp.getUserManager().getUser(p.getUniqueId());
-            if(u == null) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-                p.sendMessage(error);
-                return true;
-            }
-            if(!u.getCachedData().getPermissionData().checkPermission("mxe.mute").asBoolean()) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-                p.sendMessage(error);
-                return true;
-            }
-            Group pg = lp.getGroupManager().getGroup(u.getPrimaryGroup());
-            if(pg == null) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-                p.sendMessage(error);
-                return true;
-            }
-            Group tg = lp.getGroupManager().getGroup(Objects.requireNonNull(lp.getUserManager().getUser(t.getUniqueId())).getPrimaryGroup());
-            if(tg == null) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-                p.sendMessage(error);
-                return true;
-            }
-            if(!pg.getWeight().isPresent()) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-                p.sendMessage(error);
-                return true;
-            }
-            if(tg.getWeight().isPresent() && tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-                p.sendMessage(error);
-                return true;
+            if(!p.isOp()) {
+                if (!MXE.lpLoaded) {
+                    if (!p.hasPermission("mxe.mute")) {
+                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
+                        p.sendMessage(error);
+                        return true;
+                    }
+                } else {
+                    LuckPerms lp = LuckPermsProvider.get();
+                    User u = lp.getUserManager().getUser(p.getUniqueId());
+                    if (u == null) {
+                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
+                        p.sendMessage(error);
+                        return true;
+                    }
+                    if (!u.getCachedData().getPermissionData().checkPermission("mxe.mute").asBoolean()) {
+                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
+                        p.sendMessage(error);
+                        return true;
+                    }
+                    Group pg = lp.getGroupManager().getGroup(u.getPrimaryGroup());
+                    if (pg == null) {
+                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
+                        p.sendMessage(error);
+                        return true;
+                    }
+                    Group tg = lp.getGroupManager().getGroup(Objects.requireNonNull(lp.getUserManager().getUser(t.getUniqueId())).getPrimaryGroup());
+                    if (tg == null) {
+                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
+                        p.sendMessage(error);
+                        return true;
+                    }
+                    if (!pg.getWeight().isPresent()) {
+                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
+                        p.sendMessage(error);
+                        return true;
+                    }
+                    if (tg.getWeight().isPresent() && tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {
+                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
+                        p.sendMessage(error);
+                        return true;
+                    }
+                }
             }
             name = MXE.getPlayerPrefix(p) + p.getDisplayName();
         } else {

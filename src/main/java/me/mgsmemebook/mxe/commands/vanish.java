@@ -19,7 +19,6 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.Objects;
 
 public class vanish implements CommandExecutor {
-    LuckPerms lp = LuckPermsProvider.get();
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String error; String msg;
@@ -30,33 +29,44 @@ public class vanish implements CommandExecutor {
                 func.cMSG(error);
                 return true;
             }
-            User u = lp.getUserManager().getUser(p.getUniqueId());
-            if(u == null) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-                p.sendMessage(error);
-                return true;
-            }
-            if(!u.getCachedData().getPermissionData().checkPermission("mxe.vanish").asBoolean()) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-                p.sendMessage(error);
-                return true;
-            }
-            Group pg = lp.getGroupManager().getGroup(u.getPrimaryGroup());
-            if(pg == null) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-                p.sendMessage(error);
-                return true;
-            }
             boolean vanish = DB.getVanish(p.getUniqueId());
-            for(Player t : Bukkit.getOnlinePlayers()){
-                Group tg = lp.getGroupManager().getGroup(Objects.requireNonNull(lp.getUserManager().getUser(t.getUniqueId())).getPrimaryGroup());
-                if(tg == null) {
-                    continue;
-                } else if(!pg.getWeight().isPresent()) {
-                    continue;
+            if(MXE.lpLoaded) {
+                LuckPerms lp = LuckPermsProvider.get();
+                User u = lp.getUserManager().getUser(p.getUniqueId());
+                if (u == null) {
+                    error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
+                    p.sendMessage(error);
+                    return true;
                 }
-                if(!tg.getWeight().isPresent() || tg.getWeight().getAsInt() < pg.getWeight().getAsInt()) {
-                    if(vanish) {
+                if (!u.getCachedData().getPermissionData().checkPermission("mxe.vanish").asBoolean()) {
+                    error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
+                    p.sendMessage(error);
+                    return true;
+                }
+                Group pg = lp.getGroupManager().getGroup(u.getPrimaryGroup());
+                if (pg == null) {
+                    error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
+                    p.sendMessage(error);
+                    return true;
+                }
+                for (Player t : Bukkit.getOnlinePlayers()) {
+                    Group tg = lp.getGroupManager().getGroup(Objects.requireNonNull(lp.getUserManager().getUser(t.getUniqueId())).getPrimaryGroup());
+                    if (tg == null) {
+                        continue;
+                    } else if (!pg.getWeight().isPresent()) {
+                        continue;
+                    }
+                    if (!tg.getWeight().isPresent() || tg.getWeight().getAsInt() < pg.getWeight().getAsInt()) {
+                        if (vanish) {
+                            t.showPlayer(MXE.getPlugin(), p);
+                        } else {
+                            t.hidePlayer(MXE.getPlugin(), p);
+                        }
+                    }
+                }
+            } else {
+                for (Player t : Bukkit.getOnlinePlayers()) {
+                    if (vanish) {
                         t.showPlayer(MXE.getPlugin(), p);
                     } else {
                         t.hidePlayer(MXE.getPlugin(), p);

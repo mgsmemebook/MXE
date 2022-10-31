@@ -23,7 +23,6 @@ import java.util.Objects;
 public class tpahere implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        LuckPerms lp = LuckPermsProvider.get();
         String error;
         if(sender instanceof Player) {
             Player p = Bukkit.getPlayerExact(sender.getName());
@@ -39,18 +38,28 @@ public class tpahere implements CommandExecutor {
                 return true;
             }
 
-            User u = lp.getUserManager().getUser(p.getUniqueId());
-            if(u == null) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-                p.sendMessage(error);
-                return true;
+            if(!p.isOp()) {
+                if (!MXE.lpLoaded) {
+                    if (!p.hasPermission("mxe.tpahere")) {
+                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
+                        p.sendMessage(error);
+                        return true;
+                    }
+                } else {
+                    LuckPerms lp = LuckPermsProvider.get();
+                    User u = lp.getUserManager().getUser(p.getUniqueId());
+                    if (u == null) {
+                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
+                        p.sendMessage(error);
+                        return true;
+                    }
+                    if (!u.getCachedData().getPermissionData().checkPermission("mxe.tpa").asBoolean()) {
+                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
+                        p.sendMessage(error);
+                        return true;
+                    }
+                }
             }
-            if(!u.getCachedData().getPermissionData().checkPermission("mxe.tpa").asBoolean()) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-                p.sendMessage(error);
-                return true;
-            }
-
             Player t = Bukkit.getPlayer(args[0]);
             if(t == null) {
                 error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Spieler nicht gefunden!";

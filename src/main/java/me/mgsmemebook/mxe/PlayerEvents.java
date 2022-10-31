@@ -7,6 +7,7 @@ import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.advancement.Advancement;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,9 +24,6 @@ import java.util.Objects;
 import static me.mgsmemebook.mxe.db.DB.*;
 
 public class PlayerEvents implements Listener {
-    LuckPerms lp = LuckPermsProvider.get();
-
-    //Player Join/Leave
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
@@ -73,46 +71,66 @@ public class PlayerEvents implements Listener {
         }
     }
     public void playerJoin(Player p, PlayerJoinEvent e) {
-        User u = lp.getUserManager().getUser(p.getUniqueId());
-        if(u != null) {
-            String group = u.getPrimaryGroup();
-            Group g = lp.getGroupManager().getGroup(group);
-            if(g != null) {
-                func.updateUser(p, g);
+        if (MXE.lpLoaded) {
+            LuckPerms lp = LuckPermsProvider.get();
+            User u = lp.getUserManager().getUser(p.getUniqueId());
+            if (u != null) {
+                String group = u.getPrimaryGroup();
+                Group g = lp.getGroupManager().getGroup(group);
+                if (g != null) {
+                    func.updateUser(p, g);
+                }
             }
-        }
 
-        e.setJoinMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " ist uns beigetreten!");
+            e.setJoinMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " ist uns beigetreten!");
 
-        //Check DB
-        String res = getDBPlayer(p.getUniqueId());
-        func.cMSG(ChatColor.DARK_AQUA + "[MXE] SQL: Found database entries: " + res);
-        if(res == null) {
-            func.cMSG(ChatColor.DARK_AQUA + "[MXE] SQL: Player not found - Adding to database");
-            addDBPlayer(p.getUniqueId(), p.getName());
-        }
+            //Check DB
+            String res = getDBPlayer(p.getUniqueId());
+            func.cMSG(ChatColor.DARK_AQUA + "[MXE] SQL: Found database entries: " + res);
+            if (res == null) {
+                func.cMSG(ChatColor.DARK_AQUA + "[MXE] SQL: Player not found - Adding to database");
+                addDBPlayer(p.getUniqueId(), p.getName());
+            }
 
-        //Get vanished Players
-        ArrayList<String> van = DB.getAllVanished();
-        if(van != null) {
-            Group pg = lp.getGroupManager().getGroup(u.getPrimaryGroup());
-            for(String user:van) {
-                Player v = Bukkit.getPlayerExact(user);
-                Group vg = lp.getGroupManager().getGroup(Objects.requireNonNull(lp.getUserManager().getUser(v.getUniqueId())).getPrimaryGroup());
-                if(pg != null && vg != null) {
-                    if(!pg.getWeight().isPresent() || vg.getWeight().isPresent() && vg.getWeight().getAsInt() > pg.getWeight().getAsInt()) {
+            //Get vanished Players
+            ArrayList<String> van = DB.getAllVanished();
+            if (van != null) {
+                Group pg = lp.getGroupManager().getGroup(u.getPrimaryGroup());
+                for (String user : van) {
+                    Player v = Bukkit.getPlayerExact(user);
+                    Group vg = lp.getGroupManager().getGroup(Objects.requireNonNull(lp.getUserManager().getUser(v.getUniqueId())).getPrimaryGroup());
+                    if (pg != null && vg != null) {
+                        if (!pg.getWeight().isPresent() || vg.getWeight().isPresent() && vg.getWeight().getAsInt() > pg.getWeight().getAsInt()) {
+                            p.hidePlayer(MXE.getPlugin(), v);
+                        }
+                    } else if (pg == null && vg != null) {
                         p.hidePlayer(MXE.getPlugin(), v);
                     }
-                } else if(pg == null && vg != null) {
+                }
+            }
+            p.setScoreboard(MXE.getPlayerSB());
+        } else {
+            e.setJoinMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " ist uns beigetreten!");
+
+            //Check DB
+            String res = getDBPlayer(p.getUniqueId());
+            func.cMSG(ChatColor.DARK_AQUA + "[MXE] SQL: Found database entries: " + res);
+            if (res == null) {
+                func.cMSG(ChatColor.DARK_AQUA + "[MXE] SQL: Player not found - Adding to database");
+                addDBPlayer(p.getUniqueId(), p.getName());
+            }
+
+            //Get vanished Players
+            ArrayList<String> van = DB.getAllVanished();
+            if (van != null) {
+                for (String user : van) {
+                    Player v = Bukkit.getPlayerExact(user);
                     p.hidePlayer(MXE.getPlugin(), v);
                 }
             }
         }
-
-        p.setScoreboard(MXE.getPlayerSB());
-
-        p.setPlayerListHeader(ChatColor.GOLD+""+ChatColor.BOLD+"     -- Wilkommen "+p.getName()+" --     ");
-        p.setPlayerListFooter(ChatColor.YELLOW + "MXE V."+MXE.getPlugin().getDescription().getVersion());
+        p.setPlayerListHeader(ChatColor.GOLD + "" + ChatColor.BOLD + "     -- Wilkommen " + p.getName() + " --     ");
+        p.setPlayerListFooter(ChatColor.YELLOW + "MXE V." + MXE.getPlugin().getDescription().getVersion());
     }
 
     @EventHandler
@@ -120,8 +138,11 @@ public class PlayerEvents implements Listener {
         Player p = e.getPlayer();
         ArrayList<String> baninf = DB.getPlayerBanInfo(p.getUniqueId());
         if(baninf == null) {
-            e.setQuitMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave] " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " ist Milch holen gegangen!");
-            lp.getUserManager().saveUser(Objects.requireNonNull(lp.getUserManager().getUser(p.getUniqueId())));
+            e.setQuitMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave] " + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " ist Milch holen gegangen!");
+            if(MXE.lpLoaded) {
+                LuckPerms lp = LuckPermsProvider.get();
+                lp.getUserManager().saveUser(Objects.requireNonNull(lp.getUserManager().getUser(p.getUniqueId())));
+            }
         } else {
             e.setQuitMessage("");
         }
@@ -129,7 +150,10 @@ public class PlayerEvents implements Listener {
     @EventHandler
     public void onPlayerKick(PlayerKickEvent e) {
         Player p = e.getPlayer();
-        lp.getUserManager().saveUser(Objects.requireNonNull(lp.getUserManager().getUser(p.getUniqueId())));
+        if(MXE.lpLoaded) {
+            LuckPerms lp = LuckPermsProvider.get();
+            lp.getUserManager().saveUser(Objects.requireNonNull(lp.getUserManager().getUser(p.getUniqueId())));
+        }
     }
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent e) {
@@ -196,5 +220,15 @@ public class PlayerEvents implements Listener {
         msg = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Info: Kehre mit " + ChatColor.YELLOW + "/back" + ChatColor.GOLD + " wieder an deinen Totespunkt zurück!";
         p.sendMessage(msg);
     }
+
+    /*
+    @EventHandler
+    public void onPlayerAchievement(PlayerAdvancementDoneEvent e) {
+        Player p = e.getPlayer();
+        Advancement advancement = e.getAdvancement();
+        String msg = ChatColor.BLUE + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.BLUE + "Hat ein achievement erreicht: " + advancement;
+
+    }
+    */
 
 }

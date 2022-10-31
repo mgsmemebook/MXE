@@ -6,18 +6,19 @@
 
     <groupId>me.mgsmemebook</groupId>
     <artifactId>MXE</artifactId>
-    <version>1.3.1</version>
+    <version>1.3.2</version>
     <packaging>jar</packaging>
 
     <name>MXE</name>
 
-    <description>Minecraft Spigot 1.18.2 Essentials Plugin</description>
+    <description>Minecraft Spigot 1.19.2 Essentials Plugin</description>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <build>
+        <finalName>${project.name}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -48,10 +49,9 @@
                                     </excludes>
                                 </filter>
                                 <filter>
-                                    <artifact>com.comphenix.*</artifact>
+                                    <artifact>net.luckperms:*</artifact>
                                     <excludes>
-                                        <exclude>META-INF/*</exclude>
-                                        <exclude>plugin.yml</exclude>
+                                        <exclude>META-INF/*.MF</exclude>
                                     </excludes>
                                 </filter>
                             </filters>

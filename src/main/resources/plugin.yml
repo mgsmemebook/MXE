@@ -1,9 +1,12 @@
-name: MXE
-version: '${project.version}'
+name: MXEssentials
+version: 1.3.1
 main: me.mgsmemebook.mxe.MXE
-api-version: 1.19
-authors: [ mgsmemebook ]
 description: Minecraft Spigot 1.19.2 Essentials Plugin
+authors: [ mgsmemebook ]
+website: https://github.com/mgsmemebook/MXE
+prefix: MXE
+api-version: 1.19
+load: STARTUP
 depend: [ LuckPerms ]
 softdepend: [ ProtocolLib ]
 commands:
@@ -91,3 +94,84 @@ commands:
     description: Tauche unter.
     usage: /help <command>
     aliases: van
+
+permissions:
+  mxe.*:
+    default: false
+    children:
+      mxe.back: true
+      mxe.ban: true
+      mxe.fly: true
+      mxe.gm: true
+      mxe.god: true
+      mxe.help: true
+      mxe.home: true
+      mxe.kick: true
+      mxe.kill: true
+      mxe.mute: true
+      mxe.nick: true
+      mxe.setrank: true
+      mxe.tpa: true
+      mxe.tpahere: true
+      mxe.tpall: true
+      mxe.tphere: true
+      mxe.unban: true
+      mxe.unmute: true
+      mxe.vanish: true
+
+  mxe.back:
+    default: true
+
+  mxe.ban:
+    default: false
+
+  mxe.fly:
+    default: false
+
+  mxe.gm:
+    default: false
+
+  mxe.god:
+    default: false
+
+  mxe.help:
+    default: true
+
+  mxe.home:
+    default: true
+
+  mxe.kick:
+    default: false
+
+  mxe.kill:
+    default: false
+
+  mxe.mute:
+    default: false
+
+  mxe.nick:
+    default: false
+
+  mxe.setrank:
+    default: false
+
+  mxe.tpa:
+    default: true
+
+  mxe.tpahere:
+    default: true
+
+  mxe.tpall:
+    default: false
+
+  mxe.tphere:
+    default: false
+
+  mxe.unban:
+    default: false
+
+  mxe.unmute:
+    default: false
+
+  mxe.vanish:
+    default: false

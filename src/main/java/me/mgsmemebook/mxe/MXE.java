@@ -26,6 +26,7 @@ public final class MXE extends JavaPlugin {
     private static String plDir;
     private static Plugin plugin;
     private static Scoreboard playersb;
+    public static boolean lpLoaded = false;
     @Override
     public void onEnable() {
 
@@ -47,14 +48,14 @@ public final class MXE extends JavaPlugin {
                 cMSG(ChatColor.RED + "[MXE] Couldn't create plugin folder.");
             }
         }
-        File lib = new File(plDir+"/lib");
+        /*File lib = new File(plDir+"/lib");
         if(!lib.exists()) {
             if(!lib.mkdir()) {
                 func.cMSG(ChatColor.RED + "[MXE] Couldn't create /lib");
             } else {
                 func.cMSG(ChatColor.BLUE + "[MXE] Created /lib");
             }
-        }
+        }*/
         File db = new File(plDir+"/db");
         if(!db.exists()) {
             if(!db.mkdir()) {
@@ -65,7 +66,13 @@ public final class MXE extends JavaPlugin {
         }
 
         //ProtocolLib
-        Nametag.NameChanger();
+        if(Bukkit.getPluginManager().getPlugin("ProtocolLib") != null) {
+            Objects.requireNonNull(getCommand("nick")).setExecutor(new nick());
+            Objects.requireNonNull(getCommand("nick")).setTabCompleter(new TabCompletion());
+            Nametag.NameChanger();
+        } else {
+            cMSG(ChatColor.YELLOW + "[MXE] WARN: ProtocolLib not found. Please put ProtocolLib inside your plugins folder to use the /nick command.");
+        }
 
         //EventListeners
         getServer().getPluginManager().registerEvents(new PlayerEvents(), this);
@@ -74,26 +81,33 @@ public final class MXE extends JavaPlugin {
         SQLite.load("users");
 
         //Scoreboard
-        LuckPerms lp = LuckPermsProvider.get();
-
         ScoreboardManager sbman = Bukkit.getScoreboardManager();
         playersb = Objects.requireNonNull(sbman).getNewScoreboard();
-        lp.getGroupManager().loadAllGroups();
-        Set<Group> groupset = lp.getGroupManager().getLoadedGroups();
-        for(Group g:groupset) {
-            Team team = playersb.registerNewTeam(g.getName());
-            String prefix = g.getCachedData().getMetaData().getPrefix();
-            if(prefix == null) continue;
-            team.setPrefix(func.colCodes(prefix));
-            String color = g.getCachedData().getMetaData().getMetaValue("color");
-            cMSG(ChatColor.DARK_GRAY + "[MXE] Group found: " + g.getName());
-            if (color != null) {
-                ChatColor chatColor = ChatColor.getByChar(color.replaceAll("&", ""));
-                if(chatColor.isColor()) {
-                    cMSG(ChatColor.DARK_GRAY + "[MXE] Color found: " + chatColor.name());
-                    team.setColor(chatColor);
+
+        if(Bukkit.getPluginManager().getPlugin("LuckPerms") != null) lpLoaded = Bukkit.getPluginManager().getPlugin("LuckPerms").isEnabled();
+        if(lpLoaded) {
+            LuckPerms lp = LuckPermsProvider.get();
+            lp.getGroupManager().loadAllGroups();
+            Set<Group> groupset = lp.getGroupManager().getLoadedGroups();
+            for(Group g : groupset) {
+                Team team = playersb.registerNewTeam(g.getName());
+                String prefix = g.getCachedData().getMetaData().getPrefix();
+                if(prefix == null) continue;
+                team.setPrefix(func.colCodes(prefix));
+                String color = g.getCachedData().getMetaData().getMetaValue("color");
+                cMSG(ChatColor.DARK_GRAY + "[MXE] Group found: " + g.getName());
+                if(color != null) {
+                    ChatColor chatColor = ChatColor.getByChar(color.replaceAll("&", ""));
+                    if(chatColor != null && chatColor.isColor()) {
+                        cMSG(ChatColor.DARK_GRAY + "[MXE] Color found: " + chatColor.name());
+                        team.setColor(chatColor);
+                    }
                 }
             }
+            Objects.requireNonNull(getCommand("setrank")).setExecutor(new setrank());
+            Objects.requireNonNull(getCommand("setrank")).setTabCompleter(new TabCompletion());
+        } else {
+            cMSG(ChatColor.YELLOW + "[MXE] WARN: LuckPerms not found. Please put LuckPerms inside your plugins folder to use permissions and prefixes.");
         }
 
         //Commands
@@ -107,8 +121,6 @@ public final class MXE extends JavaPlugin {
         Objects.requireNonNull(getCommand("kick")).setExecutor(new kick());
         Objects.requireNonNull(getCommand("kill")).setExecutor(new kill());
         Objects.requireNonNull(getCommand("mute")).setExecutor(new mute());
-        Objects.requireNonNull(getCommand("nick")).setExecutor(new nick());
-        Objects.requireNonNull(getCommand("setrank")).setExecutor(new setrank());
         Objects.requireNonNull(getCommand("tpa")).setExecutor(new tpa());
         Objects.requireNonNull(getCommand("tpaccept")).setExecutor(new tpaccept());
         Objects.requireNonNull(getCommand("tpahere")).setExecutor(new tpahere());
@@ -130,8 +142,6 @@ public final class MXE extends JavaPlugin {
         Objects.requireNonNull(getCommand("kick")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("kill")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("mute")).setTabCompleter(new TabCompletion());
-        Objects.requireNonNull(getCommand("nick")).setTabCompleter(new TabCompletion());
-        Objects.requireNonNull(getCommand("setrank")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("tpa")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("tpaccept")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("tpahere")).setTabCompleter(new TabCompletion());
@@ -143,12 +153,15 @@ public final class MXE extends JavaPlugin {
         Objects.requireNonNull(getCommand("vanish")).setTabCompleter(new TabCompletion());
 
         //In case of reload
-        for(Player t:Bukkit.getOnlinePlayers()) {
-            User tu = lp.getUserManager().getUser(t.getUniqueId());
-            if(tu == null) continue;
-            Group tg = lp.getGroupManager().getGroup(tu.getPrimaryGroup());
-            if(tg == null) continue;
-            func.updateUser(t, tg);
+        if(lpLoaded) {
+            LuckPerms lp = LuckPermsProvider.get();
+            for (Player t : Bukkit.getOnlinePlayers()) {
+                User tu = lp.getUserManager().getUser(t.getUniqueId());
+                if (tu == null) continue;
+                Group tg = lp.getGroupManager().getGroup(tu.getPrimaryGroup());
+                if (tg == null) continue;
+                func.updateUser(t, tg);
+            }
         }
     }
 

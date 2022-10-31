@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Set;
 
 public class TabCompletion implements TabCompleter {
-    LuckPerms lp = LuckPermsProvider.get();
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         List<String> playerNames = new ArrayList<>();
@@ -115,7 +114,8 @@ public class TabCompletion implements TabCompleter {
             case "setrank":
                 if(args.length == 1) {
                     return playerNames;
-                } else if(args.length == 2) {
+                } else if(args.length == 2 && MXE.lpLoaded) {
+                    LuckPerms lp = LuckPermsProvider.get();
                     List<String> ranks = new ArrayList<>();
                     Set<Group> groups = lp.getGroupManager().getLoadedGroups();
                     for(Group group : groups) {

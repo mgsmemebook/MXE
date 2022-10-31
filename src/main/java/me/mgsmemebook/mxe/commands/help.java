@@ -15,7 +15,6 @@ import org.bukkit.entity.Player;
 import java.util.OptionalInt;
 
 public class help implements CommandExecutor {
-    LuckPerms lp = LuckPermsProvider.get();
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String error;
@@ -27,25 +26,38 @@ public class help implements CommandExecutor {
                 func.cMSG(error);
                 return true;
             }
-            User u = lp.getUserManager().getUser(p.getUniqueId());
-            if(u == null) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-                p.sendMessage(error);
-                return true;
-            }
             if(args.length >= 1) {
-                if (!u.getCachedData().getPermissionData().checkPermission("mxe." + args[0]).asBoolean() && !args[0].equalsIgnoreCase("admin")) {
-                    p.performCommand("help");
-                    return true;
-                }
                 cmd = args[0].toLowerCase();
-                if(cmd.equals("admin")) {
-                    if(!lp.getGroupManager().getGroup(u.getPrimaryGroup()).getWeight().isPresent()) {
-                        p.performCommand("help");
-                        return true;
-                    } else if(lp.getGroupManager().getGroup(u.getPrimaryGroup()).getWeight().getAsInt() < 5) {
-                        p.performCommand("help");
-                        return true;
+                if(!p.isOp()) {
+                    if (!MXE.lpLoaded) {
+                        if (!p.hasPermission("mxe."+cmd) && !cmd.equalsIgnoreCase("admin")) {
+                            p.performCommand("help");
+                            return true;
+                        }
+                        if(cmd.equals("admin")) {
+                            p.performCommand("help");
+                        }
+                    } else {
+                        LuckPerms lp = LuckPermsProvider.get();
+                        User u = lp.getUserManager().getUser(p.getUniqueId());
+                        if (u == null) {
+                            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
+                            p.sendMessage(error);
+                            return true;
+                        }
+                        if (!u.getCachedData().getPermissionData().checkPermission("mxe." + cmd).asBoolean() && !cmd.equalsIgnoreCase("admin")) {
+                            p.performCommand("help");
+                            return true;
+                        }
+                        if(cmd.equals("admin")) {
+                            if (!lp.getGroupManager().getGroup(u.getPrimaryGroup()).getWeight().isPresent()) {
+                                p.performCommand("help");
+                                return true;
+                            } else if (lp.getGroupManager().getGroup(u.getPrimaryGroup()).getWeight().getAsInt() < 5) {
+                                p.performCommand("help");
+                                return true;
+                            }
+                        }
                     }
                 }
             }

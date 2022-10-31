@@ -23,7 +23,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 public class ban implements CommandExecutor {
-    LuckPerms lp = LuckPermsProvider.get();
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String error; String msg;
@@ -46,29 +45,7 @@ public class ban implements CommandExecutor {
             sender.sendMessage(error);
             return true;
         }
-        CompletableFuture<User> userFuture = lp.getUserManager().loadUser(t.getUniqueId(), t.getName());
-        User tu = null;
-        try {
-            tu = userFuture.get();
-        } catch (InterruptedException ex) {
-            func.cMSG(ChatColor.GOLD + "[MXE ban] Error while getting offline User");
-            func.cMSG(ChatColor.GOLD + "[MXE ban] " + ex.getMessage());
-        } catch (ExecutionException ex) {
-            func.cMSG(ChatColor.GOLD + "[MXE ban] Error while getting offline User");
-            func.cMSG(ChatColor.GOLD + "[MXE ban] " + ex.getMessage());
-        }
-        if(tu == null) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Spieler nicht gefunden.";
-            sender.sendMessage(error);
-            return true;
-        }
-        lp.getGroupManager().loadAllGroups();
-        Group tg = lp.getGroupManager().getGroup(tu.getPrimaryGroup());
-        if(tg == null) {
-            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-            sender.sendMessage(error);
-            return true;
-        }
+
         if(sender instanceof Player) {
             Player p = Bukkit.getPlayerExact(sender.getName());
             if(p == null) {
@@ -76,32 +53,66 @@ public class ban implements CommandExecutor {
                 func.cMSG(error);
                 return true;
             }
-            User u = lp.getUserManager().getUser(p.getUniqueId());
-            if(u == null) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-                p.sendMessage(error);
-                return true;
-            }
-            if(!u.getCachedData().getPermissionData().checkPermission("mxe.ban").asBoolean()) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-                p.sendMessage(error);
-                return true;
-            }
-            Group pg = lp.getGroupManager().getGroup(u.getPrimaryGroup());
-            if(pg == null) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-                p.sendMessage(error);
-                return true;
-            }
-            if(!pg.getWeight().isPresent()) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-                p.sendMessage(error);
-                return true;
-            }
-            if(tg.getWeight().isPresent() && tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-                p.sendMessage(error);
-                return true;
+            if (!p.isOp()) {
+                if (!MXE.lpLoaded) {
+                    if (!p.hasPermission("mxe.ban")) {
+                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
+                        p.sendMessage(error);
+                        return true;
+                    }
+                } else {
+                    LuckPerms lp = LuckPermsProvider.get();
+                    CompletableFuture<User> userFuture = lp.getUserManager().loadUser(t.getUniqueId(), t.getName());
+                    User tu = null;
+                    try {
+                        tu = userFuture.get();
+                    } catch (InterruptedException ex) {
+                        func.cMSG(ChatColor.GOLD + "[MXE ban] Error while getting offline User");
+                        func.cMSG(ChatColor.GOLD + "[MXE ban] " + ex.getMessage());
+                    } catch (ExecutionException ex) {
+                        func.cMSG(ChatColor.GOLD + "[MXE ban] Error while getting offline User");
+                        func.cMSG(ChatColor.GOLD + "[MXE ban] " + ex.getMessage());
+                    }
+                    if(tu == null) {
+                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Spieler nicht gefunden.";
+                        sender.sendMessage(error);
+                        return true;
+                    }
+                    lp.getGroupManager().loadAllGroups();
+                    Group tg = lp.getGroupManager().getGroup(tu.getPrimaryGroup());
+                    if(tg == null) {
+                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
+                        sender.sendMessage(error);
+                        return true;
+                    }
+                    User u = lp.getUserManager().getUser(p.getUniqueId());
+                    if (u == null) {
+                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
+                        p.sendMessage(error);
+                        return true;
+                    }
+                    if (!u.getCachedData().getPermissionData().checkPermission("mxe.ban").asBoolean()) {
+                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
+                        p.sendMessage(error);
+                        return true;
+                    }
+                    Group pg = lp.getGroupManager().getGroup(u.getPrimaryGroup());
+                    if (pg == null) {
+                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
+                        p.sendMessage(error);
+                        return true;
+                    }
+                    if (!pg.getWeight().isPresent()) {
+                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
+                        p.sendMessage(error);
+                        return true;
+                    }
+                    if (tg.getWeight().isPresent() && tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {
+                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
+                        p.sendMessage(error);
+                        return true;
+                    }
+                }
             }
             name = MXE.getPlayerPrefix(p) + p.getDisplayName();
         } else {
