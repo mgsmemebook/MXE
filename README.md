@@ -22,7 +22,6 @@ Older versions are most likely not usable so don't bother trying them out.
 - Adds header and footer to tablist 
 
 ### To do
-- **Make /nick using ProtocolLib optional**
 - **Changable language**
 - Fix many bugs
 - Make /nick also change a players skin
@@ -44,7 +43,8 @@ Older versions are most likely not usable so don't bother trying them out.
 
 To install MXE simply download the [Latest Version](https://github.com/mgsmemebook/MXE/releases/latest) and place the .jar file inside your server's /plugins folder.
 
-As for now you will also need to download the latest [LuckPerms](https://luckperms.net/) version and the latest [ProtocolLib](https://ci.dmulloy2.net/job/ProtocolLib/lastSuccessfulBuild/) dev build *(ProtocolLib doesn't fully support 1.19 yet)* and place both .jar files inside your /plugins folder as well. 
+As for now you will also need to download the latest [LuckPerms](https://luckperms.net/) version and put it's .jar file inside your /plugins folder. 
+If you want the /nick command you will also need the [ProtocolLib](https://ci.dmulloy2.net/job/ProtocolLib/lastSuccessfulBuild/) dev build *(ProtocolLib doesn't fully support 1.19 yet)*. Then place the .jar file inside your /plugins folder as well. 
 
 Once you start the Server, MXE will automatically create a MXE folder inside of which the database is stored. In future version you will also find the plugins configuration file there.
 
