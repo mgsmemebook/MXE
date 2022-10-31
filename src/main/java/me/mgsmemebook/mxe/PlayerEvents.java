@@ -148,10 +148,12 @@ public class PlayerEvents implements Listener {
         if(MXE.getCustomConfig().getBoolean("messages.custom.tablist.enabled")) {
             String header = MXE.getCustomConfig().getString("messages.custom.tablist.header");
             header = func.colCodes(header);
-            header = header.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+            header = header.replaceAll("%u", p.getName());
+            header = header.replaceAll("%v", MXE.getPlugin().getDescription().getVersion());
             String footer = MXE.getCustomConfig().getString("messages.custom.tablist.footer");
             footer = func.colCodes(footer);
-            footer = footer.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+            footer = footer.replaceAll("%u", p.getName());
+            footer = footer.replaceAll("%v", MXE.getPlugin().getDescription().getVersion());
             p.setPlayerListHeaderFooter(header, footer);
         }
     }
@@ -228,6 +230,7 @@ public class PlayerEvents implements Listener {
             String msg = e.getMessage();
             msg = func.colCodes(msg);
             String chatmsg = MXE.getCustomConfig().getString("messages.custom.chat");
+            chatmsg = func.colCodes(chatmsg);
             chatmsg = chatmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
             chatmsg = chatmsg.replaceAll("%m", msg);
             Bukkit.broadcastMessage(chatmsg);

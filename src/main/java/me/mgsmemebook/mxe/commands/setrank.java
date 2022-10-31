@@ -117,7 +117,7 @@ public class setrank implements CommandExecutor {
                 t.sendMessage(tmsg);
             }
         } else {
-            name = ChatColor.DARK_RED + "" + ChatColor.BOLD + "Konsole";
+            name = ChatColor.DARK_RED + "" + ChatColor.BOLD + "Server";
             if(!tg.getWeight().isPresent()) {
                 String pmsg = MXE.getCustomConfig().getString("messages.custom.setrank.promote.staff");
                 pmsg = func.colCodes(pmsg);

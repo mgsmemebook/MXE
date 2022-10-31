@@ -96,11 +96,11 @@ public class unmute implements CommandExecutor {
             switch (lang) {
                 case "de":
                     msg = ChatColor.YELLOW + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.YELLOW + "Du hast " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " entmutet!";
-                    unmutemsg = ChatColor.DARK_GREEN + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_GREEN + "Du wurdest von " + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.GREEN + " entmutet!";
+                    unmutemsg = ChatColor.DARK_GREEN + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_GREEN + "Du wurdest von " + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.DARK_GREEN + " entmutet!";
                     break;
                 default:
                     msg = ChatColor.YELLOW + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "You unmuted " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + "!";
-                    unmutemsg = ChatColor.DARK_GREEN + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_GREEN + "You have been unmuted by " + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.GREEN + "!";
+                    unmutemsg = ChatColor.DARK_GREEN + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_GREEN + "You have been unmuted by " + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.DARK_GREEN + "!";
             }
             p.sendMessage(msg);
             t.sendMessage(unmutemsg);
@@ -110,11 +110,11 @@ public class unmute implements CommandExecutor {
             switch (lang) {
                 case "de":
                     msg = ChatColor.YELLOW + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.YELLOW + "Du hast " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " entmutet!";
-                    unmutemsg = ChatColor.DARK_GREEN + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_GREEN + "Du wurdest von " + ChatColor.DARK_RED + "Konsole" + ChatColor.RESET + ChatColor.GREEN + " entmutet!";
+                    unmutemsg = ChatColor.DARK_GREEN + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_GREEN + "Du wurdest von " + ChatColor.DARK_RED + "Server" + ChatColor.RESET + ChatColor.DARK_GREEN + " entmutet!";
                     break;
                 default:
                     msg = ChatColor.YELLOW + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "You unmuted " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + "!";
-                    unmutemsg = ChatColor.DARK_GREEN + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_GREEN + "You have been unmuted by " + ChatColor.DARK_RED + "Konsole" + ChatColor.RESET + ChatColor.GREEN + "!";
+                    unmutemsg = ChatColor.DARK_GREEN + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_GREEN + "You have been unmuted by " + ChatColor.DARK_RED + "Server" + ChatColor.RESET + ChatColor.DARK_GREEN + "!";
             }
             sender.sendMessage(msg);
             t.sendMessage(unmutemsg);

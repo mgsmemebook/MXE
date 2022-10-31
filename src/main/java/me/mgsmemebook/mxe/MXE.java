@@ -63,7 +63,8 @@ public final class MXE extends JavaPlugin {
                 func.cMSG(ChatColor.BLUE + "[MXE] Created /db");
             }
         }
-        createCustomConfig();
+        //createCustomConfig();
+        saveDefaultConfig();
 
         //EventListeners
         getServer().getPluginManager().registerEvents(new PlayerEvents(), this);
@@ -195,13 +196,13 @@ public final class MXE extends JavaPlugin {
     }
 
     public static FileConfiguration getCustomConfig() {
-        return config;
+        return plugin.getConfig();
     }
     private void createCustomConfig() {
-        configFile = new File(getDataFolder(), "config.yml");
+        configFile = new File(getDataFolder(), "custom-config.yml");
         if (!configFile.exists()) {
             configFile.getParentFile().mkdirs();
-            saveResource("config.yml", false);
+            saveResource("custom-config.yml", false);
         }
 
         config = new YamlConfiguration();

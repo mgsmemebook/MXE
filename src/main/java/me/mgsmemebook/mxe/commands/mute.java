@@ -95,7 +95,7 @@ public class mute  implements CommandExecutor {
             }
             name = MXE.getPlayerPrefix(p) + p.getDisplayName();
         } else {
-            name = ChatColor.DARK_RED + "" + ChatColor.BOLD + "Konsole";
+            name = ChatColor.DARK_RED + "" + ChatColor.BOLD + "Server";
         }
 
         if(args.length == 1) {
@@ -117,40 +117,77 @@ public class mute  implements CommandExecutor {
             Calendar cl = Calendar.getInstance();
             cl.setTime(new Date());
 
-            if(func.isNumeric(unit)) {
+            if(func.isNumeric(scale)) {
                 //Tempbann
                 int time = Integer.parseInt(scale);
-                switch(unit) {
-                    case "s":
-                        cl.add(Calendar.SECOND, time);
-                        zeit = zeit + " Sekunde";
-                        if(time > 1) zeit = zeit + "n";
+                switch (lang) {
+                    case "de":
+                        switch(unit) {
+                            case "s":
+                                cl.add(Calendar.SECOND, time);
+                                zeit = zeit + " Sekunde";
+                                if(time > 1) zeit = zeit + "n";
+                                break;
+                            case "m":
+                                cl.add(Calendar.MINUTE, time);
+                                zeit = zeit + " Minute";
+                                if(time > 1) zeit = zeit + "n";
+                                break;
+                            case "h":
+                                cl.add(Calendar.HOUR, time);
+                                zeit = zeit + " Stunde";
+                                if(time > 1) zeit = zeit + "n";
+                                break;
+                            case "D":
+                                cl.add(Calendar.DAY_OF_YEAR, time);
+                                zeit = zeit + " Tag";
+                                if(time > 1) zeit = zeit + "e";
+                                break;
+                            case "M":
+                                cl.add(Calendar.MONTH, time);
+                                zeit = zeit + " Monat";
+                                if(time > 1) zeit = zeit + "e";
+                                break;
+                            case "Y":
+                                cl.add(Calendar.YEAR, time);
+                                zeit = zeit + " Jahr";
+                                if(time > 1) zeit = zeit + "e";
+                                break;
+                        }
                         break;
-                    case "m":
-                        cl.add(Calendar.MINUTE, time);
-                        zeit = zeit + " Minute";
-                        if(time > 1) zeit = zeit + "n";
-                        break;
-                    case "h":
-                        cl.add(Calendar.HOUR, time);
-                        zeit = zeit + " Stunde";
-                        if(time > 1) zeit = zeit + "n";
-                        break;
-                    case "D":
-                        cl.add(Calendar.DAY_OF_YEAR, time);
-                        zeit = zeit + " Tag";
-                        if(time > 1) zeit = zeit + "e";
-                        break;
-                    case "M":
-                        cl.add(Calendar.MONTH, time);
-                        zeit = zeit + " Monat";
-                        if(time > 1) zeit = zeit + "e";
-                        break;
-                    case "Y":
-                        cl.add(Calendar.YEAR, time);
-                        zeit = zeit + " Jahr";
-                        if(time > 1) zeit = zeit + "e";
-                        break;
+                    default:
+                        switch(unit) {
+                            case "s":
+                                cl.add(Calendar.SECOND, time);
+                                zeit = zeit + " second";
+                                if(time > 1) zeit = zeit + "s";
+                                break;
+                            case "m":
+                                cl.add(Calendar.MINUTE, time);
+                                zeit = zeit + " minute";
+                                if(time > 1) zeit = zeit + "s";
+                                break;
+                            case "h":
+                                cl.add(Calendar.HOUR, time);
+                                zeit = zeit + " hour";
+                                if(time > 1) zeit = zeit + "s";
+                                break;
+                            case "D":
+                                cl.add(Calendar.DAY_OF_YEAR, time);
+                                zeit = zeit + " day";
+                                if(time > 1) zeit = zeit + "s";
+                                break;
+                            case "M":
+                                cl.add(Calendar.MONTH, time);
+                                zeit = zeit + " month";
+                                if(time > 1) zeit = zeit + "s";
+                                break;
+                            case "Y":
+                                cl.add(Calendar.YEAR, time);
+                                zeit = zeit + " year";
+                                if(time > 1) zeit = zeit + "s";
+                                break;
+                        }
                 }
                 String timestamp = cl.getTimeInMillis()+"";
                 DB.setDBPlayerMute(true, true, timestamp, t.getUniqueId());

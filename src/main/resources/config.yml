@@ -22,16 +22,16 @@ messages:
 
     # Message when a player joins the server.
     # Set player as %p. Note that you will have to reset the color because of the prefix.
-    join: "&9&l[join/leave]: %p &r&9 joined the server!"
+    join: "&9&l[join/leave]: %p&r&9 joined the server!"
 
     # Message when a player quits the server.
     # Set player as %p. Note that you will have to reset the color because of the prefix.
-    quit: "&9&l[join/leave]: %p &r&9 left the server!"
+    quit: "&9&l[join/leave]: %p&r&9 left the server!"
 
     # Message when a player sends a message in the chat
     # Set player as %p. Note that you will have to reset the color because of the prefix.
     # Set message as %m.
-    chat: "%p &r&6 says: %m"
+    chat: "%p&r&6 says: %m"
 
     # Ban messages
     ban:

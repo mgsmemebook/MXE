@@ -61,7 +61,7 @@ public class nick implements CommandExecutor {
                 }
             }
             if(args.length == 0) {
-                String quitmsg = MXE.getCustomConfig().getString("messages.custom.ban.banned-join.permanent.reason");
+                String quitmsg = MXE.getCustomConfig().getString("messages.custom.quit");
                 quitmsg = func.colCodes(quitmsg);
                 quitmsg = quitmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
                 Bukkit.broadcastMessage(quitmsg);
@@ -91,7 +91,7 @@ public class nick implements CommandExecutor {
                     return true;
                 }
 
-                String quitmsg = MXE.getCustomConfig().getString("messages.custom.ban.banned-join.permanent.reason");
+                String quitmsg = MXE.getCustomConfig().getString("messages.custom.quit");
                 quitmsg = func.colCodes(quitmsg);
                 quitmsg = quitmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
                 Bukkit.broadcastMessage(quitmsg);

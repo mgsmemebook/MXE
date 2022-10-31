@@ -120,7 +120,7 @@ public class ban implements CommandExecutor {
             }
             name = MXE.getPlayerPrefix(p) + p.getDisplayName();
         } else {
-            name = ChatColor.DARK_RED + "" + ChatColor.BOLD + "Konsole";
+            name = ChatColor.DARK_RED + "" + ChatColor.BOLD + "Server";
         }
 
         if(args.length == 1) {
