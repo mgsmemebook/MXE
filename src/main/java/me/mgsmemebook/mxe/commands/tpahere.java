@@ -24,24 +24,39 @@ public class tpahere implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String error;
-        if(sender instanceof Player) {
+        String syntaxerror = MXE.getCustomConfig().getString("messages.custom.error.syntax");
+        syntaxerror = func.colCodes(syntaxerror);
+        String lang = MXE.getCustomConfig().getString("messages.language");
+        if (sender instanceof Player) {
             Player p = Bukkit.getPlayerExact(sender.getName());
-            if(p == null) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE tpa]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
+            if (p == null) {
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE tpahere]: " + ChatColor.RESET + ChatColor.DARK_RED + "Error: Player is null (" + sender.getName() + ")";
                 func.cMSG(error);
                 return true;
             }
 
-            if(args.length == 0) {
-                error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Syntax error: /tpa [Spieler]";
-                p.sendMessage(error);
+            if (args.length == 0) {
+                switch (lang) {
+                    case "de":
+                        syntaxerror.replaceAll("%s", "/tpahere [Spieler]");
+                        break;
+                    default:
+                        syntaxerror.replaceAll("%s", "/tpahere [Player]");
+                }
+                p.sendMessage(syntaxerror);
                 return true;
             }
 
             if(!p.isOp()) {
                 if (!MXE.lpLoaded) {
                     if (!p.hasPermission("mxe.tpahere")) {
-                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
+                        switch (lang) {
+                            case "de":
+                                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
+                                break;
+                            default:
+                                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "You don't have permissions to do that!";
+                        }
                         p.sendMessage(error);
                         return true;
                     }
@@ -49,20 +64,39 @@ public class tpahere implements CommandExecutor {
                     LuckPerms lp = LuckPermsProvider.get();
                     User u = lp.getUserManager().getUser(p.getUniqueId());
                     if (u == null) {
-                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
+                        switch (lang) {
+                            case "de":
+                                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein Fehler ist aufgetreten beim Ausführen dieses Befehls.";
+                                break;
+                            default:
+                                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "An error occured while performing this command.";
+                        }
                         p.sendMessage(error);
                         return true;
                     }
-                    if (!u.getCachedData().getPermissionData().checkPermission("mxe.tpa").asBoolean()) {
-                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
+                    if (!u.getCachedData().getPermissionData().checkPermission("mxe.tpahere").asBoolean()) {
+                        switch (lang) {
+                            case "de":
+                                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
+                                break;
+                            default:
+                                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "You don't have permissions to do that!";
+                        }
                         p.sendMessage(error);
                         return true;
                     }
                 }
             }
+
             Player t = Bukkit.getPlayer(args[0]);
             if(t == null) {
-                error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Spieler nicht gefunden!";
+                switch (lang) {
+                    case "de":
+                        error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Spieler nicht gefunden!";
+                        break;
+                    default:
+                        error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Player not found!";
+                }
                 p.sendMessage(error);
                 return true;
             }
@@ -82,7 +116,13 @@ public class tpahere implements CommandExecutor {
                     if(now - then > 600000) {
                         DB.remPlayerTpa(i);
                     } else if(res.get(0).equals(p.getName()) && res.get(1).equals(t.getName())){
-                        error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Du hast diesem Spieler schon eine ausstehende Anfrage gestellt!";
+                        switch (lang) {
+                            case "de":
+                                error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Du hast diesem Spieler schon eine ausstehende Anfrage gestellt!";
+                                break;
+                            default:
+                                error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "You already sent a request to this player!";
+                        }
                         p.sendMessage(error);
                         return true;
                     }
@@ -90,29 +130,66 @@ public class tpahere implements CommandExecutor {
             }
 
             t.sendMessage(" ");
-            String tmsg = ChatColor.GOLD+"--------------------------------------------";
+            String tmsg = ChatColor.GOLD + "--------------------------------------------";
             t.sendMessage(tmsg);
             t.sendMessage(" ");
-            tmsg = MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.GOLD + " will dich zu ihm teleportieren.";
-            t.sendMessage(tmsg);
-            t.sendMessage(" ");
+            TextComponent bas;
+            TextComponent bet;
+            TextComponent atc;
+            TextComponent dtc;
+            String msg;
+            switch (lang) {
+                case "de":
+                    tmsg = MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.GOLD + " will dich zu ihm teleportieren.";
+                    t.sendMessage(tmsg);
+                    t.sendMessage(" ");
 
-            TextComponent bas = new TextComponent("  "); TextComponent bet = new TextComponent("  ");
-            TextComponent atc = new TextComponent("[ Akzeptieren ]"); atc.setColor(net.md_5.bungee.api.ChatColor.GREEN); atc.setBold(true);
-            TextComponent dtc = new TextComponent("[  Ablehnen  ]"); dtc.setColor(net.md_5.bungee.api.ChatColor.RED); dtc.setBold(true);
-            atc.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaccept")); dtc.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpdeny"));
-            t.spigot().sendMessage(bas, atc, bet, dtc);
+                    bas = new TextComponent("  ");
+                    bet = new TextComponent("  ");
+                    atc = new TextComponent("[ Akzeptieren ]");
+                    atc.setColor(net.md_5.bungee.api.ChatColor.GREEN);
+                    atc.setBold(true);
+                    dtc = new TextComponent("[  Ablehnen  ]");
+                    dtc.setColor(net.md_5.bungee.api.ChatColor.RED);
+                    dtc.setBold(true);
+                    atc.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaccept"));
+                    dtc.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpdeny"));
+                    t.spigot().sendMessage(bas, atc, bet, dtc);
 
-            t.sendMessage(" ");
-            tmsg = ChatColor.GOLD+"--------------------------------------------";
-            t.sendMessage(tmsg);
-            t.sendMessage(" ");
+                    t.sendMessage(" ");
+                    tmsg = ChatColor.GOLD + "--------------------------------------------";
+                    t.sendMessage(tmsg);
+                    t.sendMessage(" ");
+                    msg = ChatColor.GOLD +""+ ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Anfrage gesendet!";
+                    break;
+                default:
+                    tmsg = MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.GOLD + " wants you to teleport to him.";
+                    t.sendMessage(tmsg);
+                    t.sendMessage(" ");
+
+                    bas = new TextComponent("  ");
+                    bet = new TextComponent("  ");
+                    atc = new TextComponent("[ Accept ]");
+                    atc.setColor(net.md_5.bungee.api.ChatColor.GREEN);
+                    atc.setBold(true);
+                    dtc = new TextComponent("[  Deny  ]");
+                    dtc.setColor(net.md_5.bungee.api.ChatColor.RED);
+                    dtc.setBold(true);
+                    atc.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaccept"));
+                    dtc.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpdeny"));
+                    t.spigot().sendMessage(bas, atc, bet, dtc);
+
+                    t.sendMessage(" ");
+                    tmsg = ChatColor.GOLD + "--------------------------------------------";
+                    t.sendMessage(tmsg);
+                    t.sendMessage(" ");
+                    msg = ChatColor.GOLD +""+ ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Request sent!";
+            }
 
             DB.setPlayerTpa(p.getName(), t.getName(), true);
-            String msg = ChatColor.GOLD +""+ ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Anfrage gesendet!";
             p.sendMessage(msg);
         } else {
-            error = ChatColor.RED + "[MXE] Das kannst du nur als Spieler!";
+            error = ChatColor.DARK_RED + "[MXE] You can't perform this command while in console!";
             sender.sendMessage(error);
         }
         return true;

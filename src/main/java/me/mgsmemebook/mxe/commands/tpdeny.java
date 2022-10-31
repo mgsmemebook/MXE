@@ -19,10 +19,13 @@ public class tpdeny implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String error;
+        String notfounderror = MXE.getCustomConfig().getString("messages.custom.error.target-not-found");
+        notfounderror = func.colCodes(notfounderror);
+        String lang = MXE.getCustomConfig().getString("messages.language");
         if(sender instanceof Player) {
             Player p = Bukkit.getPlayerExact(sender.getName());
             if (p == null) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE tpdeny]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE tpdeny]: " + ChatColor.RESET + ChatColor.DARK_RED + "Error: Player is null (" + sender.getName() + ")";
                 func.cMSG(error);
                 return true;
             }
@@ -48,7 +51,13 @@ public class tpdeny implements CommandExecutor {
             }
 
             if(res == null || res.isEmpty()) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Anfrage abgelaufen!";
+                switch (lang) {
+                    case "de":
+                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Anfrage abgelaufen!";
+                        break;
+                    default:
+                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Request expired!";
+                }
                 p.sendMessage(error);
                 return true;
             }
@@ -57,13 +66,18 @@ public class tpdeny implements CommandExecutor {
 
             Player t = Bukkit.getPlayerExact(res.get(0));
             if (t == null) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE tpdeny]: " + ChatColor.RESET + ChatColor.DARK_RED + "t = null (" + res.get(0) + ")";
-                func.cMSG(error);
+                func.cMSG(notfounderror);
                 return true;
             }
-            t.sendMessage(ChatColor.GOLD + "[Server]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.GOLD + " hat deine Anfrage " + ChatColor.DARK_RED + "abgelehnt" + ChatColor.RESET + ChatColor.BOLD + "!");
+            switch (lang) {
+                case "de":
+                    t.sendMessage(ChatColor.GOLD + "[Server]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.GOLD + " hat deine Anfrage " + ChatColor.DARK_RED + "abgelehnt" + ChatColor.RESET + ChatColor.BOLD + "!");
+                    break;
+                default:
+                    t.sendMessage(ChatColor.GOLD + "[Server]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.DARK_RED + "rejected" + ChatColor.RESET + ChatColor.BOLD + " your request!");
+            }
         } else {
-            error = ChatColor.RED + "[MXE] Das kannst du nur als Spieler!";
+            error = ChatColor.DARK_RED + "[MXE] You can't perform this command while in console!";
             sender.sendMessage(error);
         }
         return true;

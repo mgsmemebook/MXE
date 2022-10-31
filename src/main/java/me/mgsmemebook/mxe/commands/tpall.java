@@ -21,23 +21,33 @@ public class tpall implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String error;
         String msg;
+        String othererror = MXE.getCustomConfig().getString("messages.custom.error.other");
+        othererror = func.colCodes(othererror);
+        String permerror = MXE.getCustomConfig().getString("messages.custom.error.unsufficient-permissions");
+        permerror = func.colCodes(permerror);
+        String syntaxerror = MXE.getCustomConfig().getString("messages.custom.error.syntax");
+        String lang = MXE.getCustomConfig().getString("messages.language");
+        switch (lang) {
+            case "de":
+                msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_AQUA + "Du wurdest teleportiert!";
+                break;
+            default:
+                msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_AQUA + "You have been teleported!";
+        }
         if(sender instanceof Player) {
             Player p = Bukkit.getPlayerExact(sender.getName());
             if(p == null) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE tpall]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE tpall]: " + ChatColor.RESET + ChatColor.DARK_RED + "Error: Player is null (" + sender.getName() + ")";
                 func.cMSG(error);
                 return true;
             }
             if(!p.isOp()) {
                 if (!MXE.lpLoaded) {
                     if (!p.hasPermission("mxe.tpall")) {
-                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-                        p.sendMessage(error);
+                        p.sendMessage(permerror);
                         return true;
                     }
-
                     for(Player t : Bukkit.getOnlinePlayers()) {
-                        msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_AQUA + "Du wurdest teleportiert!";
                         t.sendMessage(msg);
 
                         if(DB.getBackCoords(t.getUniqueId()) == null) {
@@ -51,19 +61,16 @@ public class tpall implements CommandExecutor {
                     LuckPerms lp = LuckPermsProvider.get();
                     User u = lp.getUserManager().getUser(p.getUniqueId());
                     if (u == null) {
-                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-                        p.sendMessage(error);
+                        p.sendMessage(othererror);
                         return true;
                     }
                     Group pg = lp.getGroupManager().getGroup(u.getPrimaryGroup());
                     if (pg == null) {
-                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-                        p.sendMessage(error);
+                        p.sendMessage(othererror);
                         return true;
                     }
                     if (!u.getCachedData().getPermissionData().checkPermission("mxe.tpall").asBoolean() || !pg.getWeight().isPresent()) {
-                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-                        p.sendMessage(error);
+                        p.sendMessage(permerror);
                         return true;
                     }
 
@@ -75,7 +82,6 @@ public class tpall implements CommandExecutor {
                         else if(tg.getWeight().isPresent() && tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) continue;
 
                         if(tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {
-                            msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_AQUA + "Du wurdest teleportiert!";
                             t.sendMessage(msg);
 
                             if(DB.getBackCoords(t.getUniqueId()) == null) {
@@ -89,7 +95,6 @@ public class tpall implements CommandExecutor {
                 }
             } else {
                 for(Player t : Bukkit.getOnlinePlayers()) {
-                    msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_AQUA + "Du wurdest teleportiert!";
                     t.sendMessage(msg);
 
                     if(DB.getBackCoords(t.getUniqueId()) == null) {
@@ -101,7 +106,7 @@ public class tpall implements CommandExecutor {
                 }
             }
         } else {
-            error = ChatColor.RED + "[MXE] Das kannst du nur als Spieler!";
+            error = ChatColor.DARK_RED + "[MXE] You can't perform this command while in console!";
             sender.sendMessage(error);
         }
         return true;

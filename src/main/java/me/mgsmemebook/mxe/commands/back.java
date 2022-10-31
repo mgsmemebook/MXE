@@ -18,31 +18,34 @@ public class back implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String error;
+        String othererror = MXE.getCustomConfig().getString("messages.custom.error.other");
+        othererror = func.colCodes(othererror);
+        String permerror = MXE.getCustomConfig().getString("messages.custom.error.unsufficient-permissions");
+        permerror = func.colCodes(permerror);
+
+        String lang = MXE.getCustomConfig().getString("messages.language");
         if(sender instanceof Player) {
             Player p = Bukkit.getPlayerExact(sender.getName());
             if(p == null) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE back]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE back]: " + ChatColor.RESET + ChatColor.DARK_RED + "Error: Player is null (" + sender.getName() + ")";
                 func.cMSG(error);
                 return true;
             }
             if(!p.isOp()) {
                 if (!MXE.lpLoaded) {
                     if (!p.hasPermission("mxe.back")) {
-                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-                        p.sendMessage(error);
+                        p.sendMessage(permerror);
                         return true;
                     }
                 } else {
                     LuckPerms lp = LuckPermsProvider.get();
                     User u = lp.getUserManager().getUser(p.getUniqueId());
                     if (u == null) {
-                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-                        p.sendMessage(error);
+                        p.sendMessage(othererror);
                         return true;
                     }
                     if (!u.getCachedData().getPermissionData().checkPermission("mxe.back").asBoolean()) {
-                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-                        p.sendMessage(error);
+                        p.sendMessage(permerror);
                         return true;
                     }
                 }
@@ -54,11 +57,18 @@ public class back implements CommandExecutor {
             p.teleport(loc);
             DB.delBackCoords(p.getUniqueId());
 
-            String msg = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Nimm revanche!";
+            String msg;
+            switch (lang) {
+                case "de":
+                    msg = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Nimm revanche!";
+                    break;
+                default:
+                    msg = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Take revenge!";
+            }
             p.sendMessage(msg);
 
         } else {
-            error = ChatColor.RED + "[MXE] Das kannst du nur als Spieler!";
+            error = ChatColor.DARK_RED + "[MXE] You can't perform this command while in console!";
             sender.sendMessage(error);
         }
         return true;

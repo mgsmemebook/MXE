@@ -24,9 +24,14 @@ public class nick implements CommandExecutor {
         String error; String msg;
         Player p = Bukkit.getPlayerExact(sender.getName());
         Group pg = null;
+        String othererror = MXE.getCustomConfig().getString("messages.custom.error.other");
+        othererror = func.colCodes(othererror);
+        String permerror = MXE.getCustomConfig().getString("messages.custom.error.unsufficient-permissions");
+        permerror = func.colCodes(permerror);
+        String lang = MXE.getCustomConfig().getString("messages.language");
         if(sender instanceof Player) {
             if(p == null) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE nick]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE nick]: " + ChatColor.RESET + ChatColor.DARK_RED + "Error: Player is null (" + sender.getName() + ")";
                 func.cMSG(error);
                 return true;
             }
@@ -34,39 +39,44 @@ public class nick implements CommandExecutor {
             if(!p.isOp()) {
                 if (!MXE.lpLoaded) {
                     if (!p.hasPermission("mxe.nick")) {
-                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-                        p.sendMessage(error);
+                        p.sendMessage(permerror);
                         return true;
                     }
                 } else {
                     LuckPerms lp = LuckPermsProvider.get();
                     User u = lp.getUserManager().getUser(p.getUniqueId());
                     if (u == null) {
-                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-                        p.sendMessage(error);
+                        p.sendMessage(othererror);
                         return true;
                     }
                     if (!u.getCachedData().getPermissionData().checkPermission("mxe.nick").asBoolean()) {
-                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-                        p.sendMessage(error);
+                        p.sendMessage(permerror);
                         return true;
                     }
                     pg = lp.getGroupManager().getGroup(u.getPrimaryGroup());
                     if (pg == null) {
-                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-                        p.sendMessage(error);
+                        p.sendMessage(othererror);
                         return true;
                     }
                 }
             }
             if(args.length == 0) {
-                Bukkit.broadcastMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " ist Milch holen gegangen!");
+                String quitmsg = MXE.getCustomConfig().getString("messages.custom.ban.banned-join.permanent.reason");
+                quitmsg = func.colCodes(quitmsg);
+                quitmsg = quitmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+                Bukkit.broadcastMessage(quitmsg);
 
                 if(MXE.getPlayerSB().getEntryTeam(p.getDisplayName()) != null) MXE.getPlayerSB().getEntryTeam(p.getDisplayName()).removeEntry(p.getDisplayName());
                 if(MXE.lpLoaded) {
                     func.updateUser(p,pg);
                 }
-                msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du bist wieder \""+ p.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + "\"!";
+                switch (lang) {
+                    case "de":
+                        msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du bist wieder \""+ p.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + "\"!";
+                        break;
+                    default:
+                        msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "You are \""+ p.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + "\" again!";
+                }
                 p.sendMessage(msg);
             } else {
                 String name = args[0];
@@ -80,7 +90,11 @@ public class nick implements CommandExecutor {
                     p.performCommand("nick");
                     return true;
                 }
-                Bukkit.broadcastMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " ist Milch holen gegangen!");
+
+                String quitmsg = MXE.getCustomConfig().getString("messages.custom.ban.banned-join.permanent.reason");
+                quitmsg = func.colCodes(quitmsg);
+                quitmsg = quitmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+                Bukkit.broadcastMessage(quitmsg);
 
                 if(MXE.getPlayerSB().getEntryTeam(p.getDisplayName()) != null) MXE.getPlayerSB().getEntryTeam(p.getDisplayName()).removeEntry(p.getDisplayName());
                 Nametag.setName(p, name);
@@ -95,12 +109,21 @@ public class nick implements CommandExecutor {
                 p.setPlayerListName(func.colCodes(prefix) + p.getDisplayName());
 
                 MXE.updatePlayerSB();
-                msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du bist jetzt \""+ p.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + "\"!";
+                switch (lang) {
+                    case "de":
+                        msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du bist jetzt \""+ p.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + "\"!";
+                        break;
+                    default:
+                        msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "You now are \""+ p.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + "\"!";
+                }
                 p.sendMessage(msg);
             }
-            Bukkit.broadcastMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " ist uns beigetreten!");
+            String joinmsg = MXE.getCustomConfig().getString("messages.custom.join");
+            joinmsg = func.colCodes(joinmsg);
+            joinmsg = joinmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+            Bukkit.broadcastMessage(joinmsg);
         } else {
-            error = ChatColor.RED + "[MXE] Das kannst du nur als Spieler!";
+            error = ChatColor.DARK_RED + "[MXE] You can't perform this command while in console!";
             sender.sendMessage(error);
         }
         return true;

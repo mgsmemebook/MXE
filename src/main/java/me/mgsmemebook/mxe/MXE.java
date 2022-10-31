@@ -8,6 +8,10 @@ import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,6 +20,7 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
 import java.util.Set;
 
@@ -26,6 +31,8 @@ public final class MXE extends JavaPlugin {
     private static String plDir;
     private static Plugin plugin;
     private static Scoreboard playersb;
+    private File configFile;
+    private static FileConfiguration config;
     public static boolean lpLoaded = false;
     @Override
     public void onEnable() {
@@ -38,7 +45,7 @@ public final class MXE extends JavaPlugin {
         cMSG(ChatColor.WHITE + "[MXE] " + ChatColor.BLUE + ChatColor.BOLD + "| |  | |  / . \\  " + ChatColor.GOLD + "| |____     ");
         cMSG(ChatColor.WHITE + "[MXE] " + ChatColor.BLUE + ChatColor.BOLD + "|_|  |_| /_/ \\_\\ " + ChatColor.GOLD + "|______|   ");
         cMSG(ChatColor.WHITE + "[MXE] -------------------------");
-        cMSG(ChatColor.GREEN + "[MXE] initializing MXEssentials ");
+        cMSG(ChatColor.GREEN + "[MXE] Initializing MXEssentials ");
         plDir = getDataFolder().getAbsolutePath();
         plugin = this;
 
@@ -48,14 +55,6 @@ public final class MXE extends JavaPlugin {
                 cMSG(ChatColor.RED + "[MXE] Couldn't create plugin folder.");
             }
         }
-        /*File lib = new File(plDir+"/lib");
-        if(!lib.exists()) {
-            if(!lib.mkdir()) {
-                func.cMSG(ChatColor.RED + "[MXE] Couldn't create /lib");
-            } else {
-                func.cMSG(ChatColor.BLUE + "[MXE] Created /lib");
-            }
-        }*/
         File db = new File(plDir+"/db");
         if(!db.exists()) {
             if(!db.mkdir()) {
@@ -64,15 +63,7 @@ public final class MXE extends JavaPlugin {
                 func.cMSG(ChatColor.BLUE + "[MXE] Created /db");
             }
         }
-
-        //ProtocolLib
-        if(Bukkit.getPluginManager().getPlugin("ProtocolLib") != null) {
-            Objects.requireNonNull(getCommand("nick")).setExecutor(new nick());
-            Objects.requireNonNull(getCommand("nick")).setTabCompleter(new TabCompletion());
-            Nametag.NameChanger();
-        } else {
-            cMSG(ChatColor.YELLOW + "[MXE] WARN: ProtocolLib not found. Please put ProtocolLib inside your plugins folder to use the /nick command.");
-        }
+        createCustomConfig();
 
         //EventListeners
         getServer().getPluginManager().registerEvents(new PlayerEvents(), this);
@@ -107,7 +98,16 @@ public final class MXE extends JavaPlugin {
             Objects.requireNonNull(getCommand("setrank")).setExecutor(new setrank());
             Objects.requireNonNull(getCommand("setrank")).setTabCompleter(new TabCompletion());
         } else {
-            cMSG(ChatColor.YELLOW + "[MXE] WARN: LuckPerms not found. Please put LuckPerms inside your plugins folder to use permissions and prefixes.");
+            cMSG(ChatColor.YELLOW + "[MXE] Warn: LuckPerms not found. Please put LuckPerms inside your plugins folder to use permissions and prefixes.");
+        }
+
+        //ProtocolLib
+        if(Bukkit.getPluginManager().getPlugin("ProtocolLib") != null) {
+            Objects.requireNonNull(getCommand("nick")).setExecutor(new nick());
+            Objects.requireNonNull(getCommand("nick")).setTabCompleter(new TabCompletion());
+            Nametag.NameChanger();
+        } else {
+            cMSG(ChatColor.YELLOW + "[MXE] Warn: ProtocolLib not found. Please put ProtocolLib inside your plugins folder to use the /nick command.");
         }
 
         //Commands
@@ -176,9 +176,7 @@ public final class MXE extends JavaPlugin {
     public static Plugin getPlugin() {
         return plugin;
     }
-    public static Scoreboard getPlayerSB() {
-        return playersb;
-    }
+
     public static String getPlayerPrefix(Player p) {
         Team team = playersb.getEntryTeam(p.getDisplayName());
         if(team == null) {
@@ -186,9 +184,32 @@ public final class MXE extends JavaPlugin {
         }
         return team.getPrefix();
     }
+
+    public static Scoreboard getPlayerSB() {
+        return playersb;
+    }
     public static void updatePlayerSB() {
         for(Player t:Bukkit.getOnlinePlayers()) {
             t.setScoreboard(playersb);
+        }
+    }
+
+    public static FileConfiguration getCustomConfig() {
+        return config;
+    }
+    private void createCustomConfig() {
+        configFile = new File(getDataFolder(), "config.yml");
+        if (!configFile.exists()) {
+            configFile.getParentFile().mkdirs();
+            saveResource("config.yml", false);
+        }
+
+        config = new YamlConfiguration();
+        try {
+            config.load(configFile);
+        } catch (IOException | InvalidConfigurationException ex) {
+            func.cMSG(ChatColor.DARK_RED + "[MXE] Error: Couldn't load plugin config");
+            func.cMSG(ChatColor.DARK_RED + "[MXE] Error: " + ex.getMessage());
         }
     }
 }

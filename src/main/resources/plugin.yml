@@ -1,10 +1,9 @@
-name: MXEssentials
+name: MXE
 version: 1.3.1
 main: me.mgsmemebook.mxe.MXE
 description: Minecraft Spigot 1.19.2 Essentials Plugin
 authors: [ mgsmemebook ]
 website: https://github.com/mgsmemebook/MXE
-prefix: MXE
 api-version: 1.19
 load: STARTUP
 depend: [ LuckPerms ]

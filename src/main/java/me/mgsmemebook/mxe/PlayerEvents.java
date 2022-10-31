@@ -7,12 +7,14 @@ import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.advancement.Advancement;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,9 +23,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
-import static me.mgsmemebook.mxe.db.DB.*;
+import static me.mgsmemebook.mxe.db.DB.addDBPlayer;
+import static me.mgsmemebook.mxe.db.DB.getDBPlayer;
 
 public class PlayerEvents implements Listener {
+    String lang = MXE.getCustomConfig().getString("messages.language");
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
@@ -52,7 +56,18 @@ public class PlayerEvents implements Listener {
                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
                     String unbandate = ldt.format(dtf);
 
-                    String msg = ChatColor.RED + "Du wurdest bis zum " + ChatColor.BOLD + unbandate + ChatColor.RESET + ChatColor.RED + " von diesem Server gebannt! Grund: " + reason;
+                    String msg = null;
+                    if(reason != null) {
+                        msg = MXE.getCustomConfig().getString("messages.custom.ban.banned-join.temporary.reason");
+                        msg = func.colCodes(msg);
+                        msg = msg.replaceAll("%d", unbandate);
+                        msg = msg.replaceAll("%r", reason);
+                    } else {
+                        msg = MXE.getCustomConfig().getString("messages.custom.ban.banned-join.temporary.no-reason");
+                        msg = func.colCodes(msg);
+                        msg = msg.replaceAll("%d", unbandate);
+                    }
+
                     p.kickPlayer(msg);
                     e.setJoinMessage("");
                 } else {
@@ -61,7 +76,15 @@ public class PlayerEvents implements Listener {
                 }
             } else {
                 //Permban
-                String msg = ChatColor.RED + "Du wurdest " + ChatColor.BOLD + "permanent" + ChatColor.RESET + ChatColor.RED + " von diesem Server gebannt! Grund: " + reason;
+                String msg = null;
+                if(reason != null) {
+                    msg = MXE.getCustomConfig().getString("messages.custom.ban.banned-join.permanent.reason");
+                    msg = func.colCodes(msg);
+                    msg = msg.replaceAll("%r", reason);
+                } else {
+                    msg = MXE.getCustomConfig().getString("messages.custom.ban.banned-join.permanent.no-reason");
+                    msg = func.colCodes(msg);
+                }
                 p.kickPlayer(msg);
                 e.setJoinMessage("");
             }
@@ -82,16 +105,6 @@ public class PlayerEvents implements Listener {
                 }
             }
 
-            e.setJoinMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " ist uns beigetreten!");
-
-            //Check DB
-            String res = getDBPlayer(p.getUniqueId());
-            func.cMSG(ChatColor.DARK_AQUA + "[MXE] SQL: Found database entries: " + res);
-            if (res == null) {
-                func.cMSG(ChatColor.DARK_AQUA + "[MXE] SQL: Player not found - Adding to database");
-                addDBPlayer(p.getUniqueId(), p.getName());
-            }
-
             //Get vanished Players
             ArrayList<String> van = DB.getAllVanished();
             if (van != null) {
@@ -110,16 +123,6 @@ public class PlayerEvents implements Listener {
             }
             p.setScoreboard(MXE.getPlayerSB());
         } else {
-            e.setJoinMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " ist uns beigetreten!");
-
-            //Check DB
-            String res = getDBPlayer(p.getUniqueId());
-            func.cMSG(ChatColor.DARK_AQUA + "[MXE] SQL: Found database entries: " + res);
-            if (res == null) {
-                func.cMSG(ChatColor.DARK_AQUA + "[MXE] SQL: Player not found - Adding to database");
-                addDBPlayer(p.getUniqueId(), p.getName());
-            }
-
             //Get vanished Players
             ArrayList<String> van = DB.getAllVanished();
             if (van != null) {
@@ -129,8 +132,28 @@ public class PlayerEvents implements Listener {
                 }
             }
         }
-        p.setPlayerListHeader(ChatColor.GOLD + "" + ChatColor.BOLD + "     -- Wilkommen " + p.getName() + " --     ");
-        p.setPlayerListFooter(ChatColor.YELLOW + "MXE V." + MXE.getPlugin().getDescription().getVersion());
+
+        //Check DB
+        String res = getDBPlayer(p.getUniqueId());
+        func.cMSG(ChatColor.DARK_AQUA + "[MXE] SQL: Found database entries: " + res);
+        if (res == null) {
+            func.cMSG(ChatColor.DARK_AQUA + "[MXE] SQL: Player not found - Adding to database");
+            addDBPlayer(p.getUniqueId(), p.getName());
+        }
+
+        String joinmsg = MXE.getCustomConfig().getString("messages.custom.join");
+        joinmsg = func.colCodes(joinmsg);
+        joinmsg = joinmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+        e.setJoinMessage(joinmsg);
+        if(MXE.getCustomConfig().getBoolean("messages.custom.tablist.enabled")) {
+            String header = MXE.getCustomConfig().getString("messages.custom.tablist.header");
+            header = func.colCodes(header);
+            header = header.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+            String footer = MXE.getCustomConfig().getString("messages.custom.tablist.footer");
+            footer = func.colCodes(footer);
+            footer = footer.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+            p.setPlayerListHeaderFooter(header, footer);
+        }
     }
 
     @EventHandler
@@ -138,7 +161,11 @@ public class PlayerEvents implements Listener {
         Player p = e.getPlayer();
         ArrayList<String> baninf = DB.getPlayerBanInfo(p.getUniqueId());
         if(baninf == null) {
-            e.setQuitMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave] " + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " ist Milch holen gegangen!");
+            String quitmsg = MXE.getCustomConfig().getString("messages.custom.quit");
+            quitmsg = func.colCodes(quitmsg);
+            quitmsg = quitmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+            e.setQuitMessage(quitmsg);
+
             if(MXE.lpLoaded) {
                 LuckPerms lp = LuckPermsProvider.get();
                 lp.getUserManager().saveUser(Objects.requireNonNull(lp.getUserManager().getUser(p.getUniqueId())));
@@ -184,20 +211,26 @@ public class PlayerEvents implements Listener {
                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
                     String unmutedate = ldt.format(dtf);
 
-                    String mutemsg = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dir wurde für " + ChatColor.BOLD + unmutedate + ChatColor.RESET + ChatColor.DARK_RED + " das Rederecht genommen!";
+                    String mutemsg = MXE.getCustomConfig().getString("messages.custom.mute.muted-chat.temporary");
+                    mutemsg = func.colCodes(mutemsg);
+                    mutemsg = mutemsg.replaceAll("%d", unmutedate);
+
                     p.sendMessage(mutemsg);
                 } else {
                     DB.setDBPlayerMute(false, false, null, p.getUniqueId());
                 }
             } else {
-                String mutemsg = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Du hast kein Recht zu reden!";
+                String mutemsg = MXE.getCustomConfig().getString("messages.custom.mute.muted-chat.permanent");
+                mutemsg = func.colCodes(mutemsg);
                 p.sendMessage(mutemsg);
             }
         } else {
             String msg = e.getMessage();
             msg = func.colCodes(msg);
-            msg = MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.GOLD + ChatColor.BOLD + " sagt: " + ChatColor.RESET + ChatColor.GRAY + msg;
-            Bukkit.broadcastMessage(msg);
+            String chatmsg = MXE.getCustomConfig().getString("messages.custom.chat");
+            chatmsg = chatmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+            chatmsg = chatmsg.replaceAll("%m", msg);
+            Bukkit.broadcastMessage(chatmsg);
         }
         e.setCancelled(true);
     }
@@ -217,7 +250,13 @@ public class PlayerEvents implements Listener {
         if(DB.getBackCoords(p.getUniqueId()) != null) {
             DB.setBackCoords(p.getUniqueId());
         }
-        msg = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Info: Kehre mit " + ChatColor.YELLOW + "/back" + ChatColor.GOLD + " wieder an deinen Totespunkt zurück!";
+        switch (lang) {
+            case "de":
+                msg = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Info: Kehre mit " + ChatColor.YELLOW + "/back" + ChatColor.GOLD + " wieder an deinen Totespunkt zurück!";
+                break;
+            default:
+                msg = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Info: Return to your death location with " + ChatColor.YELLOW + "/back" + ChatColor.GOLD + "!";
+        }
         p.sendMessage(msg);
     }
 

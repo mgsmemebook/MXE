@@ -26,25 +26,45 @@ public class TabCompletion implements TabCompleter {
         }
 
         List<String> options;
+        String lang = MXE.getCustomConfig().getString("messages.language");
         switch (command.getName()) {
             case "ban":
                 if(args.length == 1) {
                     return playerNames;
                 } else if(args.length == 2) {
                     options = new ArrayList<>();
-                    options.add("Grund");
-                    options.add("Zeit(in s/m/h/D/M/Y)");
+                    switch (lang) {
+                        case "de":
+                            options.add("Grund");
+                            options.add("Zeit (in s/m/h/D/M/Y)");
+                            break;
+                        default:
+                            options.add("Reason");
+                            options.add("Time (in s/m/h/D/M/Y)");
+                    }
                     return options;
                 } else if(args.length == 3) {
                     options = new ArrayList<>();
-                    options.add("Grund");
+                    switch (lang) {
+                        case "de":
+                            options.add("Grund");
+                            break;
+                        default:
+                            options.add("Reason");
+                    }
                     return options;
                 }
 
             case "fly":
                 if(args.length == 1) {
                     options = new ArrayList<>();
-                    options.add("Geschwindigkeit");
+                    switch (lang) {
+                        case "de":
+                            options.add("Geschwindigkeit");
+                            break;
+                        default:
+                            options.add("Speed");
+                    }
                     return options;
                 }
 
@@ -63,8 +83,19 @@ public class TabCompletion implements TabCompleter {
             case "god":
                 if(args.length == 1) {
                     options = new ArrayList<>();
-                    options.add("an");
-                    options.add("aus");
+                    switch (lang) {
+                        case "de":
+                            options.add("an");
+                            options.add("aus");
+                            options.add("1");
+                            options.add("0");
+                            break;
+                        default:
+                            options.add("on");
+                            options.add("off");
+                            options.add("1");
+                            options.add("0");
+                    }
                     return options;
                 }
 
@@ -107,7 +138,13 @@ public class TabCompletion implements TabCompleter {
                     return playerNames;
                 } else if(args.length == 2) {
                     options = new ArrayList<>();
-                    options.add("Zeit(in s/m/h/D/M/Y)");
+                    switch (lang) {
+                        case "de":
+                            options.add("Zeit (in s/m/h/D/M/Y)");
+                            break;
+                        default:
+                            options.add("Time (in s/m/h/D/M/Y)");
+                    }
                     return options;
                 }
 

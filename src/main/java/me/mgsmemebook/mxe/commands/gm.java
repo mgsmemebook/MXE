@@ -19,136 +19,156 @@ public class gm implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String error;
         String msg;
+        String othererror = MXE.getCustomConfig().getString("messages.custom.error.other");
+        othererror = func.colCodes(othererror);
+        String permerror = MXE.getCustomConfig().getString("messages.custom.error.unsufficient-permissions");
+        permerror = func.colCodes(permerror);
+        String notfounderror = MXE.getCustomConfig().getString("messages.custom.error.target-not-found");
+        notfounderror = func.colCodes(notfounderror);
+        String lang = MXE.getCustomConfig().getString("messages.language");
+
+        String notfound, p0msg, p1msg, p2msg, p3msg;
+        switch (lang) {
+            case "de":
+                p0msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du bist jetzt im Survival-Mode!";
+                p1msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du bist jetzt im Creative-Mode!";
+                p2msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du bist jetzt im Adventure-Mode!";
+                p3msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du bist jetzt im Spectator-Mode!";
+                notfound = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Gamemode nicht gefunden!";
+                break;
+            default:
+                p0msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "You are now in survival-mode!";
+                p1msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "You are now in creative-mode!";
+                p2msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "You are now in adventure-mode!";
+                p3msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "You are now in spectator-mode!";
+                notfound = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Gamemode not found!";
+        }
 
         if(sender instanceof Player) {
             Player p = Bukkit.getPlayerExact(sender.getName());
             Group pg = null;
             if(p == null) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE gm]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE gm]: " + ChatColor.RESET + ChatColor.DARK_RED + "Error: Player is null (" + sender.getName() + ")";
                 func.cMSG(error);
                 return true;
             }
             if(!p.isOp()) {
                 if (!MXE.lpLoaded) {
                     if (!p.hasPermission("mxe.nick")) {
-                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-                        p.sendMessage(error);
+                        p.sendMessage(permerror);
                         return true;
                     }
                 } else {
                     LuckPerms lp = LuckPermsProvider.get();
                     User u = lp.getUserManager().getUser(p.getUniqueId());
                     if (u == null) {
-                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-                        p.sendMessage(error);
+                        p.sendMessage(othererror);
                         return true;
                     }
                     if (!u.getCachedData().getPermissionData().checkPermission("mxe.gm").asBoolean()) {
-                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-                        p.sendMessage(error);
+                        p.sendMessage(permerror);
                         return true;
                     }
                     pg = lp.getGroupManager().getGroup(u.getPrimaryGroup());
                     if (pg == null) {
-                        error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-                        p.sendMessage(error);
+                        p.sendMessage(othererror);
                         return true;
                     }
                 }
             }
+
             if(args.length >= 2) {
                 Player t = Bukkit.getPlayer(args[1]);
                 if(t == null) {
-                    error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Spieler nicht gefunden!";
-                    sender.sendMessage(error);
+                    sender.sendMessage(notfounderror);
                     return true;
                 }
                 if(!p.isOp()) {
                     if (!MXE.lpLoaded) {
                         if (!p.hasPermission("mxe.gm")) {
-                            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-                            p.sendMessage(error);
+                            p.sendMessage(permerror);
                             return true;
                         }
                     } else {
                         LuckPerms lp = LuckPermsProvider.get();
                         User tu = lp.getUserManager().getUser(t.getUniqueId());
                         if (tu == null) {
-                            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-                            sender.sendMessage(error);
+                            sender.sendMessage(othererror);
                             return true;
                         }
                         Group tg = lp.getGroupManager().getGroup(tu.getPrimaryGroup());
                         if (tg == null) {
-                            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein interner Fehler ist aufgetreten.";
-                            sender.sendMessage(error);
+                            sender.sendMessage(othererror);
                             return true;
                         }
                         if (pg.getWeight().isPresent() && tg.getWeight().isPresent() && tg.getWeight().getAsInt() >= pg.getWeight().getAsInt()) {
-                            error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-                            p.sendMessage(error);
+                            p.sendMessage(permerror);
                             return true;
                         }
                     }
                 }
+                String t1msg, t0msg, t2msg, t3msg;
+                switch (lang) {
+                    case "de":
+                        t0msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " ist jetzt im Survival-Mode!";
+                        t1msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " ist jetzt im Creative-Mode!";
+                        t2msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " ist jetzt im Adventure-Mode!";
+                        t3msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " ist jetzt im Spectator-Mode!";
+                        break;
+                    default:
+                        t0msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " is now in survival mode!";
+                        t1msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " is now in creative mode!";
+                        t2msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " is now in adventure mode!";
+                        t3msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " is now in spectator mode!";
+                }
                 if(args[0].equalsIgnoreCase("creative") || args[0].equals("1")) {
                     t.setGameMode(GameMode.CREATIVE);
-                    msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " ist bist jetzt im Creative-Mode!";
-                    p.sendMessage(msg);
+                    p.sendMessage(t1msg);
                     return true;
                 } else if(args[0].equalsIgnoreCase("survival") || args[0].equals("0")) {
                     t.setGameMode(GameMode.SURVIVAL);
-                    msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " ist bist jetzt im Survival-Mode!";
-                    p.sendMessage(msg);
+                    p.sendMessage(t0msg);
                     return true;
                 } else if(args[0].equalsIgnoreCase("adventure") || args[0].equals("2")) {
                     t.setGameMode(GameMode.ADVENTURE);
-                    msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " ist jetzt im Adventure-Mode!";
-                    p.sendMessage(msg);
+                    p.sendMessage(t2msg);
                     return true;
                 } else if(args[0].equalsIgnoreCase("spectator") || args[0].equals("3")) {
                     t.setGameMode(GameMode.SPECTATOR);
-                    msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " ist jetzt im Spectator-Mode!";
-                    p.sendMessage(msg);
+                    p.sendMessage(t3msg);
                     return true;
                 } else {
-                    error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Gamemode nicht gefunden!";
-                    t.sendMessage(error);
+                    t.sendMessage(notfound);
                     return true;
                 }
             } else if(args.length == 1) {
                 if(args[0].equalsIgnoreCase("creative") || args[0].equals("1")) {
                     p.setGameMode(GameMode.CREATIVE);
-                    msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du bist jetzt im Creative-Mode!";
-                    p.sendMessage(msg);
+                    p.sendMessage(p1msg);
                     return true;
                 } else if(args[0].equalsIgnoreCase("survival") || args[0].equals("0")) {
                     p.setGameMode(GameMode.SURVIVAL);
-                    msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du bist jetzt im Survival-Mode!";
-                    p.sendMessage(msg);
+                    p.sendMessage(p0msg);
                     return true;
                 } else if(args[0].equalsIgnoreCase("adventure") || args[0].equals("2")) {
                     p.setGameMode(GameMode.ADVENTURE);
-                    msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du bist jetzt im Adventure-Mode!";
-                    p.sendMessage(msg);
+                    p.sendMessage(p2msg);
                     return true;
                 } else if(args[0].equalsIgnoreCase("spectator") || args[0].equals("3")) {
                     p.setGameMode(GameMode.SPECTATOR);
-                    msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du bist jetzt im Spectator-Mode!";
-                    p.sendMessage(msg);
+                    p.sendMessage(p3msg);
                     return true;
                 } else {
-                    error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Gamemode nicht gefunden!";
-                    p.sendMessage(error);
+                    p.sendMessage(notfound);
                     return true;
                 }
             } else {
                 if (p.getGameMode().equals(GameMode.CREATIVE)) {
                     p.setGameMode(GameMode.SURVIVAL);
-                    msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du bist jetzt im Survival-Mode!";
+                    msg = p0msg;
                 } else {
                     p.setGameMode(GameMode.CREATIVE);
-                    msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.AQUA + "Du bist jetzt im Creative-Mode!";
+                    msg = p1msg;
                 }
                 p.sendMessage(msg);
             }
@@ -164,27 +184,22 @@ public class gm implements CommandExecutor {
                 }
                 if(args[0].equalsIgnoreCase("creative") || args[0].equals("1")) {
                     t.setGameMode(GameMode.CREATIVE);
-                    msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " ist bist jetzt im Creative-Mode!";
-                    sender.sendMessage(msg);
+                    sender.sendMessage(p1msg);
                     return true;
                 } else if(args[0].equalsIgnoreCase("survival") || args[0].equals("0")) {
                     t.setGameMode(GameMode.SURVIVAL);
-                    msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " ist bist jetzt im Survival-Mode!";
-                    sender.sendMessage(msg);
+                    sender.sendMessage(p0msg);
                     return true;
                 } else if(args[0].equalsIgnoreCase("adventure") || args[0].equals("2")) {
                     t.setGameMode(GameMode.ADVENTURE);
-                    msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " ist jetzt im Adventure-Mode!";
-                    sender.sendMessage(msg);
+                    sender.sendMessage(p2msg);
                     return true;
                 } else if(args[0].equalsIgnoreCase("spectator") || args[0].equals("3")) {
                     t.setGameMode(GameMode.SPECTATOR);
-                    msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + MXE.getPlayerPrefix(t) + t.getDisplayName() + ChatColor.RESET + ChatColor.AQUA + " ist jetzt im Spectator-Mode!";
-                    sender.sendMessage(msg);
+                    sender.sendMessage(p3msg);
                     return true;
                 } else {
-                    error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Gamemode nicht gefunden!";
-                    t.sendMessage(error);
+                    t.sendMessage(notfound);
                     return true;
                 }
             }
