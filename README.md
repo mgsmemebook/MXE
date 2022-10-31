@@ -1,7 +1,5 @@
 # MXEessentials
 
-##### Note: At the moment this Plugin is only awayable in german!
-
 MXE is a Minecraft 1.19.2 Spigot Essentials Plugin developed by me in my free time.
 This plugin is most likely very buggy and not intended for public use.
 Older versions are most likely not usable so don't bother trying them out.
@@ -21,6 +19,7 @@ Older versions are most likely not usable so don't bother trying them out.
 - **/back command** for when a player dies
 - Replaces default /help command
 - Adds header and footer to tablist 
+- Supports two languages: English and German
 
 ### To do
 - Fix many bugs
@@ -34,6 +33,7 @@ Older versions are most likely not usable so don't bother trying them out.
 - Add support for other permissions plugins such as PermissionsEx
 - More settings
 - Make every feature optional
+- More languages
 
 ## Installation
 
