@@ -79,38 +79,38 @@ public class vanish implements CommandExecutor {
                     }
                 }
             }
+            String joinmsg = MXE.getCustomConfig().getString("messages.custom.join");
+            joinmsg = func.colCodes(joinmsg);
+            joinmsg = joinmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+            String quitmsg = MXE.getCustomConfig().getString("messages.custom.quit");
+            quitmsg = func.colCodes(quitmsg);
+            quitmsg = quitmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
             if(vanish) {
+                DB.setVanish(p.getUniqueId(), false);
                 switch (lang) {
                     case "de":
-                        DB.setVanish(p.getUniqueId(), false);
                         msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_AQUA + "Du bist jetzt nicht mehr vanished!";
                         p.sendMessage(msg);
-                        p.removePotionEffect(PotionEffectType.INVISIBILITY);
-                        Bukkit.broadcastMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " ist beigetreten!");
                         break;
                     default:
-                        DB.setVanish(p.getUniqueId(), false);
                         msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_AQUA + "You are not vanished anymore!";
                         p.sendMessage(msg);
-                        p.removePotionEffect(PotionEffectType.INVISIBILITY);
-                        Bukkit.broadcastMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " joined the server!");
                 }
+                p.removePotionEffect(PotionEffectType.INVISIBILITY);
+                Bukkit.broadcastMessage(joinmsg);
             } else {
+                DB.setVanish(p.getUniqueId(), true);
                 switch (lang) {
                     case "de":
-                        DB.setVanish(p.getUniqueId(), true);
                         msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_AQUA + "Du bist jetzt vanished!";
                         p.sendMessage(msg);
-                        p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999999, 2, true, true));
-                        Bukkit.broadcastMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave] " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " ist Milch holen gegangen!");
                         break;
                     default:
-                        DB.setVanish(p.getUniqueId(), true);
                         msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_AQUA + "You are now vanished!";
                         p.sendMessage(msg);
-                        p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999999, 2, true, true));
-                        Bukkit.broadcastMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[join/leave] " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.AQUA + " left the server!");
                 }
+                p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999999, 2, true, true));
+                Bukkit.broadcastMessage(quitmsg);
             }
         } else {
             error = ChatColor.DARK_RED + "[MXE] You can't perform this command while in console!";

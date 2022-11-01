@@ -31,7 +31,8 @@ commands:
 
   help:
     description: Dieser Befehl.
-    usage: /help mxe
+    usage: /help
+    aliases: mxe help
 
   home:
     description: Verwalte deine Homes.

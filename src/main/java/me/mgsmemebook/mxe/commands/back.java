@@ -54,7 +54,7 @@ public class back implements CommandExecutor {
             Location loc = DB.getBackCoords(p.getUniqueId());
             if(loc == null) return true;
 
-            p.teleport(loc);
+            func.teleportDelay(p, MXE.getCustomConfig().getLong("commands.back.tp-time"), loc);
             DB.delBackCoords(p.getUniqueId());
 
             String msg;

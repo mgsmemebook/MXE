@@ -8,7 +8,6 @@ import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -112,12 +111,18 @@ public final class MXE extends JavaPlugin {
         }
 
         //Commands
+        if(plugin.getConfig().getBoolean("commands.help.replace-vanilla")) {
+            Objects.requireNonNull(getCommand("help")).setExecutor(new help());
+            Objects.requireNonNull(getCommand("help")).setTabCompleter(new TabCompletion());
+        } else {
+            Objects.requireNonNull(getCommand("mxe help")).setExecutor(new help());
+            Objects.requireNonNull(getCommand("mxe help")).setTabCompleter(new TabCompletion());
+        }
         Objects.requireNonNull(getCommand("back")).setExecutor(new back());
         Objects.requireNonNull(getCommand("ban")).setExecutor(new ban());
         Objects.requireNonNull(getCommand("fly")).setExecutor(new fly());
         Objects.requireNonNull(getCommand("gm")).setExecutor(new gm());
         Objects.requireNonNull(getCommand("god")).setExecutor(new god());
-        Objects.requireNonNull(getCommand("help")).setExecutor(new help());
         Objects.requireNonNull(getCommand("home")).setExecutor(new home());
         Objects.requireNonNull(getCommand("kick")).setExecutor(new kick());
         Objects.requireNonNull(getCommand("kill")).setExecutor(new kill());
@@ -138,7 +143,6 @@ public final class MXE extends JavaPlugin {
         Objects.requireNonNull(getCommand("fly")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("gm")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("god")).setTabCompleter(new TabCompletion());
-        Objects.requireNonNull(getCommand("help")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("home")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("kick")).setTabCompleter(new TabCompletion());
         Objects.requireNonNull(getCommand("kill")).setTabCompleter(new TabCompletion());

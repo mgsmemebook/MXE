@@ -71,10 +71,10 @@ public class tpdeny implements CommandExecutor {
             }
             switch (lang) {
                 case "de":
-                    t.sendMessage(ChatColor.GOLD + "[Server]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.GOLD + " hat deine Anfrage " + ChatColor.DARK_RED + "abgelehnt" + ChatColor.RESET + ChatColor.BOLD + "!");
+                    t.sendMessage(ChatColor.GOLD + "[Server]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.GOLD + " hat deine Anfrage " + ChatColor.DARK_RED + "abgelehnt" + ChatColor.RESET + ChatColor.GOLD + "!");
                     break;
                 default:
-                    t.sendMessage(ChatColor.GOLD + "[Server]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.DARK_RED + "rejected" + ChatColor.RESET + ChatColor.BOLD + " your request!");
+                    t.sendMessage(ChatColor.GOLD + "[Server]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.DARK_RED + "rejected" + ChatColor.RESET + ChatColor.GOLD + " your request!");
             }
         } else {
             error = ChatColor.DARK_RED + "[MXE] You can't perform this command while in console!";

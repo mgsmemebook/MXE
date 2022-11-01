@@ -31,7 +31,15 @@ messages:
     # Message when a player sends a message in the chat
     # Set player as %p. Note that you will have to reset the color because of the prefix.
     # Set message as %m.
-    chat: "%p&r&6 says: %m"
+    chat: "%p&r&6 says: &r&7%m"
+
+    timedtp:
+      # Message a player gets when they are in the process of teleporting
+      # (If the delay specified in the commands section below is 0 this won't have any effect.)
+      # Set time as %t
+      wait: "&6&l[Server]:&r&6 You will be teleported in %t seconds. Please don't move!"
+      # Message a player gets when they moved during a teleport delay.
+      failed: "&c&l[Server]:&r&c You moved and the teleport was aborted! Please try again."
 
     # Ban messages
     ban:
@@ -134,14 +142,15 @@ messages:
       target-not-found: "&c&l[Server]:&r&c Player not found!"
       other: "&c&l[Server]:&r&c An error occured while performing this command."
 
+
+
+# --- Command section ---
 # Configuration and tweaks of commands
-# Will contain things like max homes or disabled commands in the future
-# Doesn't do anything yet
 commands:
-  # Disabled commands. Seperate by comma e.g. [ nick, vanish ]
+  # Disabled commands. Seperate by comma e.g. [ "nick", "vanish" ]
+  # This doesn't work yet.
   disabled: [  ]
 
-  # Configuration of /home command
   home:
     # Maximum amount of homes a group can have
     # Default: 10
@@ -149,17 +158,33 @@ commands:
       default: 10
       # Add your groups here. If a group is not found the plugin will use the default value
 
-    # Time until player gets teleported in seconds.
-    # Default: 0
-    tp-time: 0
+    # Time until the player gets teleported in seconds.
+    # Default: 0.0
+    tp-time: 0.0
 
   tpaccept:
-    # Time until player gets teleported in seconds.
-    # Default: 0
-    tp-time: 0
+    # Time until the player gets teleported in seconds.
+    # Default: 0.0
+    tp-time: 0.0
+
+  back:
+    # Time until the player gets teleported in seconds.
+    # Default: 0.0
+    tp-time: 0.0
 
   help:
     # Wether or not the plugin replaces the vanilla /help command with it's own.
     # If set to false the plugin /help command can be called with /mxe help
     # Default: true
     replace-vanilla: true
+
+  vanish:
+    # If turned on the plugin will send a fake player quit message when going into vanish mode
+    # and a fake player join message when going out of vanish mode.
+    # Default: true
+    fake-join-leave: true
+
+  nick:
+    # Toggles fake join/leave messages simliar to /vanish.
+    # Default: true
+    fake-join-leave: true

@@ -70,16 +70,16 @@ public class tpaccept implements CommandExecutor {
             }
             switch (lang) {
                 case "de":
-                    t.sendMessage(ChatColor.GOLD + "[Server]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.GOLD + " hat deine Anfrage " + ChatColor.DARK_GREEN + "angenommen" + ChatColor.RESET + ChatColor.BOLD + "!");
+                    t.sendMessage(ChatColor.GOLD + "[Server]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.GOLD + " hat deine Anfrage " + ChatColor.DARK_GREEN + "angenommen" + ChatColor.RESET + ChatColor.GOLD + "!");
                     break;
                 default:
-                    t.sendMessage(ChatColor.GOLD + "[Server]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.DARK_GREEN + "accepted" + ChatColor.RESET + ChatColor.BOLD + " your request!");
+                    t.sendMessage(ChatColor.GOLD + "[Server]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.DARK_GREEN + "accepted" + ChatColor.RESET + ChatColor.GOLD + " your request!");
             }
 
             if(Boolean.parseBoolean(res.get(3))) {
-                p.teleport(t.getLocation());
+                func.teleportDelay(p, MXE.getCustomConfig().getLong("commands.tpaccept.tp-time"), t.getLocation());
             } else {
-                t.teleport(p.getLocation());
+                func.teleportDelay(t, MXE.getCustomConfig().getLong("commands.tpaccept.tp-time"), p.getLocation());
             }
         } else {
             error = ChatColor.DARK_RED + "[MXE] You can't perform this command while in console!";

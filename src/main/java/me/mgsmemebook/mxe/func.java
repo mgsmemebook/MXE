@@ -6,7 +6,9 @@ import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.types.InheritanceNode;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import static org.bukkit.Bukkit.getServer;
 
@@ -57,4 +59,28 @@ public class func {
         return true;
     }
 
+    public static void teleportDelay(Player p, Long delay, Location loc) {
+        if(delay == null || delay == 0.0) {
+            p.teleport(loc);
+        } else {
+            Location oldloc = p.getLocation();
+            String msg = MXE.getCustomConfig().getString("messages.custom.timedtp.wait");
+            msg = colCodes(msg);
+            msg = msg.replaceAll("%t", delay.toString());
+            p.sendMessage(msg);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    Location newloc = p.getLocation();
+                    if(oldloc.getBlock() != newloc.getBlock()) {
+                        String failmsg = MXE.getCustomConfig().getString("messages.custom.timedtp.failed");
+                        failmsg = colCodes(failmsg);
+                        p.sendMessage(failmsg);
+                    } else {
+                        p.teleport(loc);
+                    }
+                }
+            }.runTaskLater(MXE.getPlugin(), delay);
+        }
+    }
 }

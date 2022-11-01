@@ -60,11 +60,11 @@ public class nick implements CommandExecutor {
                     }
                 }
             }
+            String quitmsg;
             if(args.length == 0) {
-                String quitmsg = MXE.getCustomConfig().getString("messages.custom.quit");
+                quitmsg = MXE.getCustomConfig().getString("messages.custom.quit");
                 quitmsg = func.colCodes(quitmsg);
                 quitmsg = quitmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
-                Bukkit.broadcastMessage(quitmsg);
 
                 if(MXE.getPlayerSB().getEntryTeam(p.getDisplayName()) != null) MXE.getPlayerSB().getEntryTeam(p.getDisplayName()).removeEntry(p.getDisplayName());
                 if(MXE.lpLoaded) {
@@ -91,10 +91,9 @@ public class nick implements CommandExecutor {
                     return true;
                 }
 
-                String quitmsg = MXE.getCustomConfig().getString("messages.custom.quit");
+                quitmsg = MXE.getCustomConfig().getString("messages.custom.quit");
                 quitmsg = func.colCodes(quitmsg);
                 quitmsg = quitmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
-                Bukkit.broadcastMessage(quitmsg);
 
                 if(MXE.getPlayerSB().getEntryTeam(p.getDisplayName()) != null) MXE.getPlayerSB().getEntryTeam(p.getDisplayName()).removeEntry(p.getDisplayName());
                 Nametag.setName(p, name);
@@ -118,10 +117,13 @@ public class nick implements CommandExecutor {
                 }
                 p.sendMessage(msg);
             }
-            String joinmsg = MXE.getCustomConfig().getString("messages.custom.join");
-            joinmsg = func.colCodes(joinmsg);
-            joinmsg = joinmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
-            Bukkit.broadcastMessage(joinmsg);
+            if(MXE.getCustomConfig().getBoolean("commands.nick.fake-join-leave")) {
+                String joinmsg = MXE.getCustomConfig().getString("messages.custom.join");
+                joinmsg = func.colCodes(joinmsg);
+                joinmsg = joinmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+                Bukkit.broadcastMessage(quitmsg);
+                Bukkit.broadcastMessage(joinmsg);
+            }
         } else {
             error = ChatColor.DARK_RED + "[MXE] You can't perform this command while in console!";
             sender.sendMessage(error);
