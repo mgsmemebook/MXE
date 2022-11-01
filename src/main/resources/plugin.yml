@@ -1,5 +1,5 @@
 name: MXE
-version: 1.3.1
+version: '${project.version}'
 main: me.mgsmemebook.mxe.MXE
 description: Minecraft Spigot 1.19.2 Essentials Plugin
 authors: [ mgsmemebook ]
@@ -32,7 +32,10 @@ commands:
   help:
     description: Dieser Befehl.
     usage: /help
-    aliases: mxe help
+
+  mxe help:
+    description: Dieser Befehl
+    usage: /mxe help
 
   home:
     description: Verwalte deine Homes.

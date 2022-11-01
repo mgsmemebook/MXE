@@ -30,8 +30,8 @@ public class tpahere implements CommandExecutor {
         if (sender instanceof Player) {
             Player p = Bukkit.getPlayerExact(sender.getName());
             if (p == null) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE tpahere]: " + ChatColor.RESET + ChatColor.DARK_RED + "Error: Player is null (" + sender.getName() + ")";
-                func.cMSG(error);
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE tpahere]: " + ChatColor.RESET + ChatColor.DARK_RED + "Warn: Player is null (" + sender.getName() + ")";
+                func.cMSG(error, 2);
                 return true;
             }
 

@@ -31,8 +31,8 @@ public class nick implements CommandExecutor {
         String lang = MXE.getCustomConfig().getString("messages.language");
         if(sender instanceof Player) {
             if(p == null) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE nick]: " + ChatColor.RESET + ChatColor.DARK_RED + "Error: Player is null (" + sender.getName() + ")";
-                func.cMSG(error);
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE nick]: " + ChatColor.RESET + ChatColor.DARK_RED + "Warn: Player is null (" + sender.getName() + ")";
+                func.cMSG(error, 2);
                 return true;
             }
 

@@ -19,7 +19,7 @@ import static me.mgsmemebook.mxe.db.SQLite.getSQLConnection;
 public class DB {
     public static void setDBPlayerMute(boolean muted, boolean tempmute, String mutetime, UUID uuid) {
         if(Bukkit.getPlayer(uuid) == null) {
-            func.cMSG(ChatColor.AQUA + "[MXE DB addPlayer] Player not found.");
+            func.cMSG(ChatColor.YELLOW + "[MXE DB addPlayer] Player not found.", 2);
         } else {
             Connection conn = null;
             PreparedStatement ps = null;
@@ -33,8 +33,8 @@ public class DB {
                 ps.setString(4, uuid.toString());
                 ps.execute();
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
             } finally {
                 try {
                     if (ps != null) {
@@ -44,8 +44,8 @@ public class DB {
                         conn.close();
                     }
                 } catch (SQLException ex) {
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
                 }
             }
         }
@@ -53,7 +53,7 @@ public class DB {
 
     public static void addDBPlayer(UUID uuid, String username) {
         if(Bukkit.getPlayer(uuid) == null) {
-            func.cMSG(ChatColor.AQUA + "[MXE DB addPlayer] Player " + username + " not found.");
+            func.cMSG(ChatColor.YELLOW + "[MXE DB addPlayer] Player " + username + " not found.", 2);
         } else {
             PreparedStatement ps = null;
             Connection conn = null;
@@ -67,8 +67,8 @@ public class DB {
                 ps.setBoolean(4, false);
                 ps.execute();
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't insert into database");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't insert into database", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
             } finally {
                 try {
                     if (ps != null) {
@@ -78,8 +78,8 @@ public class DB {
                         conn.close();
                     }
                 } catch (SQLException ex) {
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
                 }
             }
         }
@@ -87,7 +87,7 @@ public class DB {
     }
     public static String getDBPlayer(UUID uuid) {
         if(Bukkit.getPlayer(uuid) == null) {
-            func.cMSG(ChatColor.AQUA + "[MXE DB getPlayer] Player not found.");
+            func.cMSG(ChatColor.YELLOW + "[MXE DB getPlayer] Player not found.", 2);
         } else {
             Connection conn = null;
             PreparedStatement ps = null;
@@ -103,8 +103,8 @@ public class DB {
                     return rs.getString("username");
                 }
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
             } finally {
                 try {
                     if (ps != null) {
@@ -117,8 +117,8 @@ public class DB {
                         rs.close();
                     }
                 } catch (SQLException ex) {
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
                 }
             }
         }
@@ -139,8 +139,8 @@ public class DB {
                 return rs.getString("UUID");
             }
         } catch (SQLException ex) {
-            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data");
-            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data", 1);
+            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
         } finally {
             try {
                 if (ps != null) {
@@ -153,8 +153,8 @@ public class DB {
                     rs.close();
                 }
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
             }
         }
         return null;
@@ -162,7 +162,7 @@ public class DB {
     public static void banDBPlayer(UUID uuid, boolean tempban, String bantime, String reason) {
         OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
         if(p == null) {
-            func.cMSG(ChatColor.AQUA + "[MXE DB addPlayer] Player not found.");
+            func.cMSG(ChatColor.YELLOW + "[MXE DB addPlayer] Player not found.", 2);
         } else {
             PreparedStatement ps = null;
             Connection conn = null;
@@ -176,10 +176,10 @@ public class DB {
                 ps.setString(4, reason);
                 ps.setString(5, uuid.toString());
                 ps.executeUpdate();
-                func.cMSG(ChatColor.RED + "[MXE] Banned player: " + p.getName());
+                func.cMSG(ChatColor.RED + "[MXE] Banned player: " + p.getName(), 3);
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't update database");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't update database", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
             } finally {
                 try {
                     if (ps != null) {
@@ -189,8 +189,8 @@ public class DB {
                         conn.close();
                     }
                 } catch (SQLException ex) {
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
                 }
             }
         }
@@ -212,10 +212,10 @@ public class DB {
                 ps.setString(4, "");
                 ps.setString(5, uuid.toString());
                 ps.executeUpdate();
-                func.cMSG(ChatColor.RED + "[MXE] Unbanned player: " + p.getName());
+                func.cMSG(ChatColor.RED + "[MXE] Unbanned player: " + p.getName(), 3);
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't update database");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't update database", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
             } finally {
                 try {
                     if (ps != null) {
@@ -225,8 +225,8 @@ public class DB {
                         conn.close();
                     }
                 } catch (SQLException ex) {
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
                 }
             }
         }
@@ -234,7 +234,7 @@ public class DB {
 
     public static ArrayList<String> getPlayerBanInfo(UUID uuid) {
         if(Bukkit.getPlayer(uuid) == null) {
-            func.cMSG(ChatColor.AQUA + "[MXE DB getPlayerBanInfo] Player not found.");
+            func.cMSG(ChatColor.YELLOW + "[MXE DB getPlayerBanInfo] Player not found.", 2);
         } else {
             PreparedStatement ps = null;
             Connection conn = null;
@@ -260,8 +260,8 @@ public class DB {
                     }
                 }
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
             } finally {
                 try {
                     if (ps != null) {
@@ -274,8 +274,8 @@ public class DB {
                         rs.close();
                     }
                 } catch (SQLException ex) {
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
                 }
             }
         }
@@ -284,7 +284,7 @@ public class DB {
 
     public static ArrayList<String> getPlayerMuteInfo(UUID uuid) {
         if(Bukkit.getPlayer(uuid) == null) {
-            func.cMSG(ChatColor.AQUA + "[MXE DB getPlayerMuteInfo] Player not found.");
+            func.cMSG(ChatColor.YELLOW + "[MXE DB getPlayerMuteInfo] Player not found.", 2);
         } else {
             PreparedStatement ps = null;
             Connection conn = null;
@@ -307,8 +307,8 @@ public class DB {
                     }
                 }
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
             } finally {
                 try {
                     if (ps != null) {
@@ -321,8 +321,8 @@ public class DB {
                         rs.close();
                     }
                 } catch (SQLException ex) {
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
                 }
             }
         }
@@ -330,7 +330,7 @@ public class DB {
     }
     public static ArrayList<Integer> getPlayerTpas(String username) {
         if(Bukkit.getPlayer(username) == null) {
-            func.cMSG(ChatColor.AQUA + "[MXE DB getPlayerTpa] Player not found.");
+            func.cMSG(ChatColor.YELLOW + "[MXE DB getPlayerTpa] Player not found.", 2);
         } else {
             PreparedStatement ps = null;
             Connection conn = null;
@@ -350,8 +350,8 @@ public class DB {
                 }
                 return query;
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
             } finally {
                 try {
                     if (ps != null) {
@@ -364,8 +364,8 @@ public class DB {
                         rs.close();
                     }
                 } catch (SQLException ex) {
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
                 }
             }
         }
@@ -392,8 +392,8 @@ public class DB {
             }
             return query;
         } catch (SQLException ex) {
-            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data");
-            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data", 1);
+            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
         } finally {
             try {
                 if (ps != null) {
@@ -406,8 +406,8 @@ public class DB {
                     rs.close();
                 }
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
             }
         }
         return null;
@@ -423,8 +423,8 @@ public class DB {
             ps.setInt(1, id);
             ps.execute();
         } catch (SQLException ex) {
-            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't remove table data");
-            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't remove table data", 1);
+            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
         } finally {
             try {
                 if (ps != null) {
@@ -434,14 +434,14 @@ public class DB {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
             }
         }
     }
     public static void setPlayerTpa(String from, String to, boolean tpahere) {
         if(Bukkit.getPlayer(from) == null || Bukkit.getPlayer(to) == null) {
-            func.cMSG(ChatColor.AQUA + "[MXE DB setPlayerTpa] Player not found.");
+            func.cMSG(ChatColor.YELLOW + "[MXE DB setPlayerTpa] Player not found.", 2);
         } else {
             PreparedStatement ps = null;
             Connection conn = null;
@@ -457,8 +457,8 @@ public class DB {
                 ps.setBoolean(4, tpahere);
                 ps.execute();
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't insert table data");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't insert table data", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
             } finally {
                 try {
                     if (ps != null) {
@@ -468,15 +468,15 @@ public class DB {
                         conn.close();
                     }
                 } catch (SQLException ex) {
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
                 }
             }
         }
     }
     public static Location getPlayerHome(UUID uuid, String home) {
         if(Bukkit.getPlayer(uuid) == null) {
-            func.cMSG(ChatColor.AQUA + "[MXE DB getPlayerHome] Player not found.");
+            func.cMSG(ChatColor.YELLOW + "[MXE DB getPlayerHome] Player not found.", 1);
         } else {
             PreparedStatement ps = null;
             Connection conn = null;
@@ -490,8 +490,8 @@ public class DB {
                     return new Location(Bukkit.getWorld(rs.getString("world")), rs.getDouble("x"), rs.getDouble("y"), rs.getDouble("z"));
                 }
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
             } finally {
                 try {
                     if (ps != null) {
@@ -504,8 +504,8 @@ public class DB {
                         rs.close();
                     }
                 } catch (SQLException ex) {
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
                 }
             }
         }
@@ -513,7 +513,7 @@ public class DB {
     }
     public static ArrayList<String> getPlayerHomes(UUID uuid) {
         if(Bukkit.getPlayer(uuid) == null) {
-            func.cMSG(ChatColor.AQUA + "[MXE DB getPlayerMuteInfo] Player not found.");
+            func.cMSG(ChatColor.YELLOW + "[MXE DB getPlayerMuteInfo] Player not found.", 2);
         } else {
             PreparedStatement ps = null;
             Connection conn = null;
@@ -532,8 +532,8 @@ public class DB {
                 }
                 return homes;
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
             } finally {
                 try {
                     if (ps != null) {
@@ -546,8 +546,8 @@ public class DB {
                         rs.close();
                     }
                 } catch (SQLException ex) {
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
                 }
             }
         }
@@ -555,7 +555,7 @@ public class DB {
     }
     public static boolean addPlayerHome(UUID uuid, String home, Location loc) {
         if(Bukkit.getPlayer(uuid) == null) {
-            func.cMSG(ChatColor.AQUA + "[MXE DB addPlayerHome] Player not found.");
+            func.cMSG(ChatColor.YELLOW + "[MXE DB addPlayerHome] Player not found.", 2);
         } else {
             PreparedStatement ps = null;
             Connection conn = null;
@@ -573,8 +573,8 @@ public class DB {
                 ps.execute();
                 return true;
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't insert table data");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't insert table data", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
             } finally {
                 try {
                     if (ps != null) {
@@ -584,8 +584,8 @@ public class DB {
                         conn.close();
                     }
                 } catch (SQLException ex) {
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
                 }
             }
         }
@@ -593,7 +593,7 @@ public class DB {
     }
     public static boolean changePlayerHome(UUID uuid, String home, String name, Location loc) {
         if(Bukkit.getPlayer(uuid) == null) {
-            func.cMSG(ChatColor.AQUA + "[MXE DB renamePlayerHome] Player not found.");
+            func.cMSG(ChatColor.YELLOW + "[MXE DB renamePlayerHome] Player not found.", 2);
         } else {
             PreparedStatement ps = null;
             Connection conn = null;
@@ -612,8 +612,8 @@ public class DB {
                 ps.executeUpdate();
                 return true;
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't insert table data");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't insert table data", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
             } finally {
                 try {
                     if (ps != null) {
@@ -623,8 +623,8 @@ public class DB {
                         conn.close();
                     }
                 } catch (SQLException ex) {
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
                 }
             }
         }
@@ -643,8 +643,8 @@ public class DB {
             ps.execute();
             return true;
         } catch (SQLException ex) {
-            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't remove table data");
-            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't remove table data", 1);
+            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
         } finally {
             try {
                 if (ps != null) {
@@ -654,15 +654,15 @@ public class DB {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
             }
         }
         return false;
     }
     public static boolean setBackCoords(UUID uuid) {
         if(Bukkit.getPlayer(uuid) == null) {
-            func.cMSG(ChatColor.AQUA + "[MXE DB renamePlayerHome] Player not found.");
+            func.cMSG(ChatColor.YELLOW + "[MXE DB renamePlayerHome] Player not found.", 2);
         } else {
             PreparedStatement ps = null;
             Connection conn = null;
@@ -681,8 +681,8 @@ public class DB {
                 ps.executeUpdate();
                 return true;
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't insert table data");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't insert table data", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
             } finally {
                 try {
                     if (ps != null) {
@@ -692,8 +692,8 @@ public class DB {
                         conn.close();
                     }
                 } catch (SQLException ex) {
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
                 }
             }
         }
@@ -701,7 +701,7 @@ public class DB {
     }
     public static boolean delBackCoords(UUID uuid) {
         if(Bukkit.getPlayer(uuid) == null) {
-            func.cMSG(ChatColor.AQUA + "[MXE DB renamePlayerHome] Player not found.");
+            func.cMSG(ChatColor.YELLOW + "[MXE DB renamePlayerHome] Player not found.", 2);
         } else {
             PreparedStatement ps = null;
             Connection conn = null;
@@ -713,8 +713,8 @@ public class DB {
                 ps.execute();
                 return true;
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't delete table data");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't delete table data", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
             } finally {
                 try {
                     if (ps != null) {
@@ -724,8 +724,8 @@ public class DB {
                         conn.close();
                     }
                 } catch (SQLException ex) {
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
                 }
             }
         }
@@ -733,7 +733,7 @@ public class DB {
     }
     public static Location getBackCoords(UUID uuid) {
         if(Bukkit.getPlayer(uuid) == null) {
-            func.cMSG(ChatColor.AQUA + "[MXE DB renamePlayerHome] Player not found.");
+            func.cMSG(ChatColor.YELLOW + "[MXE DB renamePlayerHome] Player not found.", 2);
         } else {
             PreparedStatement ps = null;
             Connection conn = null;
@@ -749,8 +749,8 @@ public class DB {
                     return new Location(Bukkit.getWorld(rs.getString("world")), rs.getDouble("x"), rs.getDouble("y"), rs.getDouble("z"));
                 }
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't recieve table data");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't recieve table data", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
             } finally {
                 try {
                     if (ps != null) {
@@ -763,8 +763,8 @@ public class DB {
                         rs.close();
                     }
                 } catch (SQLException ex) {
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
                 }
             }
         }
@@ -772,7 +772,7 @@ public class DB {
     }
     public static void addBackCoords(UUID uuid) {
         if(Bukkit.getPlayer(uuid) == null) {
-            func.cMSG(ChatColor.AQUA + "[MXE DB renamePlayerHome] Player not found.");
+            func.cMSG(ChatColor.YELLOW + "[MXE DB renamePlayerHome] Player not found.", 2);
         } else {
             PreparedStatement ps = null;
             Connection conn = null;
@@ -790,8 +790,8 @@ public class DB {
                 ps.execute();
 
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't recieve table data");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't recieve table data", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
             } finally {
                 try {
                     if (ps != null) {
@@ -801,8 +801,8 @@ public class DB {
                         conn.close();
                     }
                 } catch (SQLException ex) {
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
                 }
             }
         }
@@ -810,7 +810,7 @@ public class DB {
 
     public static boolean getVanish(UUID uuid) {
         if(Bukkit.getPlayer(uuid) == null) {
-            func.cMSG(ChatColor.AQUA + "[MXE DB renamePlayerHome] Player not found.");
+            func.cMSG(ChatColor.YELLOW + "[MXE DB renamePlayerHome] Player not found.", 2);
         } else {
             PreparedStatement ps = null;
             Connection conn = null;
@@ -826,8 +826,8 @@ public class DB {
                     if (rs.getBoolean("vanished")) return true;
                 }
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't recieve table data");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't recieve table data", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
             } finally {
                 try {
                     if (ps != null) {
@@ -840,8 +840,8 @@ public class DB {
                         rs.close();
                     }
                 } catch (SQLException ex) {
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
                 }
             }
         }
@@ -866,8 +866,8 @@ public class DB {
             }
             return res;
         } catch (SQLException ex) {
-            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't recieve table data");
-            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't recieve table data", 1);
+            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
         } finally {
             try {
                 if (ps != null) {
@@ -880,15 +880,15 @@ public class DB {
                     rs.close();
                 }
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
             }
         }
         return null;
     }
     public static void setVanish(UUID uuid, Boolean vanished) {
         if(Bukkit.getPlayer(uuid) == null) {
-            func.cMSG(ChatColor.AQUA + "[MXE DB renamePlayerHome] Player not found.");
+            func.cMSG(ChatColor.YELLOW + "[MXE DB renamePlayerHome] Player not found.", 2);
         } else {
             PreparedStatement ps = null;
             Connection conn = null;
@@ -901,8 +901,8 @@ public class DB {
                 ps.execute();
 
             } catch (SQLException ex) {
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't recieve table data");
-                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't recieve table data", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
             } finally {
                 try {
                     if (ps != null) {
@@ -912,8 +912,8 @@ public class DB {
                         conn.close();
                     }
                 } catch (SQLException ex) {
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection");
-                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
                 }
             }
         }

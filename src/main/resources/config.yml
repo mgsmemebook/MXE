@@ -8,6 +8,15 @@
 # -------------------------
 # MXE V.1.3.3 Configuration File
 
+mxe:
+  # Sets how many error messages and such should be logged in the console.
+  # 0 - none
+  # 1 - errors
+  # 2 - warns
+  # 3 - debug
+  # Default: 1
+  log-level: 1
+
 # Configuration of custom and command messages
 messages:
   # Sets the language the plugin uses when communicating to the player.
@@ -155,8 +164,8 @@ commands:
     # Maximum amount of homes a group can have
     # Default: 10
     max-homes:
-      default: 10
       # Add your groups here. If a group is not found the plugin will use the default value
+      default: 10
 
     # Time until the player gets teleported in seconds.
     # Default: 0.0

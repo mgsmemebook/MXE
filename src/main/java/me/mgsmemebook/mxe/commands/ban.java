@@ -61,8 +61,8 @@ public class ban implements CommandExecutor {
         if(sender instanceof Player) {
             Player p = Bukkit.getPlayerExact(sender.getName());
             if(p == null) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE ban]: " + ChatColor.RESET + ChatColor.DARK_RED + "Error: Player is null (" + sender.getName() + ")";
-                func.cMSG(error);
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE ban]: " + ChatColor.RESET + ChatColor.DARK_RED + "Warn: Player is null (" + sender.getName() + ")";
+                func.cMSG(error, 2);
                 return true;
             }
             if (!p.isOp()) {
@@ -78,11 +78,11 @@ public class ban implements CommandExecutor {
                     try {
                         tu = userFuture.get();
                     } catch (InterruptedException ex) {
-                        func.cMSG(ChatColor.GOLD + "[MXE ban] Error while getting offline User");
-                        func.cMSG(ChatColor.GOLD + "[MXE ban] " + ex.getMessage());
+                        func.cMSG(ChatColor.GOLD + "[MXE ban] Error while getting offline User", 2);
+                        func.cMSG(ChatColor.GOLD + "[MXE ban] " + ex.getMessage(), 2);
                     } catch (ExecutionException ex) {
-                        func.cMSG(ChatColor.GOLD + "[MXE ban] Error while getting offline User");
-                        func.cMSG(ChatColor.GOLD + "[MXE ban] " + ex.getMessage());
+                        func.cMSG(ChatColor.GOLD + "[MXE ban] Error while getting offline User", 2);
+                        func.cMSG(ChatColor.GOLD + "[MXE ban] " + ex.getMessage(), 2);
                     }
                     if(tu == null) {
                         sender.sendMessage(notfounderror);

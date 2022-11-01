@@ -35,34 +35,34 @@ public final class MXE extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        cMSG(ChatColor.WHITE + "[MXE] -------------------------");
-        cMSG(ChatColor.WHITE + "[MXE] " + ChatColor.BLUE + ChatColor.BOLD + " __  __  __   __  " + ChatColor.GOLD + "______      ");
-        cMSG(ChatColor.WHITE + "[MXE] " + ChatColor.BLUE + ChatColor.BOLD + "|  \\/  | \\ \\ / / " + ChatColor.GOLD + "|  ____|  ");
-        cMSG(ChatColor.WHITE + "[MXE] " + ChatColor.BLUE + ChatColor.BOLD + "| \\  / |  \\ V /  " + ChatColor.GOLD + "| |__      ");
-        cMSG(ChatColor.WHITE + "[MXE] " + ChatColor.BLUE + ChatColor.BOLD + "| |\\/| |   > <   " + ChatColor.GOLD + "|  __|      ");
-        cMSG(ChatColor.WHITE + "[MXE] " + ChatColor.BLUE + ChatColor.BOLD + "| |  | |  / . \\  " + ChatColor.GOLD + "| |____     ");
-        cMSG(ChatColor.WHITE + "[MXE] " + ChatColor.BLUE + ChatColor.BOLD + "|_|  |_| /_/ \\_\\ " + ChatColor.GOLD + "|______|   ");
-        cMSG(ChatColor.WHITE + "[MXE] -------------------------");
-        cMSG(ChatColor.GREEN + "[MXE] Initializing MXEssentials ");
+        cMSG(ChatColor.WHITE + "[MXE] -------------------------", 0);
+        cMSG(ChatColor.WHITE + "[MXE] " + ChatColor.AQUA + ChatColor.BOLD + " __  __  __   __  " + ChatColor.GOLD + "______      ", 0);
+        cMSG(ChatColor.WHITE + "[MXE] " + ChatColor.AQUA + ChatColor.BOLD + "|  \\/  | \\ \\ / / " + ChatColor.GOLD + "|  ____|  ", 0);
+        cMSG(ChatColor.WHITE + "[MXE] " + ChatColor.AQUA + ChatColor.BOLD + "| \\  / |  \\ V /  " + ChatColor.GOLD + "| |__      ", 0);
+        cMSG(ChatColor.WHITE + "[MXE] " + ChatColor.AQUA + ChatColor.BOLD + "| |\\/| |   > <   " + ChatColor.GOLD + "|  __|      ", 0);
+        cMSG(ChatColor.WHITE + "[MXE] " + ChatColor.AQUA + ChatColor.BOLD + "| |  | |  / . \\  " + ChatColor.GOLD + "| |____     ", 0);
+        cMSG(ChatColor.WHITE + "[MXE] " + ChatColor.AQUA + ChatColor.BOLD + "|_|  |_| /_/ \\_\\ " + ChatColor.GOLD + "|______|   ", 0);
+        cMSG(ChatColor.WHITE + "[MXE] -------------------------", 0);
+        cMSG(ChatColor.GREEN + "[MXE] Initializing MXEssentials ", 0);
         plDir = getDataFolder().getAbsolutePath();
         plugin = this;
 
         //plugin files
         if (!getDataFolder().exists()) {
             if(!getDataFolder().mkdir()) {
-                cMSG(ChatColor.RED + "[MXE] Couldn't create plugin folder.");
+                cMSG(ChatColor.RED + "[MXE] Couldn't create plugin folder.", 1);
             }
         }
         File db = new File(plDir+"/db");
         if(!db.exists()) {
             if(!db.mkdir()) {
-                func.cMSG(ChatColor.RED + "[MXE] Couldn't create /db");
+                func.cMSG(ChatColor.RED + "[MXE] Couldn't create /db", 1);
             } else {
-                func.cMSG(ChatColor.BLUE + "[MXE] Created /db");
+                func.cMSG(ChatColor.BLUE + "[MXE] Created /db", 3);
             }
         }
-        //createCustomConfig();
         saveDefaultConfig();
+        func.checkAllSections();
 
         //EventListeners
         getServer().getPluginManager().registerEvents(new PlayerEvents(), this);
@@ -86,11 +86,11 @@ public final class MXE extends JavaPlugin {
                 if(prefix == null) continue;
                 team.setPrefix(func.colCodes(prefix));
                 String color = g.getCachedData().getMetaData().getMetaValue("color");
-                cMSG(ChatColor.DARK_GRAY + "[MXE] Group found: " + g.getName());
+                cMSG(ChatColor.DARK_GRAY + "[MXE] Group found: " + g.getName(), 3);
                 if(color != null) {
                     ChatColor chatColor = ChatColor.getByChar(color.replaceAll("&", ""));
                     if(chatColor != null && chatColor.isColor()) {
-                        cMSG(ChatColor.DARK_GRAY + "[MXE] Color found: " + chatColor.name());
+                        cMSG(ChatColor.DARK_GRAY + "[MXE] Color found: " + chatColor.name(), 3);
                         team.setColor(chatColor);
                     }
                 }
@@ -98,7 +98,7 @@ public final class MXE extends JavaPlugin {
             Objects.requireNonNull(getCommand("setrank")).setExecutor(new setrank());
             Objects.requireNonNull(getCommand("setrank")).setTabCompleter(new TabCompletion());
         } else {
-            cMSG(ChatColor.YELLOW + "[MXE] Warn: LuckPerms not found. Please put LuckPerms inside your plugins folder to use permissions and prefixes.");
+            cMSG(ChatColor.YELLOW + "[MXE] Warn: LuckPerms not found. Please put LuckPerms inside your plugins folder to use permissions and prefixes.", 2);
         }
 
         //ProtocolLib
@@ -107,7 +107,7 @@ public final class MXE extends JavaPlugin {
             Objects.requireNonNull(getCommand("nick")).setTabCompleter(new TabCompletion());
             Nametag.NameChanger();
         } else {
-            cMSG(ChatColor.YELLOW + "[MXE] Warn: ProtocolLib not found. Please put ProtocolLib inside your plugins folder to use the /nick command.");
+            cMSG(ChatColor.YELLOW + "[MXE] Warn: ProtocolLib not found. Please put ProtocolLib inside your plugins folder to use the /nick command.", 2);
         }
 
         //Commands
@@ -201,21 +201,6 @@ public final class MXE extends JavaPlugin {
 
     public static FileConfiguration getCustomConfig() {
         return plugin.getConfig();
-    }
-    private void createCustomConfig() {
-        configFile = new File(getDataFolder(), "custom-config.yml");
-        if (!configFile.exists()) {
-            configFile.getParentFile().mkdirs();
-            saveResource("custom-config.yml", false);
-        }
-
-        FileConfiguration config = new YamlConfiguration();
-        try {
-            config.load(configFile);
-        } catch (IOException | InvalidConfigurationException ex) {
-            func.cMSG(ChatColor.DARK_RED + "[MXE] Error: Couldn't load plugin config");
-            func.cMSG(ChatColor.DARK_RED + "[MXE] Error: " + ex.getMessage());
-        }
     }
 }
 

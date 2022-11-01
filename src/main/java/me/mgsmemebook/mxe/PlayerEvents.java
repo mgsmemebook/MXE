@@ -135,9 +135,9 @@ public class PlayerEvents implements Listener {
 
         //Check DB
         String res = getDBPlayer(p.getUniqueId());
-        func.cMSG(ChatColor.DARK_AQUA + "[MXE] SQL: Found database entries: " + res);
+        func.cMSG(ChatColor.DARK_AQUA + "[MXE] SQL: Found database entries: " + res, 3);
         if (res == null) {
-            func.cMSG(ChatColor.DARK_AQUA + "[MXE] SQL: Player not found - Adding to database");
+            func.cMSG(ChatColor.DARK_AQUA + "[MXE] SQL: Player not found - Adding to database", 3);
             addDBPlayer(p.getUniqueId(), p.getName());
         }
 

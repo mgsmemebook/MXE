@@ -57,7 +57,7 @@ public class SQLite {
                     ");";
         }
         else {
-            func.cMSG(ChatColor.RED + "[MXE] Couldn't find db table " + tablename);
+            func.cMSG(ChatColor.RED + "[MXE] Couldn't find db table " + tablename, 1);
         }
         return sql;
     }
@@ -67,12 +67,12 @@ public class SQLite {
         if(!dataFolder.exists()) {
             try {
                 if(!dataFolder.createNewFile()) {
-                    func.cMSG(ChatColor.RED + "[MXE] Couldn't create database file");
+                    func.cMSG(ChatColor.RED + "[MXE] Couldn't create database file", 1);
                 } else {
-                    func.cMSG(ChatColor.BLUE + "[MXE] Created new database");
+                    func.cMSG(ChatColor.BLUE + "[MXE] Created new database", 3);
                 }
             } catch (IOException ex) {
-                func.cMSG(ChatColor.RED + "File write error " + ex.getMessage());
+                func.cMSG(ChatColor.RED + "File write error " + ex.getMessage(), 1);
             }
         }
         try {
@@ -83,11 +83,11 @@ public class SQLite {
             conn = DriverManager.getConnection("jdbc:sqlite:" + dataFolder);
             return conn;
         } catch (SQLException ex) {
-            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't initialize SQLite");
-            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't initialize SQLite", 1);
+            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
         } catch (ClassNotFoundException ex) {
-            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: SQLite JBDC Library not found. (insert into /plugins/MXE/lib/)");
-            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage());
+            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: SQLite JBDC Library not found. (insert into /plugins/MXE/lib/)", 1);
+            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
         }
         return null;
     }
@@ -117,8 +117,8 @@ public class SQLite {
                     s = Objects.requireNonNull(conn).createStatement();
                     s.executeUpdate(col.get(i));
                 } catch(SQLException ex) {
-                    func.cMSG(ChatColor.DARK_GRAY + "[MXE] SQL warn: Failed to create column " + i + " of table users. Ignore this if said column already exists.");
-                    func.cMSG(ChatColor.DARK_GRAY + "[MXE] SQL warn: " + ex.getMessage());
+                    func.cMSG(ChatColor.DARK_GRAY + "[MXE] SQL warn: Failed to create column " + i + " of table users. Ignore this if said column already exists.", 3);
+                    func.cMSG(ChatColor.DARK_GRAY + "[MXE] SQL warn: " + ex.getMessage(), 3);
                 }
             }
 

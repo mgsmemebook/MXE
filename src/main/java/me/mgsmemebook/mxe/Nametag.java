@@ -57,7 +57,6 @@ public class Nametag {
     public static void setName(final Player player, String fakeName) {
         fakeNames.put(player, fakeName);
         refresh(player);
-        func.cMSG("fakeNames test: " + fakeNames);
     }
 
     /**

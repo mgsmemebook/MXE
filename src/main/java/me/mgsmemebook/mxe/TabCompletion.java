@@ -112,8 +112,8 @@ public class TabCompletion implements TabCompleter {
                     if(args[0].equalsIgnoreCase("rename") || args[0].equalsIgnoreCase("remove") && sender instanceof Player) {
                         Player p = Bukkit.getPlayerExact(sender.getName());
                         if(p == null) {
-                            String error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE home]: " + ChatColor.RESET + ChatColor.DARK_RED + "p = null (" + sender.getName() + ")";
-                            func.cMSG(error);
+                            String error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE TabCompletion]: " + ChatColor.RESET + ChatColor.DARK_RED + "Warn: Player is null (" + sender.getName() + ")";
+                            func.cMSG(error, 2);
                             return null;
                         }
                         return DB.getPlayerHomes(p.getUniqueId());

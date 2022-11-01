@@ -48,8 +48,8 @@ public class gm implements CommandExecutor {
             Player p = Bukkit.getPlayerExact(sender.getName());
             Group pg = null;
             if(p == null) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE gm]: " + ChatColor.RESET + ChatColor.DARK_RED + "Error: Player is null (" + sender.getName() + ")";
-                func.cMSG(error);
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE gm]: " + ChatColor.RESET + ChatColor.DARK_RED + "Warn: Player is null (" + sender.getName() + ")";
+                func.cMSG(error, 2);
                 return true;
             }
             if(!p.isOp()) {

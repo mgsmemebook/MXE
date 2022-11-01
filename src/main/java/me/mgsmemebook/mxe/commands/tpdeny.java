@@ -25,8 +25,8 @@ public class tpdeny implements CommandExecutor {
         if(sender instanceof Player) {
             Player p = Bukkit.getPlayerExact(sender.getName());
             if (p == null) {
-                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE tpdeny]: " + ChatColor.RESET + ChatColor.DARK_RED + "Error: Player is null (" + sender.getName() + ")";
-                func.cMSG(error);
+                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE tpdeny]: " + ChatColor.RESET + ChatColor.DARK_RED + "Warn: Player is null (" + sender.getName() + ")";
+                func.cMSG(error, 2);
                 return true;
             }
 
@@ -66,7 +66,7 @@ public class tpdeny implements CommandExecutor {
 
             Player t = Bukkit.getPlayerExact(res.get(0));
             if (t == null) {
-                func.cMSG(notfounderror);
+                p.sendMessage(notfounderror);
                 return true;
             }
             switch (lang) {

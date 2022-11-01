@@ -10,11 +10,17 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
+
 import static org.bukkit.Bukkit.getServer;
 
 public class func {
-    public static void cMSG(String message) {
-        getServer().getConsoleSender().sendMessage(message);
+    public static void cMSG(String message, Integer logLevel) {
+        if(logLevel <= MXE.getCustomConfig().getInt("mxe.log-level")) {
+            getServer().getConsoleSender().sendMessage(message);
+        }
     }
 
     public static String colCodes(String s) {
@@ -82,5 +88,21 @@ public class func {
                 }
             }.runTaskLater(MXE.getPlugin(), delay);
         }
+    }
+    public static void checkAllSections() {
+        Set<String> keys = MXE.getCustomConfig().getDefaults().getKeys(true);
+        for(String key:keys) {
+            if(!MXE.getCustomConfig().contains(key, true) && MXE.getCustomConfig().getDefaults().contains(key, false)) {
+                if(MXE.getCustomConfig().getDefaults().isSet(key)) {
+                    MXE.getCustomConfig().set(key, MXE.getCustomConfig().get(key));
+                    cMSG(ChatColor.DARK_GRAY + "[MXE] Debug: Setting " + key + " to " + MXE.getCustomConfig().get(key) + ".", 3);
+                } else {
+                    MXE.getCustomConfig().createSection(key);
+                    cMSG(ChatColor.DARK_GRAY + "[MXE] Debug: Creating section " + key + ".", 3);
+                }
+            }
+            MXE.getCustomConfig().setComments(key, MXE.getCustomConfig().getComments(key));
+        }
+        MXE.getPlugin().saveConfig();
     }
 }
