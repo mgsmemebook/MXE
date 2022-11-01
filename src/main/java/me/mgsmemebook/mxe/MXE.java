@@ -32,7 +32,6 @@ public final class MXE extends JavaPlugin {
     private static Plugin plugin;
     private static Scoreboard playersb;
     private File configFile;
-    private static FileConfiguration config;
     public static boolean lpLoaded = false;
     @Override
     public void onEnable() {
@@ -72,12 +71,13 @@ public final class MXE extends JavaPlugin {
         //DB
         SQLite.load("users");
 
-        //Scoreboard
-        ScoreboardManager sbman = Bukkit.getScoreboardManager();
-        playersb = Objects.requireNonNull(sbman).getNewScoreboard();
 
         if(Bukkit.getPluginManager().getPlugin("LuckPerms") != null) lpLoaded = Bukkit.getPluginManager().getPlugin("LuckPerms").isEnabled();
         if(lpLoaded) {
+            //Scoreboard
+            ScoreboardManager sbman = Bukkit.getScoreboardManager();
+            playersb = Objects.requireNonNull(sbman).getNewScoreboard();
+
             LuckPerms lp = LuckPermsProvider.get();
             lp.getGroupManager().loadAllGroups();
             Set<Group> groupset = lp.getGroupManager().getLoadedGroups();
@@ -205,7 +205,7 @@ public final class MXE extends JavaPlugin {
             saveResource("custom-config.yml", false);
         }
 
-        config = new YamlConfiguration();
+        FileConfiguration config = new YamlConfiguration();
         try {
             config.load(configFile);
         } catch (IOException | InvalidConfigurationException ex) {
