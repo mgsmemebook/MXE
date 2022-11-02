@@ -8,9 +8,7 @@ import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,7 +17,6 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Objects;
 import java.util.Set;
 
@@ -30,11 +27,11 @@ public final class MXE extends JavaPlugin {
     private static String plDir;
     private static Plugin plugin;
     private static Scoreboard playersb;
-    private File configFile;
     public static boolean lpLoaded = false;
     @Override
     public void onEnable() {
-
+        plDir = getDataFolder().getAbsolutePath();
+        plugin = this;
         cMSG(ChatColor.WHITE + "[MXE] -------------------------", 0);
         cMSG(ChatColor.WHITE + "[MXE] " + ChatColor.AQUA + ChatColor.BOLD + " __  __  __   __  " + ChatColor.GOLD + "______      ", 0);
         cMSG(ChatColor.WHITE + "[MXE] " + ChatColor.AQUA + ChatColor.BOLD + "|  \\/  | \\ \\ / / " + ChatColor.GOLD + "|  ____|  ", 0);
@@ -44,8 +41,6 @@ public final class MXE extends JavaPlugin {
         cMSG(ChatColor.WHITE + "[MXE] " + ChatColor.AQUA + ChatColor.BOLD + "|_|  |_| /_/ \\_\\ " + ChatColor.GOLD + "|______|   ", 0);
         cMSG(ChatColor.WHITE + "[MXE] -------------------------", 0);
         cMSG(ChatColor.GREEN + "[MXE] Initializing MXEssentials ", 0);
-        plDir = getDataFolder().getAbsolutePath();
-        plugin = this;
 
         //plugin files
         if (!getDataFolder().exists()) {
@@ -75,7 +70,7 @@ public final class MXE extends JavaPlugin {
         if(lpLoaded) {
             //Scoreboard
             ScoreboardManager sbman = Bukkit.getScoreboardManager();
-            playersb = Objects.requireNonNull(sbman).getNewScoreboard();
+            playersb = sbman.getNewScoreboard();
 
             LuckPerms lp = LuckPermsProvider.get();
             lp.getGroupManager().loadAllGroups();
