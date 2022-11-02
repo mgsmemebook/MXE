@@ -17,7 +17,6 @@ Older versions are most likely not usable so don't bother trying them out.
 - **/nick command** using ProtocolLib
 - 10 **homes** for each player
 - **/back command** for when a player dies
-- Replaces default /help command
 - Adds header and footer to tablist 
 - Supports two languages: English and German
 
@@ -27,9 +26,7 @@ Older versions are most likely not usable so don't bother trying them out.
 - Make Permissions using LuckPerms optional
 - More utilities
 - Add support for other databases such as MySQL
-- Make /help replacement optional
-- /home and /back tweaks
-- Custom amount of homes
+- /home, /tpaccept and /back tweaks
 - Add support for other permissions plugins such as PermissionsEx
 - More settings
 - Make every feature optional
