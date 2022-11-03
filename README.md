@@ -8,17 +8,18 @@ Older versions are most likely not usable so don't bother trying them out.
 ### Features
 - **21 commands**
 - Custom **player join/leave/chat messages** and more
-- **Chat coloring** using &-Color-Codes ([Image](https://camo.skyblock.net/4898234defc4ebd6680475bc7729223d3ba78577?url=https:%2F%2Fi.imgur.com%2FxkgOs7u.jpg))
+- **Chat coloring** using &-Color-Codes ([Color Codes](https://camo.skyblock.net/4898234defc4ebd6680475bc7729223d3ba78577?url=https:%2F%2Fi.imgur.com%2FxkgOs7u.jpg))
 - Uses SQLite Database
 - Uses and depends on [LuckPerms](https://github.com/LuckPerms/LuckPerms) *(api)*
 - Uses [ProtocolLib](https://github.com/dmulloy2/ProtocolLib) *(api)*
 - **Ban and mute system** with ban messages and temporary bans/mutes
 - **Role prefixes** using LuckPerms and **colored names**
 - **/nick command** using ProtocolLib
-- 10 **homes** for each player
+- **/vanish command**
+- Configurable amount of **homes** for each player
 - **/back command** for when a player dies
-- Adds header and footer to tablist 
-- Supports two languages: English and German
+- Adds configurable header and footer to tablist 
+- Currently supports two languages: English and German
 
 ### To do
 - Fix many bugs
@@ -87,5 +88,7 @@ If you need help you can always contact me on Discord *(mgsmemebook#2636)*. Have
 /tpdeny /tphere /unban /unmute /vanish
 ```
 
-#### Known Issues on V.1.3.2
+#### Known Issues on V.1.3.3
 - When players don't see you /nick doesn't work
+- /back sometimes works sometimes not
+- Still sends quit messages on /nick while vanished 
