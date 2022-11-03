@@ -2,6 +2,7 @@ package me.mgsmemebook.mxe.commands;
 
 import me.mgsmemebook.mxe.MXE;
 import me.mgsmemebook.mxe.Nametag;
+import me.mgsmemebook.mxe.db.DB;
 import me.mgsmemebook.mxe.func;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -9,7 +10,6 @@ import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -29,6 +29,10 @@ public class nick implements CommandExecutor {
         String permerror = MXE.getCustomConfig().getString("messages.custom.error.unsufficient-permissions");
         permerror = func.colCodes(permerror);
         String lang = MXE.getCustomConfig().getString("messages.language");
+        if(othererror == null || lang == null || permerror == null) {
+            func.cMSG(ChatColor.RED + "[MXE]: Error: Config misconfigured! Commands won't work!", 1);
+            return false;
+        }
         if(sender instanceof Player) {
             if(p == null) {
                 error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[MXE nick]: " + ChatColor.RESET + ChatColor.DARK_RED + "Warn: Player is null (" + sender.getName() + ")";
@@ -63,8 +67,12 @@ public class nick implements CommandExecutor {
             String quitmsg;
             if(args.length == 0) {
                 quitmsg = MXE.getCustomConfig().getString("messages.custom.quit");
-                quitmsg = func.colCodes(quitmsg);
-                quitmsg = quitmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+                if(quitmsg == null) {
+                    func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.quit)", 2);
+                } else {
+                    quitmsg = func.colCodes(quitmsg);
+                    quitmsg = quitmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+                }
 
                 if(MXE.getPlayerSB().getEntryTeam(p.getDisplayName()) != null) MXE.getPlayerSB().getEntryTeam(p.getDisplayName()).removeEntry(p.getDisplayName());
                 if(MXE.lpLoaded) {
@@ -79,26 +87,30 @@ public class nick implements CommandExecutor {
                 }
                 p.sendMessage(msg);
             } else {
-                String name = args[0];
+                StringBuilder name = new StringBuilder(args[0]);
                 for(int i = 1; i < args.length; i++) {
-                    name = name + " " + args[i];
+                    name.append("_").append(args[i]);
                 }
                 if(name.length() > 16) {
-                    name = name.substring(0, 15);
+                    name = new StringBuilder(name.substring(0, 15));
                 }
-                if(name.equals(p.getName())) {
+                if(name.toString().equals(p.getName())) {
                     p.performCommand("nick");
                     return true;
                 }
 
                 quitmsg = MXE.getCustomConfig().getString("messages.custom.quit");
-                quitmsg = func.colCodes(quitmsg);
-                quitmsg = quitmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+                if(quitmsg == null) {
+                    func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.quit)", 2);
+                } else {
+                    quitmsg = func.colCodes(quitmsg);
+                    quitmsg = quitmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+                }
 
                 if(MXE.getPlayerSB().getEntryTeam(p.getDisplayName()) != null) MXE.getPlayerSB().getEntryTeam(p.getDisplayName()).removeEntry(p.getDisplayName());
-                Nametag.setName(p, name);
-                MXE.getPlayerSB().getTeam("default").addEntry(name);
-                p.setDisplayName(name);
+                Nametag.setName(p, name.toString());
+                MXE.getPlayerSB().getTeam("default").addEntry(name.toString());
+                p.setDisplayName(name.toString());
 
                 String prefix = "";
                 if(MXE.lpLoaded) {
@@ -117,12 +129,16 @@ public class nick implements CommandExecutor {
                 }
                 p.sendMessage(msg);
             }
-            if(MXE.getCustomConfig().getBoolean("commands.nick.fake-join-leave")) {
+            if(MXE.getCustomConfig().getBoolean("commands.nick.fake-join-leave") && !DB.getVanish(p.getUniqueId()) && quitmsg != null) {
                 String joinmsg = MXE.getCustomConfig().getString("messages.custom.join");
-                joinmsg = func.colCodes(joinmsg);
-                joinmsg = joinmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+                if(joinmsg == null) {
+                    func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.join)", 2);
+                } else {
+                    joinmsg = func.colCodes(joinmsg);
+                    joinmsg = joinmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+                    Bukkit.broadcastMessage(joinmsg);
+                }
                 Bukkit.broadcastMessage(quitmsg);
-                Bukkit.broadcastMessage(joinmsg);
             }
         } else {
             error = ChatColor.DARK_RED + "[MXE] You can't perform this command while in console!";

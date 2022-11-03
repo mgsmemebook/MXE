@@ -1,6 +1,7 @@
 package me.mgsmemebook.mxe.commands;
 
 import me.mgsmemebook.mxe.MXE;
+import me.mgsmemebook.mxe.Nametag;
 import me.mgsmemebook.mxe.db.DB;
 import me.mgsmemebook.mxe.func;
 import net.luckperms.api.LuckPerms;
@@ -26,7 +27,17 @@ public class tpahere implements CommandExecutor {
         String error;
         String syntaxerror = MXE.getCustomConfig().getString("messages.custom.error.syntax");
         syntaxerror = func.colCodes(syntaxerror);
+        String notfounderror = MXE.getCustomConfig().getString("messages.custom.error.target-not-found");
+        notfounderror = func.colCodes(notfounderror);
+        String permerror = MXE.getCustomConfig().getString("messages.custom.error.unsufficient-permissions");
+        permerror = func.colCodes(permerror);
+        String othererror = MXE.getCustomConfig().getString("messages.custom.error.other");
+        othererror = func.colCodes(othererror);
         String lang = MXE.getCustomConfig().getString("messages.language");
+        if(othererror == null || lang == null || permerror == null || syntaxerror == null || notfounderror == null) {
+            func.cMSG(ChatColor.RED + "[MXE]: Error: Config misconfigured! Commands won't work!", 1);
+            return false;
+        }
         if (sender instanceof Player) {
             Player p = Bukkit.getPlayerExact(sender.getName());
             if (p == null) {
@@ -38,10 +49,10 @@ public class tpahere implements CommandExecutor {
             if (args.length == 0) {
                 switch (lang) {
                     case "de":
-                        syntaxerror.replaceAll("%s", "/tpahere [Spieler]");
+                        syntaxerror = syntaxerror.replaceAll("%s", "/tpahere [Spieler]");
                         break;
                     default:
-                        syntaxerror.replaceAll("%s", "/tpahere [Player]");
+                        syntaxerror = syntaxerror.replaceAll("%s", "/tpahere [Player]");
                 }
                 p.sendMessage(syntaxerror);
                 return true;
@@ -50,56 +61,28 @@ public class tpahere implements CommandExecutor {
             if(!p.isOp()) {
                 if (!MXE.lpLoaded) {
                     if (!p.hasPermission("mxe.tpahere")) {
-                        switch (lang) {
-                            case "de":
-                                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-                                break;
-                            default:
-                                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "You don't have permissions to do that!";
-                        }
-                        p.sendMessage(error);
+                        p.sendMessage(permerror);
                         return true;
                     }
                 } else {
                     LuckPerms lp = LuckPermsProvider.get();
                     User u = lp.getUserManager().getUser(p.getUniqueId());
                     if (u == null) {
-                        switch (lang) {
-                            case "de":
-                                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Ein Fehler ist aufgetreten beim Ausführen dieses Befehls.";
-                                break;
-                            default:
-                                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "An error occured while performing this command.";
-                        }
-                        p.sendMessage(error);
+                        p.sendMessage(othererror);
                         return true;
                     }
                     if (!u.getCachedData().getPermissionData().checkPermission("mxe.tpahere").asBoolean()) {
-                        switch (lang) {
-                            case "de":
-                                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "Dafür hast du keine Rechte!";
-                                break;
-                            default:
-                                error = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_RED + "You don't have permissions to do that!";
-                        }
-                        p.sendMessage(error);
+                        p.sendMessage(permerror);
                         return true;
                     }
                 }
             }
 
-            Player t = Bukkit.getPlayer(args[0]);
-            if(t == null) {
-                switch (lang) {
-                    case "de":
-                        error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Spieler nicht gefunden!";
-                        break;
-                    default:
-                        error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Player not found!";
-                }
-                p.sendMessage(error);
+            if(Bukkit.getPlayer(args[0]) == null && !Nametag.isFakeName(args[0])) {
+                sender.sendMessage(notfounderror);
                 return true;
             }
+            Player t = func.getRealPlayer(args[0]);
 
             ArrayList<Integer> tpas = DB.getPlayerTpas(p.getName());
             ArrayList<String> res;

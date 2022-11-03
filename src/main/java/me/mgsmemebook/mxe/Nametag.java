@@ -15,8 +15,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.*;
 
 public class Nametag {
-    private static Plugin plugin = MXE.getPlugin();
+    private static final Plugin plugin = MXE.getPlugin();
     private static final Map<Player, String> fakeNames = new WeakHashMap<>();
+    private static final Map<String, Player> fakePlayers = new WeakHashMap<>();
+    private static final ArrayList<String> fakeNameList = new ArrayList<>();
 
     public static void NameChanger() {
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(plugin, PacketType.Play.Server.PLAYER_INFO) {
@@ -56,6 +58,8 @@ public class Nametag {
      */
     public static void setName(final Player player, String fakeName) {
         fakeNames.put(player, fakeName);
+        fakePlayers.put(fakeName, player);
+        fakeNameList.add(fakeName);
         refresh(player);
     }
 
@@ -69,10 +73,22 @@ public class Nametag {
     public static void resetName(Player player) {
         if(fakeNames.containsKey(player)) {
             fakeNames.remove(player);
+            fakePlayers.remove(player.getDisplayName());
+            fakeNameList.remove(player.getDisplayName());
         }
         refresh(player);
     }
-
+    public static Player getRealPlayer(String fakeName) {
+        for(String name:fakeNameList) {
+            if(name.toLowerCase().startsWith(fakeName.toLowerCase())) {
+                return fakePlayers.get(name);
+            }
+        }
+        return null;
+    }
+    public static boolean isFakeName(String name) {
+        return getRealPlayer(name) != null;
+    }
     private static void refresh(final Player player) {
         for (final Player forWhom : player.getWorld().getPlayers()) {
             forWhom.hidePlayer(plugin, player);

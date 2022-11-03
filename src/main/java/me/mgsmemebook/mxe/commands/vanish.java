@@ -26,11 +26,11 @@ public class vanish implements CommandExecutor {
         othererror = func.colCodes(othererror);
         String permerror = MXE.getCustomConfig().getString("messages.custom.error.unsufficient-permissions");
         permerror = func.colCodes(permerror);
-        String syntaxerror = MXE.getCustomConfig().getString("messages.custom.error.syntax");
-        syntaxerror = func.colCodes(syntaxerror);
-        String notfounderror = MXE.getCustomConfig().getString("messages.custom.error.target-not-found");
-        notfounderror = func.colCodes(notfounderror);
         String lang = MXE.getCustomConfig().getString("messages.language");
+        if(othererror == null || lang == null || permerror == null) {
+            func.cMSG(ChatColor.RED + "[MXE]: Error: Config misconfigured! Commands won't work!", 1);
+            return false;
+        }
         if(sender instanceof Player) {
             Player p = Bukkit.getPlayerExact(sender.getName());
             if(p == null) {
@@ -80,11 +80,19 @@ public class vanish implements CommandExecutor {
                 }
             }
             String joinmsg = MXE.getCustomConfig().getString("messages.custom.join");
-            joinmsg = func.colCodes(joinmsg);
-            joinmsg = joinmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+            if(joinmsg == null) {
+                func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.join)", 2);
+            } else {
+                joinmsg = func.colCodes(joinmsg);
+                joinmsg = joinmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+            }
             String quitmsg = MXE.getCustomConfig().getString("messages.custom.quit");
-            quitmsg = func.colCodes(quitmsg);
-            quitmsg = quitmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+            if(quitmsg == null) {
+                func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.join)", 2);
+            } else {
+                quitmsg = func.colCodes(quitmsg);
+                quitmsg = quitmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+            }
             if(vanish) {
                 DB.setVanish(p.getUniqueId(), false);
                 switch (lang) {
@@ -97,7 +105,9 @@ public class vanish implements CommandExecutor {
                         p.sendMessage(msg);
                 }
                 p.removePotionEffect(PotionEffectType.INVISIBILITY);
-                Bukkit.broadcastMessage(joinmsg);
+                if (joinmsg != null) {
+                    Bukkit.broadcastMessage(joinmsg);
+                }
             } else {
                 DB.setVanish(p.getUniqueId(), true);
                 switch (lang) {
@@ -110,7 +120,9 @@ public class vanish implements CommandExecutor {
                         p.sendMessage(msg);
                 }
                 p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999999, 2, true, true));
-                Bukkit.broadcastMessage(quitmsg);
+                if (quitmsg != null) {
+                    Bukkit.broadcastMessage(quitmsg);
+                }
             }
         } else {
             error = ChatColor.DARK_RED + "[MXE] You can't perform this command while in console!";

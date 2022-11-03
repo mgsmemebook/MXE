@@ -1,6 +1,7 @@
 package me.mgsmemebook.mxe.commands;
 
 import me.mgsmemebook.mxe.MXE;
+import me.mgsmemebook.mxe.Nametag;
 import me.mgsmemebook.mxe.db.DB;
 import me.mgsmemebook.mxe.func;
 import net.luckperms.api.LuckPerms;
@@ -33,6 +34,10 @@ public class tpa implements CommandExecutor {
         String notfounderror = MXE.getCustomConfig().getString("messages.custom.error.target-not-found");
         notfounderror = func.colCodes(notfounderror);
         String lang = MXE.getCustomConfig().getString("messages.language");
+        if(othererror == null || lang == null || permerror == null || syntaxerror == null || notfounderror == null) {
+            func.cMSG(ChatColor.RED + "[MXE]: Error: Config misconfigured! Commands won't work!", 1);
+            return false;
+        }
         if (sender instanceof Player) {
             Player p = Bukkit.getPlayerExact(sender.getName());
             if (p == null) {
@@ -44,10 +49,10 @@ public class tpa implements CommandExecutor {
             if (args.length == 0) {
                 switch (lang) {
                     case "de":
-                        syntaxerror.replaceAll("%s", "/tpa [Spieler]");
+                        syntaxerror = syntaxerror.replaceAll("%s", "/tpa [Spieler]");
                         break;
                     default:
-                        syntaxerror.replaceAll("%s", "/tpa [Player]");
+                        syntaxerror = syntaxerror.replaceAll("%s", "/tpa [Player]");
                 }
                 p.sendMessage(syntaxerror);
                 return true;
@@ -73,11 +78,11 @@ public class tpa implements CommandExecutor {
                 }
             }
 
-            Player t = Bukkit.getPlayer(args[0]);
-            if (t == null) {
-                p.sendMessage(notfounderror);
+            if(Bukkit.getPlayer(args[0]) == null && !Nametag.isFakeName(args[0])) {
+                sender.sendMessage(notfounderror);
                 return true;
             }
+            Player t = func.getRealPlayer(args[0]);
 
             ArrayList<Integer> tpas = DB.getPlayerTpas(p.getName());
             ArrayList<String> res;

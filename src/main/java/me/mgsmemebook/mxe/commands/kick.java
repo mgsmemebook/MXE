@@ -1,6 +1,7 @@
 package me.mgsmemebook.mxe.commands;
 
 import me.mgsmemebook.mxe.MXE;
+import me.mgsmemebook.mxe.Nametag;
 import me.mgsmemebook.mxe.func;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -30,6 +31,10 @@ public class kick implements CommandExecutor {
         syntaxerror = func.colCodes(syntaxerror);
         String notfounderror = MXE.getCustomConfig().getString("messages.custom.error.target-not-found");
         notfounderror = func.colCodes(notfounderror);
+        if(othererror == null || lang == null || permerror == null || syntaxerror == null || notfounderror == null) {
+            func.cMSG(ChatColor.RED + "[MXE]: Error: Config misconfigured! Commands won't work!", 1);
+            return false;
+        }
         if(args.length < 1) {
             switch (lang) {
                 case "de":
@@ -41,11 +46,11 @@ public class kick implements CommandExecutor {
             sender.sendMessage(syntaxerror);
             return true;
         }
-        Player t = Bukkit.getPlayer(args[0]);
-        if(t == null) {
+        if(Bukkit.getPlayer(args[0]) == null && !Nametag.isFakeName(args[0])) {
             sender.sendMessage(notfounderror);
             return true;
         }
+        Player t = func.getRealPlayer(args[0]);
         if(sender instanceof Player) {
             Player p = Bukkit.getPlayerExact(sender.getName());
             if(p == null) {
@@ -98,22 +103,40 @@ public class kick implements CommandExecutor {
         if(args.length == 2) {
             String reason = args[1];
             kickmsg = MXE.getCustomConfig().getString("messages.custom.kick.reason.player");
-            kickmsg = func.colCodes(kickmsg);
-            kickmsg = kickmsg.replaceAll("%m", name);
-            kickmsg = kickmsg.replaceAll("%r", reason);
+            if(kickmsg == null) {
+                func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.kick.reason.player)", 2);
+            } else {
+                kickmsg = func.colCodes(kickmsg);
+                kickmsg = kickmsg.replaceAll("%m", name);
+                kickmsg = kickmsg.replaceAll("%r", reason);
+            }
             msg = MXE.getCustomConfig().getString("messages.custom.kick.reason.staff");
-            msg = func.colCodes(msg);
-            msg = msg.replaceAll("%p", MXE.getPlayerPrefix(t) + t.getDisplayName());
-            msg = msg.replaceAll("%r", reason);
+            if(msg == null) {
+                func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.kick.reason.staff)", 2);
+            } else {
+                msg = func.colCodes(msg);
+                msg = msg.replaceAll("%p", MXE.getPlayerPrefix(t) + t.getDisplayName());
+                msg = msg.replaceAll("%r", reason);
+            }
         } else {
             kickmsg = MXE.getCustomConfig().getString("messages.custom.kick.no-reason.player");
-            kickmsg = func.colCodes(kickmsg);
-            kickmsg = kickmsg.replaceAll("%m", name);
+            if(kickmsg == null) {
+                func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.kick.reason.player)", 2);
+            } else {
+                kickmsg = func.colCodes(kickmsg);
+                kickmsg = kickmsg.replaceAll("%m", name);
+            }
             msg = MXE.getCustomConfig().getString("messages.custom.kick.no-reason.staff");
-            msg = func.colCodes(msg);
-            msg = msg.replaceAll("%p", MXE.getPlayerPrefix(t) + t.getDisplayName());
+            if(msg == null) {
+                func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.kick.reason.staff)", 2);
+            } else {
+                msg = func.colCodes(msg);
+                msg = msg.replaceAll("%p", MXE.getPlayerPrefix(t) + t.getDisplayName());
+            }
         }
-        sender.sendMessage(msg);
+        if (msg != null) {
+            sender.sendMessage(msg);
+        }
         t.kickPlayer(kickmsg);
         return true;
     }

@@ -42,6 +42,12 @@ messages:
     # Set message as %m.
     chat: "%p&r&6 says: &r&7%m"
 
+    # Private messages via /pm
+    # Set sender as %s. Note that you will have to reset the color because of the prefix.
+    # Set reciever as %r. Note that you will have to reset the color because of the prefix.
+    # Set message as %m.
+    pm: "&6[%s &r&6--> %r&r&6]: &r&7%m"
+
     timedtp:
       # Message a player gets when they are in the process of teleporting
       # (If the delay specified in the commands section below is 0 this won't have any effect.)
@@ -156,9 +162,12 @@ messages:
 # --- Command section ---
 # Configuration and tweaks of commands
 commands:
-  # Disabled commands. Seperate by comma e.g. [ "nick", "vanish" ]
-  # This doesn't work yet.
-  disabled: [  ]
+  # Disabled commands. Seperate by comma
+  # Must be in lower case!
+  disabled:
+    # Example:
+    #"command1",
+    #"command2"
 
   home:
     # Maximum amount of homes a group can have

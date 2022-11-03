@@ -1,6 +1,7 @@
 package me.mgsmemebook.mxe.commands;
 
 import me.mgsmemebook.mxe.MXE;
+import me.mgsmemebook.mxe.Nametag;
 import me.mgsmemebook.mxe.func;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -24,10 +25,12 @@ public class kill implements CommandExecutor {
         othererror = func.colCodes(othererror);
         String permerror = MXE.getCustomConfig().getString("messages.custom.error.unsufficient-permissions");
         permerror = func.colCodes(permerror);
-        String syntaxerror = MXE.getCustomConfig().getString("messages.custom.error.syntax");
-        syntaxerror = func.colCodes(syntaxerror);
         String notfounderror = MXE.getCustomConfig().getString("messages.custom.error.target-not-found");
         notfounderror = func.colCodes(notfounderror);
+        if(othererror == null || permerror == null || notfounderror == null) {
+            func.cMSG(ChatColor.RED + "[MXE]: Error: Config misconfigured! Commands won't work!", 1);
+            return false;
+        }
         if(sender instanceof Player) {
             Player p = Bukkit.getPlayerExact(sender.getName());
             if(p == null) {
@@ -40,11 +43,11 @@ public class kill implements CommandExecutor {
                 p.setHealth(0);
                 return true;
             }
-            t = Bukkit.getPlayer(args[0]);
-            if (t == null) {
+            if(Bukkit.getPlayer(args[0]) == null && !Nametag.isFakeName(args[0])) {
                 sender.sendMessage(notfounderror);
                 return true;
             }
+            t = func.getRealPlayer(args[0]);
             if(!p.isOp()) {
                 if (!MXE.lpLoaded) {
                     if (!p.hasPermission("mxe.kill")) {
@@ -87,11 +90,11 @@ public class kill implements CommandExecutor {
                 sender.sendMessage(notfounderror);
                 return true;
             } else {
-                t = Bukkit.getPlayer(args[0]);
-                if(t == null) {
+                if(Bukkit.getPlayer(args[1]) == null && !Nametag.isFakeName(args[1])) {
                     sender.sendMessage(notfounderror);
                     return true;
                 }
+                t = func.getRealPlayer(args[1]);
             }
         }
         t.setHealth(0);

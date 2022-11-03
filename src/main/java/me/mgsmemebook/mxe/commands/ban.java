@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -36,6 +37,10 @@ public class ban implements CommandExecutor {
         String notfounderror = MXE.getCustomConfig().getString("messages.custom.error.target-not-found");
         notfounderror = func.colCodes(notfounderror);
         String lang = MXE.getCustomConfig().getString("messages.language");
+        if(othererror == null || lang == null || permerror == null || syntaxerror == null || notfounderror == null) {
+            func.cMSG(ChatColor.RED + "[MXE]: Error: Config misconfigured! Commands won't work!", 1);
+            return false;
+        }
         if(args.length < 1) {
             switch (lang) {
                 case "de":
@@ -77,10 +82,7 @@ public class ban implements CommandExecutor {
                     User tu = null;
                     try {
                         tu = userFuture.get();
-                    } catch (InterruptedException ex) {
-                        func.cMSG(ChatColor.GOLD + "[MXE ban] Error while getting offline User", 2);
-                        func.cMSG(ChatColor.GOLD + "[MXE ban] " + ex.getMessage(), 2);
-                    } catch (ExecutionException ex) {
+                    } catch (InterruptedException | ExecutionException ex) {
                         func.cMSG(ChatColor.GOLD + "[MXE ban] Error while getting offline User", 2);
                         func.cMSG(ChatColor.GOLD + "[MXE ban] " + ex.getMessage(), 2);
                     }
@@ -128,11 +130,19 @@ public class ban implements CommandExecutor {
             DB.banDBPlayer(t.getUniqueId(), false, null, null);
 
             kickmsg = MXE.getCustomConfig().getString("messages.custom.ban.banned.permanent.no-reason.player");
-            kickmsg = func.colCodes(kickmsg);
-            kickmsg = kickmsg.replaceAll("%m", name);
+            if(kickmsg == null) {
+                func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.ban.banned.permanent.no-reason.player)", 2);
+            } else {
+                kickmsg = func.colCodes(kickmsg);
+                kickmsg = kickmsg.replaceAll("%m", name);
+            }
             msg = MXE.getCustomConfig().getString("messages.custom.ban.banned.permanent.no-reason.staff");
-            msg = func.colCodes(msg);
-            msg = msg.replaceAll("%p", t.getName());
+            if(msg == null) {
+                func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.ban.banned.permanent.no-reason.staff)", 2);
+            } else {
+                msg = func.colCodes(msg);
+                msg = msg.replaceAll("%p", Objects.requireNonNull(t.getName()));
+            }
         } else if(args.length == 2) {
             //Tempban ohne Grund oder Permabann mit Grund
             String unit = args[1].substring(args[1].length() - 1);
@@ -218,26 +228,42 @@ public class ban implements CommandExecutor {
                 DB.banDBPlayer(t.getUniqueId(), true, timestamp, null);
 
                 kickmsg = MXE.getCustomConfig().getString("messages.custom.ban.banned.temporary.no-reason.player");
-                kickmsg = func.colCodes(kickmsg);
-                kickmsg = kickmsg.replaceAll("%t", zeit);
-                kickmsg = kickmsg.replaceAll("%m", name);
+                if(kickmsg == null) {
+                    func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.ban.banned.temporary.no-reason.player)", 2);
+                } else {
+                    kickmsg = func.colCodes(kickmsg);
+                    kickmsg = kickmsg.replaceAll("%t", zeit);
+                    kickmsg = kickmsg.replaceAll("%m", name);
+                }
                 msg = MXE.getCustomConfig().getString("messages.custom.ban.banned.temporary.no-reason.staff");
-                msg = func.colCodes(msg);
-                msg = msg.replaceAll("%t", zeit);
-                msg = msg.replaceAll("%p", t.getName());
+                if(msg == null) {
+                    func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.ban.banned.temporary.no-reason.staff)", 2);
+                } else {
+                    msg = func.colCodes(msg);
+                    msg = msg.replaceAll("%t", zeit);
+                    msg = msg.replaceAll("%p", t.getName());
+                }
             } else {
                 //Permabann mit Grund
                 reason = args[1];
                 DB.banDBPlayer(t.getUniqueId(), false, null, reason);
 
                 kickmsg = MXE.getCustomConfig().getString("messages.custom.ban.banned.permanent.reason.player");
-                kickmsg = func.colCodes(kickmsg);
-                kickmsg = kickmsg.replaceAll("%r", reason);
-                kickmsg = kickmsg.replaceAll("%m", name);
+                if(kickmsg == null) {
+                    func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.ban.banned.permanent.reason.staff)", 2);
+                } else {
+                    kickmsg = func.colCodes(kickmsg);
+                    kickmsg = kickmsg.replaceAll("%r", reason);
+                    kickmsg = kickmsg.replaceAll("%m", name);
+                }
                 msg = MXE.getCustomConfig().getString("messages.custom.ban.banned.permanent.reason.staff");
-                msg = func.colCodes(msg);
-                msg = msg.replaceAll("%r", reason);
-                msg = msg.replaceAll("%p", t.getName());
+                if(msg == null) {
+                    func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.ban.banned.permanent.reason.staff)", 2);
+                } else {
+                    msg = func.colCodes(msg);
+                    msg = msg.replaceAll("%r", reason);
+                    msg = msg.replaceAll("%p", t.getName());
+                }
             }
         } else {
             //Tempbann mit Grund
@@ -327,15 +353,23 @@ public class ban implements CommandExecutor {
             DB.banDBPlayer(t.getUniqueId(), true, timestamp, reason);
 
             kickmsg = MXE.getCustomConfig().getString("messages.custom.ban.banned.temporary.reason.player");
-            kickmsg = func.colCodes(kickmsg);
-            kickmsg = kickmsg.replaceAll("%t", zeit);
-            kickmsg = kickmsg.replaceAll("%m", name);
-            kickmsg = kickmsg.replaceAll("%r", reason);
+            if(kickmsg == null) {
+                func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.ban.banned.temporary.reason.staff)", 2);
+            } else {
+                kickmsg = func.colCodes(kickmsg);
+                kickmsg = kickmsg.replaceAll("%t", zeit);
+                kickmsg = kickmsg.replaceAll("%m", name);
+                kickmsg = kickmsg.replaceAll("%r", reason);
+            }
             msg = MXE.getCustomConfig().getString("messages.custom.ban.banned.temporary.reason.staff");
-            msg = func.colCodes(msg);
-            msg = msg.replaceAll("%t", zeit);
-            msg = msg.replaceAll("%p", t.getName());
-            msg = msg.replaceAll("%r", reason);
+            if(msg == null) {
+                func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.ban.banned.temporary.reason.staff)", 2);
+            } else {
+                msg = func.colCodes(msg);
+                msg = msg.replaceAll("%t", zeit);
+                msg = msg.replaceAll("%p", t.getName());
+                msg = msg.replaceAll("%r", reason);
+            }
         }
         if(t.isOnline()) {
             Player tplayer = Bukkit.getPlayer(t.getUniqueId());
@@ -343,7 +377,9 @@ public class ban implements CommandExecutor {
                 tplayer.kickPlayer(kickmsg);
             }
         }
-        sender.sendMessage(msg);
+        if (msg != null) {
+            sender.sendMessage(msg);
+        }
         return true;
     }
 }

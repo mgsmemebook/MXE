@@ -17,6 +17,7 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
 import java.io.File;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -65,12 +66,16 @@ public final class MXE extends JavaPlugin {
         //DB
         SQLite.load("users");
 
-
-        if(Bukkit.getPluginManager().getPlugin("LuckPerms") != null) lpLoaded = Bukkit.getPluginManager().getPlugin("LuckPerms").isEnabled();
+        Plugin lpPlugin = Bukkit.getPluginManager().getPlugin("LuckPerms");
+        if(lpPlugin != null) lpLoaded = lpPlugin.isEnabled();
         if(lpLoaded) {
             //Scoreboard
             ScoreboardManager sbman = Bukkit.getScoreboardManager();
-            playersb = sbman.getNewScoreboard();
+            if(sbman == null) {
+                cMSG(ChatColor.YELLOW + "[MXE]: Warn: ScoreBoardManager is null! Plugin probably won't work correctly.", 2);
+            } else {
+                playersb = sbman.getNewScoreboard();
+            }
 
             LuckPerms lp = LuckPermsProvider.get();
             lp.getGroupManager().loadAllGroups();
@@ -106,51 +111,72 @@ public final class MXE extends JavaPlugin {
         }
 
         //Commands
-        if(plugin.getConfig().getBoolean("commands.help.replace-vanilla")) {
-            Objects.requireNonNull(getCommand("help")).setExecutor(new help());
-            Objects.requireNonNull(getCommand("help")).setTabCompleter(new TabCompletion());
-        } else {
-            Objects.requireNonNull(getCommand("mxe help")).setExecutor(new help());
-            Objects.requireNonNull(getCommand("mxe help")).setTabCompleter(new TabCompletion());
-        }
-        Objects.requireNonNull(getCommand("back")).setExecutor(new back());
-        Objects.requireNonNull(getCommand("ban")).setExecutor(new ban());
-        Objects.requireNonNull(getCommand("fly")).setExecutor(new fly());
-        Objects.requireNonNull(getCommand("gm")).setExecutor(new gm());
-        Objects.requireNonNull(getCommand("god")).setExecutor(new god());
-        Objects.requireNonNull(getCommand("home")).setExecutor(new home());
-        Objects.requireNonNull(getCommand("kick")).setExecutor(new kick());
-        Objects.requireNonNull(getCommand("kill")).setExecutor(new kill());
-        Objects.requireNonNull(getCommand("mute")).setExecutor(new mute());
-        Objects.requireNonNull(getCommand("tpa")).setExecutor(new tpa());
-        Objects.requireNonNull(getCommand("tpaccept")).setExecutor(new tpaccept());
-        Objects.requireNonNull(getCommand("tpahere")).setExecutor(new tpahere());
-        Objects.requireNonNull(getCommand("tpall")).setExecutor(new tpall());
-        Objects.requireNonNull(getCommand("tpdeny")).setExecutor(new tpdeny());
-        Objects.requireNonNull(getCommand("tphere")).setExecutor(new tphere());
-        Objects.requireNonNull(getCommand("unban")).setExecutor(new unban());
-        Objects.requireNonNull(getCommand("unmute")).setExecutor(new unmute());
-        Objects.requireNonNull(getCommand("vanish")).setExecutor(new vanish());
+        List<String> disabledCommands;
+        disabledCommands = (List<String>) getCustomConfig().getList("commands.disabled");
 
-        //TabCompletion
-        Objects.requireNonNull(getCommand("back")).setTabCompleter(new TabCompletion());
-        Objects.requireNonNull(getCommand("ban")).setTabCompleter(new TabCompletion());
-        Objects.requireNonNull(getCommand("fly")).setTabCompleter(new TabCompletion());
-        Objects.requireNonNull(getCommand("gm")).setTabCompleter(new TabCompletion());
-        Objects.requireNonNull(getCommand("god")).setTabCompleter(new TabCompletion());
-        Objects.requireNonNull(getCommand("home")).setTabCompleter(new TabCompletion());
-        Objects.requireNonNull(getCommand("kick")).setTabCompleter(new TabCompletion());
-        Objects.requireNonNull(getCommand("kill")).setTabCompleter(new TabCompletion());
-        Objects.requireNonNull(getCommand("mute")).setTabCompleter(new TabCompletion());
-        Objects.requireNonNull(getCommand("tpa")).setTabCompleter(new TabCompletion());
-        Objects.requireNonNull(getCommand("tpaccept")).setTabCompleter(new TabCompletion());
-        Objects.requireNonNull(getCommand("tpahere")).setTabCompleter(new TabCompletion());
-        Objects.requireNonNull(getCommand("tpall")).setTabCompleter(new TabCompletion());
-        Objects.requireNonNull(getCommand("tpdeny")).setTabCompleter(new TabCompletion());
-        Objects.requireNonNull(getCommand("tphere")).setTabCompleter(new TabCompletion());
-        Objects.requireNonNull(getCommand("unban")).setTabCompleter(new TabCompletion());
-        Objects.requireNonNull(getCommand("unmute")).setTabCompleter(new TabCompletion());
-        Objects.requireNonNull(getCommand("vanish")).setTabCompleter(new TabCompletion());
+        if(disabledCommands == null || !disabledCommands.contains("help")) {
+            if (plugin.getConfig().getBoolean("commands.help.replace-vanilla")) {
+                Objects.requireNonNull(getCommand("help")).setExecutor(new help());
+                Objects.requireNonNull(getCommand("help")).setTabCompleter(new TabCompletion());
+            } else {
+                Objects.requireNonNull(getCommand("mxe help")).setExecutor(new help());
+                Objects.requireNonNull(getCommand("mxe help")).setTabCompleter(new TabCompletion());
+            }
+        }if(disabledCommands == null || !disabledCommands.contains("back")) {
+            Objects.requireNonNull(getCommand("back")).setExecutor(new back());
+            Objects.requireNonNull(getCommand("back")).setTabCompleter(new TabCompletion());
+        } if(disabledCommands == null || !disabledCommands.contains("ban")) {
+            Objects.requireNonNull(getCommand("ban")).setExecutor(new ban());
+            Objects.requireNonNull(getCommand("ban")).setTabCompleter(new TabCompletion());
+        } if(disabledCommands == null || !disabledCommands.contains("fly")) {
+            Objects.requireNonNull(getCommand("fly")).setExecutor(new fly());
+            Objects.requireNonNull(getCommand("fly")).setTabCompleter(new TabCompletion());
+        } if(disabledCommands == null || !disabledCommands.contains("back")) {
+            Objects.requireNonNull(getCommand("gm")).setExecutor(new gm());
+            Objects.requireNonNull(getCommand("gm")).setTabCompleter(new TabCompletion());
+        } if(disabledCommands == null || !disabledCommands.contains("god")) {
+            Objects.requireNonNull(getCommand("god")).setExecutor(new god());
+            Objects.requireNonNull(getCommand("god")).setTabCompleter(new TabCompletion());
+        } if(disabledCommands == null || !disabledCommands.contains("home")) {
+            Objects.requireNonNull(getCommand("home")).setExecutor(new home());
+            Objects.requireNonNull(getCommand("home")).setTabCompleter(new TabCompletion());
+        } if(disabledCommands == null || !disabledCommands.contains("kick")) {
+            Objects.requireNonNull(getCommand("kick")).setExecutor(new kick());
+            Objects.requireNonNull(getCommand("kick")).setTabCompleter(new TabCompletion());
+        } if(disabledCommands == null || !disabledCommands.contains("kill")) {
+            Objects.requireNonNull(getCommand("kill")).setExecutor(new kill());
+            Objects.requireNonNull(getCommand("kill")).setTabCompleter(new TabCompletion());
+        } if(disabledCommands == null || !disabledCommands.contains("mute")) {
+            Objects.requireNonNull(getCommand("mute")).setExecutor(new mute());
+            Objects.requireNonNull(getCommand("mute")).setTabCompleter(new TabCompletion());
+        } if(disabledCommands == null || !disabledCommands.contains("tpa")) {
+            Objects.requireNonNull(getCommand("tpa")).setExecutor(new tpa());
+            Objects.requireNonNull(getCommand("tpa")).setTabCompleter(new TabCompletion());
+        } if(disabledCommands == null || !disabledCommands.contains("tpaccept")) {
+            Objects.requireNonNull(getCommand("tpaccept")).setExecutor(new tpaccept());
+            Objects.requireNonNull(getCommand("tpaccept")).setTabCompleter(new TabCompletion());
+        } if(disabledCommands == null || !disabledCommands.contains("tpahere")) {
+            Objects.requireNonNull(getCommand("tpahere")).setExecutor(new tpahere());
+            Objects.requireNonNull(getCommand("tpahere")).setTabCompleter(new TabCompletion());
+        } if(disabledCommands == null || !disabledCommands.contains("tpall")) {
+            Objects.requireNonNull(getCommand("tpall")).setExecutor(new tpall());
+            Objects.requireNonNull(getCommand("tpall")).setTabCompleter(new TabCompletion());
+        } if(disabledCommands == null || !disabledCommands.contains("tpdeny")) {
+            Objects.requireNonNull(getCommand("tpdeny")).setExecutor(new tpdeny());
+            Objects.requireNonNull(getCommand("tpdeny")).setTabCompleter(new TabCompletion());
+        } if(disabledCommands == null || !disabledCommands.contains("tphere")) {
+            Objects.requireNonNull(getCommand("tphere")).setExecutor(new tphere());
+            Objects.requireNonNull(getCommand("tphere")).setTabCompleter(new TabCompletion());
+        } if(disabledCommands == null || !disabledCommands.contains("unban")) {
+            Objects.requireNonNull(getCommand("unban")).setExecutor(new unban());
+            Objects.requireNonNull(getCommand("unban")).setTabCompleter(new TabCompletion());
+        } if(disabledCommands == null || !disabledCommands.contains("unmute")) {
+            Objects.requireNonNull(getCommand("unmute")).setExecutor(new unmute());
+            Objects.requireNonNull(getCommand("unmute")).setTabCompleter(new TabCompletion());
+        } if(disabledCommands == null || !disabledCommands.contains("vanish")) {
+            Objects.requireNonNull(getCommand("vanish")).setExecutor(new vanish());
+            Objects.requireNonNull(getCommand("vanish")).setTabCompleter(new TabCompletion());
+        }
 
         //In case of reload
         if(lpLoaded) {

@@ -7,6 +7,7 @@ import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,8 +24,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
-import static me.mgsmemebook.mxe.db.DB.addDBPlayer;
-import static me.mgsmemebook.mxe.db.DB.getDBPlayer;
+import static me.mgsmemebook.mxe.db.DB.*;
 
 public class PlayerEvents implements Listener {
     String lang = MXE.getCustomConfig().getString("messages.language");
@@ -56,16 +56,24 @@ public class PlayerEvents implements Listener {
                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
                     String unbandate = ldt.format(dtf);
 
-                    String msg = null;
+                    String msg;
                     if(reason != null) {
                         msg = MXE.getCustomConfig().getString("messages.custom.ban.banned-join.temporary.reason");
-                        msg = func.colCodes(msg);
-                        msg = msg.replaceAll("%d", unbandate);
-                        msg = msg.replaceAll("%r", reason);
+                        if(msg == null) {
+                            func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.ban.banned-join.temporary.reason)", 2);
+                        } else {
+                            msg = func.colCodes(msg);
+                            msg = msg.replaceAll("%d", unbandate);
+                            msg = msg.replaceAll("%r", reason);
+                        }
                     } else {
                         msg = MXE.getCustomConfig().getString("messages.custom.ban.banned-join.temporary.no-reason");
-                        msg = func.colCodes(msg);
-                        msg = msg.replaceAll("%d", unbandate);
+                        if(msg == null) {
+                            func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.ban.banned-join.temporary.no-reason)", 2);
+                        } else {
+                            msg = func.colCodes(msg);
+                            msg = msg.replaceAll("%d", unbandate);
+                        }
                     }
 
                     p.kickPlayer(msg);
@@ -76,14 +84,22 @@ public class PlayerEvents implements Listener {
                 }
             } else {
                 //Permban
-                String msg = null;
+                String msg;
                 if(reason != null) {
                     msg = MXE.getCustomConfig().getString("messages.custom.ban.banned-join.permanent.reason");
-                    msg = func.colCodes(msg);
-                    msg = msg.replaceAll("%r", reason);
+                    if(msg == null) {
+                        func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.ban.banned-join.permanent.reason)", 2);
+                    } else {
+                        msg = func.colCodes(msg);
+                        msg = msg.replaceAll("%r", reason);
+                    }
                 } else {
                     msg = MXE.getCustomConfig().getString("messages.custom.ban.banned-join.permanent.no-reason");
-                    msg = func.colCodes(msg);
+                    if(msg == null) {
+                        func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.ban.banned-join.permanent.no-reason)", 2);
+                    } else {
+                        msg = func.colCodes(msg);
+                    }
                 }
                 p.kickPlayer(msg);
                 e.setJoinMessage("");
@@ -140,20 +156,36 @@ public class PlayerEvents implements Listener {
             func.cMSG(ChatColor.DARK_AQUA + "[MXE] SQL: Player not found - Adding to database", 3);
             addDBPlayer(p.getUniqueId(), p.getName());
         }
+        Location loc = getBackCoords(p.getUniqueId());
+        if(loc == null) {
+            addBackCoords(p.getUniqueId());
+        }
 
         String joinmsg = MXE.getCustomConfig().getString("messages.custom.join");
-        joinmsg = func.colCodes(joinmsg);
-        joinmsg = joinmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
-        e.setJoinMessage(joinmsg);
+        if(joinmsg == null) {
+            func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.join)", 2);
+        } else {
+            joinmsg = func.colCodes(joinmsg);
+            joinmsg = joinmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+            e.setJoinMessage(joinmsg);
+        }
         if(MXE.getCustomConfig().getBoolean("messages.custom.tablist.enabled")) {
             String header = MXE.getCustomConfig().getString("messages.custom.tablist.header");
-            header = func.colCodes(header);
-            header = header.replaceAll("%u", p.getName());
-            header = header.replaceAll("%v", MXE.getPlugin().getDescription().getVersion());
+            if(header == null) {
+                func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.tablist.header)", 2);
+            } else {
+                header = func.colCodes(header);
+                header = header.replaceAll("%u", p.getName());
+                header = header.replaceAll("%v", MXE.getPlugin().getDescription().getVersion());
+            }
             String footer = MXE.getCustomConfig().getString("messages.custom.tablist.footer");
-            footer = func.colCodes(footer);
-            footer = footer.replaceAll("%u", p.getName());
-            footer = footer.replaceAll("%v", MXE.getPlugin().getDescription().getVersion());
+            if(footer == null) {
+                func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.tablist.footer)", 2);
+            } else {
+                footer = func.colCodes(footer);
+                footer = footer.replaceAll("%u", p.getName());
+                footer = footer.replaceAll("%v", MXE.getPlugin().getDescription().getVersion());
+            }
             p.setPlayerListHeaderFooter(header, footer);
         }
     }
@@ -164,10 +196,13 @@ public class PlayerEvents implements Listener {
         ArrayList<String> baninf = DB.getPlayerBanInfo(p.getUniqueId());
         if(baninf == null) {
             String quitmsg = MXE.getCustomConfig().getString("messages.custom.quit");
-            quitmsg = func.colCodes(quitmsg);
-            quitmsg = quitmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
-            e.setQuitMessage(quitmsg);
-
+            if(quitmsg == null) {
+                func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.join)", 2);
+            } else {
+                quitmsg = func.colCodes(quitmsg);
+                quitmsg = quitmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+                e.setQuitMessage(quitmsg);
+            }
             if(MXE.lpLoaded) {
                 LuckPerms lp = LuckPermsProvider.get();
                 lp.getUserManager().saveUser(Objects.requireNonNull(lp.getUserManager().getUser(p.getUniqueId())));
@@ -214,26 +249,37 @@ public class PlayerEvents implements Listener {
                     String unmutedate = ldt.format(dtf);
 
                     String mutemsg = MXE.getCustomConfig().getString("messages.custom.mute.muted-chat.temporary");
-                    mutemsg = func.colCodes(mutemsg);
-                    mutemsg = mutemsg.replaceAll("%d", unmutedate);
-
-                    p.sendMessage(mutemsg);
+                    if(mutemsg == null) {
+                        func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.join)", 2);
+                    } else {
+                        mutemsg = func.colCodes(mutemsg);
+                        mutemsg = mutemsg.replaceAll("%d", unmutedate);
+                        p.sendMessage(mutemsg);
+                    }
                 } else {
                     DB.setDBPlayerMute(false, false, null, p.getUniqueId());
                 }
             } else {
                 String mutemsg = MXE.getCustomConfig().getString("messages.custom.mute.muted-chat.permanent");
-                mutemsg = func.colCodes(mutemsg);
-                p.sendMessage(mutemsg);
+                if(mutemsg == null) {
+                    func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.join)", 2);
+                } else {
+                    mutemsg = func.colCodes(mutemsg);
+                    p.sendMessage(mutemsg);
+                }
             }
         } else {
             String msg = e.getMessage();
             msg = func.colCodes(msg);
             String chatmsg = MXE.getCustomConfig().getString("messages.custom.chat");
-            chatmsg = func.colCodes(chatmsg);
-            chatmsg = chatmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
-            chatmsg = chatmsg.replaceAll("%m", msg);
-            Bukkit.broadcastMessage(chatmsg);
+            if(chatmsg == null) {
+                func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.join)", 2);
+            } else {
+                chatmsg = func.colCodes(chatmsg);
+                chatmsg = chatmsg.replaceAll("%p", MXE.getPlayerPrefix(p) + p.getDisplayName());
+                chatmsg = chatmsg.replaceAll("%m", msg);
+                Bukkit.broadcastMessage(chatmsg);
+            }
         }
         e.setCancelled(true);
     }

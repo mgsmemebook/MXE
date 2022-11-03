@@ -5,13 +5,12 @@ import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.types.InheritanceNode;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.Map;
 import java.util.Set;
 
 import static org.bukkit.Bukkit.getServer;
@@ -71,17 +70,25 @@ public class func {
         } else {
             Location oldloc = p.getLocation();
             String msg = MXE.getCustomConfig().getString("messages.custom.timedtp.wait");
-            msg = colCodes(msg);
-            msg = msg.replaceAll("%t", delay.toString());
-            p.sendMessage(msg);
+            if(msg == null) {
+                func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.timedtp.wait)", 2);
+            } else {
+                msg = colCodes(msg);
+                msg = msg.replaceAll("%t", delay.toString());
+                p.sendMessage(msg);
+            }
             new BukkitRunnable() {
                 @Override
                 public void run() {
                     Location newloc = p.getLocation();
                     if(oldloc.getBlock() != newloc.getBlock()) {
                         String failmsg = MXE.getCustomConfig().getString("messages.custom.timedtp.failed");
-                        failmsg = colCodes(failmsg);
-                        p.sendMessage(failmsg);
+                        if(failmsg == null) {
+                            func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.timedtp.failed)", 2);
+                        } else {
+                            failmsg = colCodes(failmsg);
+                            p.sendMessage(failmsg);
+                        }
                     } else {
                         p.teleport(loc);
                     }
@@ -104,5 +111,17 @@ public class func {
             MXE.getCustomConfig().setComments(key, MXE.getCustomConfig().getComments(key));
         }
         MXE.getPlugin().saveConfig();
+    }
+
+    public static Player getRealPlayer(String name) {
+        if(Bukkit.getPlayer(name) == null) {
+            if(Nametag.isFakeName(name)) {
+                return Nametag.getRealPlayer(name);
+            } else {
+                return null;
+            }
+        } else {
+            return Bukkit.getPlayer(name);
+        }
     }
 }

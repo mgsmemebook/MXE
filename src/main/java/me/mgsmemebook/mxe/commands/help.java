@@ -12,8 +12,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.OptionalInt;
-
 public class help implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -22,6 +20,10 @@ public class help implements CommandExecutor {
         String lang = MXE.getCustomConfig().getString("messages.language");
         String othererror = MXE.getCustomConfig().getString("messages.custom.error.other");
         othererror = func.colCodes(othererror);
+        if(othererror == null || lang == null) {
+            func.cMSG(ChatColor.RED + "[MXE]: Error: Config misconfigured! Commands won't work!", 1);
+            return false;
+        }
         if(sender instanceof Player) {
             Player p = Bukkit.getPlayerExact(sender.getName());
             if(p == null) {

@@ -22,11 +22,15 @@ public class TabCompletion implements TabCompleter {
         Player[] players = new Player[Bukkit.getServer().getOnlinePlayers().size()];
         Bukkit.getServer().getOnlinePlayers().toArray(players);
         for (Player player : players) {
-            playerNames.add(player.getName());
+            playerNames.add(player.getDisplayName());
         }
 
         List<String> options;
         String lang = MXE.getCustomConfig().getString("messages.language");
+        if(lang == null) {
+            func.cMSG(ChatColor.RED + "[MXE]: Error: Config misconfigured! Commands won't work!", 1);
+            return new ArrayList<>();
+        }
         switch (command.getName()) {
             case "ban":
                 if(args.length == 1) {

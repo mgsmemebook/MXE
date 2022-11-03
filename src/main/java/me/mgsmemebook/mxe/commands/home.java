@@ -15,7 +15,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class home implements CommandExecutor {
     @Override
@@ -28,7 +27,11 @@ public class home implements CommandExecutor {
         permerror = func.colCodes(permerror);
         String syntaxerror = MXE.getCustomConfig().getString("messages.custom.error.syntax");
         syntaxerror = func.colCodes(syntaxerror);
-        Integer maxhomes = MXE.getCustomConfig().getInt("commands.home.max-homes.default");
+        int maxhomes = MXE.getCustomConfig().getInt("commands.home.max-homes.default");
+        if(othererror == null || lang == null || permerror == null || syntaxerror == null) {
+            func.cMSG(ChatColor.RED + "[MXE]: Error: Config misconfigured! Commands won't work!", 1);
+            return false;
+        }
         if(sender instanceof Player) {
             Player p = Bukkit.getPlayerExact(sender.getName());
             if(p == null) {

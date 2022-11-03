@@ -1,6 +1,7 @@
 package me.mgsmemebook.mxe.commands;
 
 import me.mgsmemebook.mxe.MXE;
+import me.mgsmemebook.mxe.Nametag;
 import me.mgsmemebook.mxe.func;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -26,6 +27,10 @@ public class gm implements CommandExecutor {
         String notfounderror = MXE.getCustomConfig().getString("messages.custom.error.target-not-found");
         notfounderror = func.colCodes(notfounderror);
         String lang = MXE.getCustomConfig().getString("messages.language");
+        if(othererror == null || lang == null || permerror == null || notfounderror == null) {
+            func.cMSG(ChatColor.RED + "[MXE]: Error: Config misconfigured! Commands won't work!", 1);
+            return false;
+        }
 
         String notfound, p0msg, p1msg, p2msg, p3msg;
         switch (lang) {
@@ -78,11 +83,12 @@ public class gm implements CommandExecutor {
             }
 
             if(args.length >= 2) {
-                Player t = Bukkit.getPlayer(args[1]);
-                if(t == null) {
+                if(Bukkit.getPlayer(args[1]) == null && !Nametag.isFakeName(args[1])) {
                     sender.sendMessage(notfounderror);
                     return true;
                 }
+                Player t = func.getRealPlayer(args[1]);
+
                 if(!p.isOp()) {
                     if (!MXE.lpLoaded) {
                         if (!p.hasPermission("mxe.gm")) {

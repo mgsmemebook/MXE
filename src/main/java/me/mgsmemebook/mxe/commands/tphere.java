@@ -1,6 +1,7 @@
 package me.mgsmemebook.mxe.commands;
 
 import me.mgsmemebook.mxe.MXE;
+import me.mgsmemebook.mxe.Nametag;
 import me.mgsmemebook.mxe.db.DB;
 import me.mgsmemebook.mxe.func;
 import net.luckperms.api.LuckPerms;
@@ -29,6 +30,10 @@ public class tphere implements CommandExecutor {
         String notfounderror = MXE.getCustomConfig().getString("messages.custom.error.target-not-found");
         notfounderror = func.colCodes(notfounderror);
         String lang = MXE.getCustomConfig().getString("messages.language");
+        if(othererror == null || lang == null || permerror == null || syntaxerror == null || notfounderror == null) {
+            func.cMSG(ChatColor.RED + "[MXE]: Error: Config misconfigured! Commands won't work!", 1);
+            return false;
+        }
         if(sender instanceof Player) {
             Player p = Bukkit.getPlayerExact(sender.getName());
             if(p == null) {
@@ -39,19 +44,19 @@ public class tphere implements CommandExecutor {
             if(args.length == 0) {
                 switch (lang) {
                     case "de":
-                        syntaxerror.replaceAll("%s", "/tphere [Spieler]");
+                        syntaxerror = syntaxerror.replaceAll("%s", "/tphere [Spieler]");
                         break;
                     default:
-                        syntaxerror.replaceAll("%s", "/tphere [Player]");
+                        syntaxerror = syntaxerror.replaceAll("%s", "/tphere [Player]");
                 }
                 p.sendMessage(syntaxerror);
                 return true;
             }
-            Player t = Bukkit.getPlayer(args[0]);
-            if (t == null) {
-                p.sendMessage(notfounderror);
+            if(Bukkit.getPlayer(args[1]) == null && !Nametag.isFakeName(args[1])) {
+                sender.sendMessage(notfounderror);
                 return true;
             }
+            Player t = func.getRealPlayer(args[1]);
 
             if(!p.isOp()) {
                 if (!MXE.lpLoaded) {

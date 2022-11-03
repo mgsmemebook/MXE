@@ -31,13 +31,17 @@ public class unban implements CommandExecutor {
         String notfounderror = MXE.getCustomConfig().getString("messages.custom.error.target-not-found");
         notfounderror = func.colCodes(notfounderror);
         String lang = MXE.getCustomConfig().getString("messages.language");
+        if(othererror == null || lang == null || permerror == null || syntaxerror == null || notfounderror == null) {
+            func.cMSG(ChatColor.RED + "[MXE]: Error: Config misconfigured! Commands won't work!", 1);
+            return false;
+        }
         if(args.length < 1) {
             switch (lang) {
                 case "de":
-                    syntaxerror.replaceAll("%s", "/unban [Spieler]");
+                    syntaxerror = syntaxerror.replaceAll("%s", "/unban [Spieler]");
                     break;
                 default:
-                    syntaxerror.replaceAll("%s", "/unban [Player]");
+                    syntaxerror = syntaxerror.replaceAll("%s", "/unban [Player]");
             }
             sender.sendMessage(syntaxerror);
             return true;

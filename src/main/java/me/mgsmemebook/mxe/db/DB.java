@@ -161,7 +161,7 @@ public class DB {
     }
     public static void banDBPlayer(UUID uuid, boolean tempban, String bantime, String reason) {
         OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
-        if(p == null) {
+        if(!p.hasPlayedBefore()) {
             func.cMSG(ChatColor.YELLOW + "[MXE DB addPlayer] Player not found.", 2);
         } else {
             PreparedStatement ps = null;
@@ -198,7 +198,8 @@ public class DB {
 
     public static void unbanDBPlayer(UUID uuid) {
         OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
-        if(p == null) {
+        if(!p.hasPlayedBefore()) {
+            func.cMSG(ChatColor.YELLOW + "[MXE DB unbanDBPlayer] Player not found.", 2);
         } else {
             PreparedStatement ps = null;
             Connection conn = null;

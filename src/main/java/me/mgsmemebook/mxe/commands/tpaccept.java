@@ -1,6 +1,7 @@
 package me.mgsmemebook.mxe.commands;
 
 import me.mgsmemebook.mxe.MXE;
+import me.mgsmemebook.mxe.Nametag;
 import me.mgsmemebook.mxe.db.DB;
 import me.mgsmemebook.mxe.func;
 import org.bukkit.Bukkit;
@@ -22,6 +23,10 @@ public class tpaccept implements CommandExecutor {
         String notfounderror = MXE.getCustomConfig().getString("messages.custom.error.target-not-found");
         notfounderror = func.colCodes(notfounderror);
         String lang = MXE.getCustomConfig().getString("messages.language");
+        if(lang == null || notfounderror == null) {
+            func.cMSG(ChatColor.RED + "[MXE]: Error: Config misconfigured! Commands won't work!", 1);
+            return false;
+        }
         if(sender instanceof Player) {
             Player p = Bukkit.getPlayerExact(sender.getName());
             if (p == null) {
@@ -63,11 +68,11 @@ public class tpaccept implements CommandExecutor {
 
             DB.remPlayerTpa(Integer.parseInt(res.get(4)));
 
-            Player t = Bukkit.getPlayerExact(res.get(0));
-            if(t == null) {
-                p.sendMessage(notfounderror);
+            if(Bukkit.getPlayer(res.get(0)) == null && !Nametag.isFakeName(res.get(0))) {
+                sender.sendMessage(notfounderror);
                 return true;
             }
+            Player t = func.getRealPlayer(args[1]);
             switch (lang) {
                 case "de":
                     t.sendMessage(ChatColor.GOLD + "[Server]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.GOLD + " hat deine Anfrage " + ChatColor.DARK_GREEN + "angenommen" + ChatColor.RESET + ChatColor.GOLD + "!");

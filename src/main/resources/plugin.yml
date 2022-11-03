@@ -10,91 +10,91 @@ depend: [ LuckPerms ]
 softdepend: [ ProtocolLib ]
 commands:
   back:
-    description: Kehre an deinen Todespunkt zurück.
+    description: Return to your death location.
     usage: /help <command>
 
   ban:
-    description: Banne einen Spieler.
+    description: Ban a player.
     usage: /help <command>
 
   fly:
-    description: Werde zu einem AH-64 Apache Attack Helicopter.
+    description: Become an AH-64 Apache Attack Helicopter.
     usage: /help <command>
 
   gm:
-    description: Wechsle deinen Gamemode.
+    description: Change your gamemode.
     usage: /help <command>
 
   god:
-    description: Werde zum Gott.
+    description: Become a god.
     usage: /help <command>
 
   help:
-    description: Dieser Befehl.
+    description: This command.
     usage: /help
 
   mxe help:
-    description: Dieser Befehl
+    description: This command.
     usage: /mxe help
 
   home:
-    description: Verwalte deine Homes.
+    description: Configure your homes.
     usage: /help <command>
 
   kick:
-    description: Kicke einen Spieler vom Server.
+    description: Kick a player from the server.
     usage: /help <command>
 
   kill:
-    description: Töte einen Spieler.
+    description: Kill a player.
     usage: /help <command>
 
   mute:
-    description: Stumme einen Spieler.
+    description: Mute a player.
     usage: /help <command>
 
   nick:
-    description: Ändere deine Identität.
+    description: Disguise yourself.
     usage: /help <command>
 
   setrank:
-    description: Setze den Rang eines Spielers.
+    description: Set a player's rank.
     usage: /help <command>
 
   tpa:
-    description: Teleportiere dich zu deinen Freunden.
+    description: Teleport to your friends.
     usage: /help <command>
 
   tpaccept:
-    description: Akzeptiere die letzte tp-Anfrage.
+    description: Accept the last tp-request.
     usage: /help <command>
 
   tpahere:
-    description: Teleportiere einen Freund zu dir.
+    description: Teleport a friend to you.
     usage: /help <command>
 
   tpall:
-    description: Teleportiere alle Spieler zu dir.
+    description: Teleport all players to you.
     usage: /help <command>
 
   tpdeny:
-    description: Lehne die letzte tp-Anfrage ab.
+    description: Reject the last tp-request.
     usage: /help <command>
 
   tphere:
-    description: Teleportiere einen Spieler zu dir.
+    description: Teleport a player to you.
     usage: /help <command>
 
   unban:
-    description: Vergebe einem Spieler.
+    description: Forgive a player.
     usage: /help <command>
 
   unmute:
-    description: Entmute einen Spieler.
+    description: Unmute a player.
     usage: /help <command>
 
   vanish:
-    description: Tauche unter.
+    description: Disappear.
     usage: /help <command>
     aliases: van
 

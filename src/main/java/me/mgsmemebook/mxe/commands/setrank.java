@@ -1,6 +1,7 @@
 package me.mgsmemebook.mxe.commands;
 
 import me.mgsmemebook.mxe.MXE;
+import me.mgsmemebook.mxe.Nametag;
 import me.mgsmemebook.mxe.func;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -28,22 +29,26 @@ public class setrank implements CommandExecutor {
         String notfounderror = MXE.getCustomConfig().getString("messages.custom.error.target-not-found");
         notfounderror = func.colCodes(notfounderror);
         String lang = MXE.getCustomConfig().getString("messages.language");
+        if(othererror == null || lang == null || permerror == null || syntaxerror == null || notfounderror == null) {
+            func.cMSG(ChatColor.RED + "[MXE]: Error: Config misconfigured! Commands won't work!", 1);
+            return false;
+        }
         if(args.length < 2) {
             switch (lang) {
                 case "de":
-                    syntaxerror.replaceAll("%s", "/setrank [Spieler] [Rang]");
+                    syntaxerror = syntaxerror.replaceAll("%s", "/setrank [Spieler] [Rang]");
                     break;
                 default:
-                    syntaxerror.replaceAll("%s", "/setrank [Player] [Rank]");
+                    syntaxerror = syntaxerror.replaceAll("%s", "/setrank [Player] [Rank]");
             }
             sender.sendMessage(syntaxerror);
             return true;
         }
-        Player t = Bukkit.getPlayer(args[0]);
-        if(t == null) {
+        if(Bukkit.getPlayer(args[0]) == null && !Nametag.isFakeName(args[0])) {
             sender.sendMessage(notfounderror);
             return true;
         }
+        Player t = func.getRealPlayer(args[0]);
         User tu = lp.getUserManager().getUser(t.getUniqueId());
         if(tu == null) {
             sender.sendMessage(othererror);
@@ -97,68 +102,116 @@ public class setrank implements CommandExecutor {
 
             if(tg.getWeight().getAsInt() >= ng.getWeight().getAsInt()) {
                 String pmsg = MXE.getCustomConfig().getString("messages.custom.setrank.demote.staff");
-                pmsg = func.colCodes(pmsg);
-                pmsg = pmsg.replaceAll("%p", t.getDisplayName());
-                pmsg = pmsg.replaceAll("%r", args[1]);
+                if(pmsg == null) {
+                    func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.setrank.demote.staff)", 2);
+                } else {
+                    pmsg = func.colCodes(pmsg);
+                    pmsg = pmsg.replaceAll("%p", t.getDisplayName());
+                    pmsg = pmsg.replaceAll("%r", args[1]);
+                    sender.sendMessage(pmsg);
+                }
                 String tmsg = MXE.getCustomConfig().getString("messages.custom.setrank.demote.player");
-                tmsg = func.colCodes(tmsg);
-                tmsg = tmsg.replaceAll("%m", name);
-                sender.sendMessage(pmsg);
-                t.sendMessage(tmsg);
+                if(tmsg == null) {
+                    func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.setrank.demote.player)", 2);
+                } else {
+                    tmsg = func.colCodes(tmsg);
+                    tmsg = tmsg.replaceAll("%m", name);
+                    t.sendMessage(tmsg);
+                }
             } else {
                 String pmsg = MXE.getCustomConfig().getString("messages.custom.setrank.promote.staff");
-                pmsg = func.colCodes(pmsg);
-                pmsg = pmsg.replaceAll("%p", t.getDisplayName());
-                pmsg = pmsg.replaceAll("%r", args[1]);
+                if(pmsg == null) {
+                    func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.setrank.promote.staff)", 2);
+                } else {
+                    pmsg = func.colCodes(pmsg);
+                    pmsg = pmsg.replaceAll("%p", t.getDisplayName());
+                    pmsg = pmsg.replaceAll("%r", args[1]);
+                    sender.sendMessage(pmsg);
+                }
                 String tmsg = MXE.getCustomConfig().getString("messages.custom.setrank.promote.player");
-                tmsg = func.colCodes(tmsg);
-                tmsg = tmsg.replaceAll("%m", name);
-                sender.sendMessage(pmsg);
-                t.sendMessage(tmsg);
+                if(tmsg == null) {
+                    func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.setrank.promote.player)", 2);
+                } else {
+                    tmsg = func.colCodes(tmsg);
+                    tmsg = tmsg.replaceAll("%m", name);
+                    t.sendMessage(tmsg);
+                }
             }
         } else {
             name = ChatColor.DARK_RED + "" + ChatColor.BOLD + "Server";
             if(!tg.getWeight().isPresent()) {
                 String pmsg = MXE.getCustomConfig().getString("messages.custom.setrank.promote.staff");
-                pmsg = func.colCodes(pmsg);
-                pmsg = pmsg.replaceAll("%p", t.getDisplayName());
-                pmsg = pmsg.replaceAll("%r", args[1]);
+                if(pmsg == null) {
+                    func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.setrank.promote.staff)", 2);
+                } else {
+                    pmsg = func.colCodes(pmsg);
+                    pmsg = pmsg.replaceAll("%p", t.getDisplayName());
+                    pmsg = pmsg.replaceAll("%r", args[1]);
+                    sender.sendMessage(pmsg);
+                }
                 String tmsg = MXE.getCustomConfig().getString("messages.custom.setrank.promote.player");
-                tmsg = func.colCodes(tmsg);
-                tmsg = tmsg.replaceAll("%m", name);
-                sender.sendMessage(pmsg);
-                t.sendMessage(tmsg);
+                if(tmsg == null) {
+                    func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.setrank.promote.player)", 2);
+                } else {
+                    tmsg = func.colCodes(tmsg);
+                    tmsg = tmsg.replaceAll("%m", name);
+                    t.sendMessage(tmsg);
+                }
             } else if(!ng.getWeight().isPresent()) {
                 String pmsg = MXE.getCustomConfig().getString("messages.custom.setrank.demote.staff");
-                pmsg = func.colCodes(pmsg);
-                pmsg = pmsg.replaceAll("%p", t.getDisplayName());
-                pmsg = pmsg.replaceAll("%r", args[1]);
+                if(pmsg == null) {
+                    func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.setrank.demote.staff)", 2);
+                } else {
+                    pmsg = func.colCodes(pmsg);
+                    pmsg = pmsg.replaceAll("%p", t.getDisplayName());
+                    pmsg = pmsg.replaceAll("%r", args[1]);
+                    sender.sendMessage(pmsg);
+                }
                 String tmsg = MXE.getCustomConfig().getString("messages.custom.setrank.demote.player");
-                tmsg = func.colCodes(tmsg);
-                tmsg = tmsg.replaceAll("%m", name);
-                sender.sendMessage(pmsg);
-                t.sendMessage(tmsg);
+                if(tmsg == null) {
+                    func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.setrank.demote.player)", 2);
+                } else {
+                    tmsg = func.colCodes(tmsg);
+                    tmsg = tmsg.replaceAll("%m", name);
+                    t.sendMessage(tmsg);
+                }
             } else {
                 if (tg.getWeight().getAsInt() >= ng.getWeight().getAsInt()) {
                     String pmsg = MXE.getCustomConfig().getString("messages.custom.setrank.demote.staff");
-                    pmsg = func.colCodes(pmsg);
-                    pmsg = pmsg.replaceAll("%p", t.getDisplayName());
-                    pmsg = pmsg.replaceAll("%r", args[1]);
+                    if(pmsg == null) {
+                        func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.setrank.demote.staff)", 2);
+                    } else {
+                        pmsg = func.colCodes(pmsg);
+                        pmsg = pmsg.replaceAll("%p", t.getDisplayName());
+                        pmsg = pmsg.replaceAll("%r", args[1]);
+                        sender.sendMessage(pmsg);
+                    }
                     String tmsg = MXE.getCustomConfig().getString("messages.custom.setrank.demote.player");
-                    tmsg = func.colCodes(tmsg);
-                    tmsg = tmsg.replaceAll("%m", name);
-                    sender.sendMessage(pmsg);
-                    t.sendMessage(tmsg);
+                    if(tmsg == null) {
+                        func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.setrank.demote.player)", 2);
+                    } else {
+                        tmsg = func.colCodes(tmsg);
+                        tmsg = tmsg.replaceAll("%m", name);
+                        t.sendMessage(tmsg);
+                    }
                 } else {
                     String pmsg = MXE.getCustomConfig().getString("messages.custom.setrank.promote.staff");
-                    pmsg = func.colCodes(pmsg);
-                    pmsg = pmsg.replaceAll("%p", t.getDisplayName());
-                    pmsg = pmsg.replaceAll("%r", args[1]);
+                    if(pmsg == null) {
+                        func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.setrank.promote.staff)", 2);
+                    } else {
+                        pmsg = func.colCodes(pmsg);
+                        pmsg = pmsg.replaceAll("%p", t.getDisplayName());
+                        pmsg = pmsg.replaceAll("%r", args[1]);
+                        sender.sendMessage(pmsg);
+                    }
                     String tmsg = MXE.getCustomConfig().getString("messages.custom.setrank.promote.player");
-                    tmsg = func.colCodes(tmsg);
-                    tmsg = tmsg.replaceAll("%m", name);
-                    sender.sendMessage(pmsg);
-                    t.sendMessage(tmsg);
+                    if(tmsg == null) {
+                        func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.setrank.promote.player)", 2);
+                    } else {
+                        tmsg = func.colCodes(tmsg);
+                        tmsg = tmsg.replaceAll("%m", name);
+                        t.sendMessage(tmsg);
+                    }
                 }
             }
         }

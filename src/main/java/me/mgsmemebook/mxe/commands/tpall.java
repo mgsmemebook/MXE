@@ -25,8 +25,11 @@ public class tpall implements CommandExecutor {
         othererror = func.colCodes(othererror);
         String permerror = MXE.getCustomConfig().getString("messages.custom.error.unsufficient-permissions");
         permerror = func.colCodes(permerror);
-        String syntaxerror = MXE.getCustomConfig().getString("messages.custom.error.syntax");
         String lang = MXE.getCustomConfig().getString("messages.language");
+        if(othererror == null || lang == null || permerror == null) {
+            func.cMSG(ChatColor.RED + "[MXE]: Error: Config misconfigured! Commands won't work!", 1);
+            return false;
+        }
         switch (lang) {
             case "de":
                 msg = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.DARK_AQUA + "Du wurdest teleportiert!";

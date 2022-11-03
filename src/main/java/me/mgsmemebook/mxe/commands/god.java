@@ -21,6 +21,10 @@ public class god implements CommandExecutor {
         othererror = func.colCodes(othererror);
         String permerror = MXE.getCustomConfig().getString("messages.custom.error.unsufficient-permissions");
         permerror = func.colCodes(permerror);
+        if(othererror == null || lang == null || permerror == null) {
+            func.cMSG(ChatColor.RED + "[MXE]: Error: Config misconfigured! Commands won't work!", 1);
+            return false;
+        }
         if(sender instanceof Player) {
             Player p = Bukkit.getPlayerExact(sender.getName());
             if(p == null) {

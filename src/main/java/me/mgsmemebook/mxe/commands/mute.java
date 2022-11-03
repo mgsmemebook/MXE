@@ -1,6 +1,7 @@
 package me.mgsmemebook.mxe.commands;
 
 import me.mgsmemebook.mxe.MXE;
+import me.mgsmemebook.mxe.Nametag;
 import me.mgsmemebook.mxe.db.DB;
 import me.mgsmemebook.mxe.func;
 import net.luckperms.api.LuckPerms;
@@ -32,23 +33,26 @@ public class mute  implements CommandExecutor {
         String notfounderror = MXE.getCustomConfig().getString("messages.custom.error.target-not-found");
         notfounderror = func.colCodes(notfounderror);
         String lang = MXE.getCustomConfig().getString("messages.language");
+        if(othererror == null || lang == null || permerror == null || syntaxerror == null || notfounderror == null) {
+            func.cMSG(ChatColor.RED + "[MXE]: Error: Config misconfigured! Commands won't work!", 1);
+            return false;
+        }
         if(args.length < 1) {
             switch (lang) {
                 case "de":
-                    syntaxerror.replaceAll("%s", "/mute [Spieler] [Zeit]");
+                    syntaxerror = syntaxerror.replaceAll("%s", "/mute [Spieler] [Zeit]");
                     break;
                 default:
-                    syntaxerror.replaceAll("%s", "/mute [Player] [Time]");
+                    syntaxerror = syntaxerror.replaceAll("%s", "/mute [Player] [Time]");
             }
             sender.sendMessage(syntaxerror);
             return true;
         }
-        Player t = Bukkit.getPlayerExact(args[0]);
-        if(t == null) {
-            error = ChatColor.GOLD + "" + ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.GOLD + "Spieler nicht gefunden!";
+        if(Bukkit.getPlayer(args[0]) == null && !Nametag.isFakeName(args[0])) {
             sender.sendMessage(notfounderror);
             return true;
         }
+        Player t = func.getRealPlayer(args[0]);
         if(sender instanceof Player) {
             Player p = Bukkit.getPlayerExact(sender.getName());
             if(p == null) {
@@ -103,11 +107,19 @@ public class mute  implements CommandExecutor {
             DB.setDBPlayerMute(true, false, null, t.getUniqueId());
 
             mutemsg = MXE.getCustomConfig().getString("messages.custom.mute.muted.permanent.player");
-            mutemsg = func.colCodes(mutemsg);
-            mutemsg = mutemsg.replaceAll("%m", name);
+            if(mutemsg == null) {
+                func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.mute.muted.permanent.player)", 2);
+            } else {
+                mutemsg = func.colCodes(mutemsg);
+                mutemsg = mutemsg.replaceAll("%m", name);
+            }
             msg = MXE.getCustomConfig().getString("messages.custom.mute.muted.permanent.staff");
-            msg = func.colCodes(msg);
-            msg = msg.replaceAll("%p", MXE.getPlayerPrefix(t) + t.getDisplayName());
+            if(msg == null) {
+                func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.mute.muted.permanent.player)", 2);
+            } else {
+                msg = func.colCodes(msg);
+                msg = msg.replaceAll("%p", MXE.getPlayerPrefix(t) + t.getDisplayName());
+            }
         } else {
             //Tempmute
             String unit = args[1].substring(args[1].length() - 1);
@@ -193,13 +205,21 @@ public class mute  implements CommandExecutor {
                 DB.setDBPlayerMute(true, true, timestamp, t.getUniqueId());
 
                 mutemsg = MXE.getCustomConfig().getString("messages.custom.mute.muted.temporary.player");
-                mutemsg = func.colCodes(mutemsg);
-                mutemsg = mutemsg.replaceAll("%m", name);
-                mutemsg = mutemsg.replaceAll("%t", zeit);
+                if(mutemsg == null) {
+                    func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.mute.muted.temporary.player)", 2);
+                } else {
+                    mutemsg = func.colCodes(mutemsg);
+                    mutemsg = mutemsg.replaceAll("%m", name);
+                    mutemsg = mutemsg.replaceAll("%t", zeit);
+                }
                 msg = MXE.getCustomConfig().getString("messages.custom.mute.muted.temporary.staff");
-                msg = func.colCodes(msg);
-                msg = msg.replaceAll("%p", MXE.getPlayerPrefix(t) + t.getDisplayName());
-                msg = msg.replaceAll("%t", zeit);
+                if(msg == null) {
+                    func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.mute.muted.temporary.staff)", 2);
+                } else {
+                    msg = func.colCodes(msg);
+                    msg = msg.replaceAll("%p", MXE.getPlayerPrefix(t) + t.getDisplayName());
+                    msg = msg.replaceAll("%t", zeit);
+                }
             } else {
                 switch (lang) {
                     case "de":
