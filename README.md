@@ -89,3 +89,4 @@ If you need help you can always contact me on Discord *(mgsmemebook#2636)*. Have
 
 #### Known Issues on V.1.3.2
 - When players don't see you /nick doesn't work
+- /back sometimes works sometimes not
