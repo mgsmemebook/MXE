@@ -60,9 +60,6 @@ public final class MXE extends JavaPlugin {
         saveDefaultConfig();
         func.checkAllSections();
 
-        //EventListeners
-        getServer().getPluginManager().registerEvents(new PlayerEvents(), this);
-
         //DB
         SQLite.load("users");
 
@@ -109,6 +106,9 @@ public final class MXE extends JavaPlugin {
         } else {
             cMSG(ChatColor.YELLOW + "[MXE] Warn: ProtocolLib not found. Please put ProtocolLib inside your plugins folder to use the /nick command.", 2);
         }
+
+        //EventListeners
+        getServer().getPluginManager().registerEvents(new PlayerEvents(), this);
 
         //Commands
         List<String> disabledCommands;

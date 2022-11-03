@@ -72,7 +72,7 @@ public class tpaccept implements CommandExecutor {
                 sender.sendMessage(notfounderror);
                 return true;
             }
-            Player t = func.getRealPlayer(args[1]);
+            Player t = func.getRealPlayer(res.get(0));
             switch (lang) {
                 case "de":
                     t.sendMessage(ChatColor.GOLD + "[Server]: " + ChatColor.RESET + MXE.getPlayerPrefix(p) + p.getDisplayName() + ChatColor.RESET + ChatColor.GOLD + " hat deine Anfrage " + ChatColor.DARK_GREEN + "angenommen" + ChatColor.RESET + ChatColor.GOLD + "!");

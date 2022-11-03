@@ -81,7 +81,9 @@ public class func {
                 @Override
                 public void run() {
                     Location newloc = p.getLocation();
-                    if(oldloc.getBlock() != newloc.getBlock()) {
+                    if(oldloc.getX() == newloc.getX() && oldloc.getY() == newloc.getY() && oldloc.getZ() == newloc.getZ() && oldloc.getWorld() == newloc.getWorld()) {
+                        p.teleport(loc);
+                    } else {
                         String failmsg = MXE.getCustomConfig().getString("messages.custom.timedtp.failed");
                         if(failmsg == null) {
                             func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.timedtp.failed)", 2);
@@ -89,11 +91,9 @@ public class func {
                             failmsg = colCodes(failmsg);
                             p.sendMessage(failmsg);
                         }
-                    } else {
-                        p.teleport(loc);
                     }
                 }
-            }.runTaskLater(MXE.getPlugin(), delay);
+            }.runTaskLater(MXE.getPlugin(), delay*20);
         }
     }
     public static void checkAllSections() {
