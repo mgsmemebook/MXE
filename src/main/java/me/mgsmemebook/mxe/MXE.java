@@ -119,8 +119,8 @@ public final class MXE extends JavaPlugin {
                 Objects.requireNonNull(getCommand("help")).setExecutor(new help());
                 Objects.requireNonNull(getCommand("help")).setTabCompleter(new TabCompletion());
             } else {
-                Objects.requireNonNull(getCommand("mxe help")).setExecutor(new help());
-                Objects.requireNonNull(getCommand("mxe help")).setTabCompleter(new TabCompletion());
+                Objects.requireNonNull(getCommand("mxe")).setExecutor(new help());
+                Objects.requireNonNull(getCommand("mxe")).setTabCompleter(new TabCompletion());
             }
         }if(disabledCommands == null || !disabledCommands.contains("back")) {
             Objects.requireNonNull(getCommand("back")).setExecutor(new back());
@@ -149,6 +149,12 @@ public final class MXE extends JavaPlugin {
         } if(disabledCommands == null || !disabledCommands.contains("mute")) {
             Objects.requireNonNull(getCommand("mute")).setExecutor(new mute());
             Objects.requireNonNull(getCommand("mute")).setTabCompleter(new TabCompletion());
+        } if(disabledCommands == null || !disabledCommands.contains("pm")) {
+            Objects.requireNonNull(getCommand("pm")).setExecutor(new pm());
+            Objects.requireNonNull(getCommand("pm")).setTabCompleter(new TabCompletion());
+        } if(disabledCommands == null || !disabledCommands.contains("reply")) {
+            Objects.requireNonNull(getCommand("reply")).setExecutor(new reply());
+            Objects.requireNonNull(getCommand("reply")).setTabCompleter(new TabCompletion());
         } if(disabledCommands == null || !disabledCommands.contains("tpa")) {
             Objects.requireNonNull(getCommand("tpa")).setExecutor(new tpa());
             Objects.requireNonNull(getCommand("tpa")).setTabCompleter(new TabCompletion());

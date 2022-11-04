@@ -200,6 +200,16 @@ public class help implements CommandExecutor {
                         msg = msg + "\n" + ChatColor.DARK_GREEN + "Ändere deine Identität.";
                         msg = msg + "\n" + ChatColor.DARK_GREEN + "Syntax: /nick [Name]";
                         break;
+                    case "pm":
+                        msg = ChatColor.GREEN + "/pm:";
+                        msg = msg + "\n" + ChatColor.DARK_GREEN + "Sende eine Privatnachricht an einen Spieler.";
+                        msg = msg + "\n" + ChatColor.DARK_GREEN + "Syntax: /pm [Spieler]";
+                        break;
+                    case "reply":
+                        msg = ChatColor.GREEN + "/reply:";
+                        msg = msg + "\n" + ChatColor.DARK_GREEN + "Sende eine Privatnachricht an einen Spieler.";
+                        msg = msg + "\n" + ChatColor.DARK_GREEN + "Syntax: /reply [Spieler]";
+                        break;
                     case "setrank":
                         msg = ChatColor.GREEN + "/setrank:";
                         msg = msg + "\n" + ChatColor.DARK_GREEN + "Setze den Rang eines Spielers.";
@@ -255,6 +265,7 @@ public class help implements CommandExecutor {
                         if (args.length >= 1) {
                             if (args[0].equalsIgnoreCase("2")) {
                                 msg = ChatColor.GREEN + "MXEssentials Befehle Seite 2/2 (/help [Seite])";
+                                msg = msg + "\n" + ChatColor.DARK_GREEN + "/tpa | Teleportiere dich zu deinen Freunden.";
                                 msg = msg + "\n" + ChatColor.DARK_GREEN + "/tpaccept | Akzeptiere die letzte tp-Anfrage.";
                                 msg = msg + "\n" + ChatColor.DARK_GREEN + "/tpahere | Teleportiere einen Freund zu dir.";
                                 msg = msg + "\n" + ChatColor.DARK_GREEN + "/tpdeny | Lehne die letzte tp-Anfrage ab.";
@@ -264,7 +275,7 @@ public class help implements CommandExecutor {
                                 msg = msg + "\n" + ChatColor.DARK_GREEN + "/back | Kehre an deinen Todespunkt zurück.";
                                 msg = msg + "\n" + ChatColor.DARK_GREEN + "/help | Dieser Befehl.";
                                 msg = msg + "\n" + ChatColor.DARK_GREEN + "/home | Verwalte deine Homes.";
-                                msg = msg + "\n" + ChatColor.DARK_GREEN + "/tpa | Teleportiere dich zu deinen Freunden.";
+                                msg = msg + "\n" + ChatColor.DARK_GREEN + "/pm | Sende eine Privatnachricht an einen Spieler.";
                                 msg = msg + "\n" + ChatColor.DARK_GREEN + "/help [Befehl] für weitere Informationen";
                             }
                         } else {
@@ -272,7 +283,7 @@ public class help implements CommandExecutor {
                             msg = msg + "\n" + ChatColor.DARK_GREEN + "/back | Kehre an deinen Todespunkt zurück.";
                             msg = msg + "\n" + ChatColor.DARK_GREEN + "/help | Dieser Befehl.";
                             msg = msg + "\n" + ChatColor.DARK_GREEN + "/home | Verwalte deine Homes.";
-                            msg = msg + "\n" + ChatColor.DARK_GREEN + "/tpa | Teleportiere dich zu deinen Freunden.";
+                            msg = msg + "\n" + ChatColor.DARK_GREEN + "/pm | Sende eine Privatnachricht an einen Spieler.";
                             msg = msg + "\n" + ChatColor.DARK_GREEN + "/help [Befehl] für weitere Informationen";
                         }
                         break;
@@ -402,6 +413,16 @@ public class help implements CommandExecutor {
                         msg = msg + "\n" + ChatColor.DARK_GREEN + "Disguise yourself.";
                         msg = msg + "\n" + ChatColor.DARK_GREEN + "Syntax: /nick [Name]";
                         break;
+                    case "pm":
+                        msg = ChatColor.GREEN + "/pm:";
+                        msg = msg + "\n" + ChatColor.DARK_GREEN + "Send a private message to a player.";
+                        msg = msg + "\n" + ChatColor.DARK_GREEN + "Syntax: /pm [Player]";
+                        break;
+                    case "reply":
+                        msg = ChatColor.GREEN + "/reply:";
+                        msg = msg + "\n" + ChatColor.DARK_GREEN + "Send a private message to a player.";
+                        msg = msg + "\n" + ChatColor.DARK_GREEN + "Syntax: /reply [Player]";
+                        break;
                     case "setrank":
                         msg = ChatColor.GREEN + "/setrank:";
                         msg = msg + "\n" + ChatColor.DARK_GREEN + "Set a player's rank.";
@@ -457,6 +478,7 @@ public class help implements CommandExecutor {
                         if (args.length >= 1) {
                             if (args[0].equalsIgnoreCase("2")) {
                                 msg = ChatColor.GREEN + "MXEssentials commands page 2/2 (/help [Page])";
+                                msg = msg + "\n" + ChatColor.DARK_GREEN + "/tpa | Teleport to your friends.";
                                 msg = msg + "\n" + ChatColor.DARK_GREEN + "/tpaccept | Accept the last tp-request.";
                                 msg = msg + "\n" + ChatColor.DARK_GREEN + "/tpahere | Teleport a friend to you.";
                                 msg = msg + "\n" + ChatColor.DARK_GREEN + "/tpdeny | Reject the last tp-request.";
@@ -466,7 +488,7 @@ public class help implements CommandExecutor {
                                 msg = msg + "\n" + ChatColor.DARK_GREEN + "/back | Return to your death location.";
                                 msg = msg + "\n" + ChatColor.DARK_GREEN + "/help | This command.";
                                 msg = msg + "\n" + ChatColor.DARK_GREEN + "/home | Configure your homes.";
-                                msg = msg + "\n" + ChatColor.DARK_GREEN + "/tpa | Teleport to your friends.";
+                                msg = msg + "\n" + ChatColor.DARK_GREEN + "/pm | Send a private message to a player.";
                                 msg = msg + "\n" + ChatColor.DARK_GREEN + "/help [Command] for further information";
                             }
                         } else {
@@ -474,7 +496,7 @@ public class help implements CommandExecutor {
                             msg = msg + "\n" + ChatColor.DARK_GREEN + "/back | Return to your death location.";
                             msg = msg + "\n" + ChatColor.DARK_GREEN + "/help | This command.";
                             msg = msg + "\n" + ChatColor.DARK_GREEN + "/home | Configure your homes.";
-                            msg = msg + "\n" + ChatColor.DARK_GREEN + "/tpa | Teleport to your friends.";
+                            msg = msg + "\n" + ChatColor.DARK_GREEN + "/pm | Send a private message to a player.";
                             msg = msg + "\n" + ChatColor.DARK_GREEN + "/help [Command] for further information";
                         }
                         break;

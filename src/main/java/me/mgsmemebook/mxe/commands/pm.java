@@ -2,6 +2,7 @@ package me.mgsmemebook.mxe.commands;
 
 import me.mgsmemebook.mxe.MXE;
 import me.mgsmemebook.mxe.Nametag;
+import me.mgsmemebook.mxe.db.DB;
 import me.mgsmemebook.mxe.func;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -41,6 +42,11 @@ public class pm implements CommandExecutor {
             sender.sendMessage(syntaxerror);
             return true;
         }
+        if(Bukkit.getPlayer(args[0]) == null && !Nametag.isFakeName(args[1])) {
+            sender.sendMessage(notfounderror);
+            return true;
+        }
+        Player t = func.getRealPlayer(args[0]);
         if(sender instanceof Player) {
             Player p = Bukkit.getPlayerExact(sender.getName());
             if(p == null) {
@@ -48,6 +54,8 @@ public class pm implements CommandExecutor {
                 func.cMSG(error, 2);
                 return true;
             }
+            if(!func.playerMuteCheck(p)) return true;
+
             name = MXE.getPlayerPrefix(p) + p.getDisplayName();
             if(!p.isOp()) {
                 if(MXE.lpLoaded) {
@@ -66,14 +74,10 @@ public class pm implements CommandExecutor {
                     return true;
                 }
             }
+            DB.setLastPm(t.getUniqueId(), p.getName());
         } else {
             name = ChatColor.DARK_RED + "" + ChatColor.BOLD + "Server";
         }
-        if(Bukkit.getPlayer(args[0]) == null && !Nametag.isFakeName(args[1])) {
-            sender.sendMessage(notfounderror);
-            return true;
-        }
-        Player t = func.getRealPlayer(args[0]);
         StringBuilder msg = new StringBuilder(args[1]);
         for(int i = 2; i < args.length; i++) {
             msg.append(" ").append(args[i]);

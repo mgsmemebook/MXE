@@ -159,6 +159,72 @@ public class DB {
         }
         return null;
     }
+    public static String getLastPm(UUID uuid) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getSQLConnection("users");
+            String sql = "SELECT lastpm FROM users WHERE UUID = ?";
+            ps = Objects.requireNonNull(conn).prepareStatement(sql);
+            ps.setString(1, uuid.toString());
+            rs = ps.executeQuery();
+
+            if(!rs.isClosed()) {
+                return rs.getString("lastpm");
+            }
+        } catch (SQLException ex) {
+            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data", 1);
+            func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException ex) {
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
+            }
+        }
+        return null;
+    }
+    public static void setLastPm(UUID uuid, String name) {
+        if(Bukkit.getPlayer(uuid) == null) {
+            func.cMSG(ChatColor.YELLOW + "[MXE DB addPlayer] Player not found.", 2);
+        } else {
+            Connection conn = null;
+            PreparedStatement ps = null;
+            try {
+                conn = getSQLConnection("users");
+                String sql = "UPDATE users SET lastpm = ? WHERE UUID = ?";
+                ps = Objects.requireNonNull(conn).prepareStatement(sql);
+                ps.setString(1, name);
+                ps.setString(2, uuid.toString());
+                ps.execute();
+            } catch (SQLException ex) {
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't retrieve table data", 1);
+                func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
+            } finally {
+                try {
+                    if (ps != null) {
+                        ps.close();
+                    }
+                    if (conn != null) {
+                        conn.close();
+                    }
+                } catch (SQLException ex) {
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: Couldn't close database connection", 1);
+                    func.cMSG(ChatColor.DARK_RED + "[MXE] SQL error: " + ex.getMessage(), 1);
+                }
+            }
+        }
+    }
     public static void banDBPlayer(UUID uuid, boolean tempban, String bantime, String reason) {
         OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
         if(!p.hasPlayedBefore()) {

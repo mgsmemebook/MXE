@@ -223,52 +223,7 @@ public class PlayerEvents implements Listener {
     public void onPlayerChat(AsyncPlayerChatEvent e) {
         Player p = e.getPlayer();
 
-        ArrayList<String> muteinf = DB.getPlayerMuteInfo(p.getUniqueId());
-        long mutetime;
-
-        if(muteinf != null) {
-            boolean tempmute = Boolean.parseBoolean(muteinf.get(0));
-            if(tempmute) {
-                String timestring = muteinf.get(1);
-                if(timestring == null) {
-                    mutetime = 0;
-                } else {
-                    mutetime = Long.parseLong(timestring);
-                }
-                Calendar cl = Calendar.getInstance();
-                Calendar now = Calendar.getInstance();
-
-                now.setTime(new Date());
-                cl.setTimeInMillis(mutetime);
-
-                long timeleft = mutetime-now.getTimeInMillis();
-
-                if(timeleft > 0) {
-                    LocalDateTime ldt = LocalDateTime.ofInstant(cl.toInstant(), cl.getTimeZone().toZoneId());
-                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
-                    String unmutedate = ldt.format(dtf);
-
-                    String mutemsg = MXE.getCustomConfig().getString("messages.custom.mute.muted-chat.temporary");
-                    if(mutemsg == null) {
-                        func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.join)", 2);
-                    } else {
-                        mutemsg = func.colCodes(mutemsg);
-                        mutemsg = mutemsg.replaceAll("%d", unmutedate);
-                        p.sendMessage(mutemsg);
-                    }
-                } else {
-                    DB.setDBPlayerMute(false, false, null, p.getUniqueId());
-                }
-            } else {
-                String mutemsg = MXE.getCustomConfig().getString("messages.custom.mute.muted-chat.permanent");
-                if(mutemsg == null) {
-                    func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.join)", 2);
-                } else {
-                    mutemsg = func.colCodes(mutemsg);
-                    p.sendMessage(mutemsg);
-                }
-            }
-        } else {
+        if(!func.playerMuteCheck(p)) {
             String msg = e.getMessage();
             msg = func.colCodes(msg);
             String chatmsg = MXE.getCustomConfig().getString("messages.custom.chat");

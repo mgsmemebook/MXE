@@ -1,5 +1,6 @@
 package me.mgsmemebook.mxe;
 
+import me.mgsmemebook.mxe.db.DB;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
@@ -11,6 +12,11 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Set;
 
 import static org.bukkit.Bukkit.getServer;
@@ -122,6 +128,56 @@ public class func {
             }
         } else {
             return Bukkit.getPlayer(name);
+        }
+    }
+
+    public static boolean playerMuteCheck(Player p) {
+        ArrayList<String> muteinf = DB.getPlayerMuteInfo(p.getUniqueId());
+
+        if(muteinf != null) {
+            boolean tempmute = Boolean.parseBoolean(muteinf.get(0));
+            long mutetime;
+
+            if (tempmute) {
+                String timestring = muteinf.get(1);
+                if (timestring == null) {
+                    mutetime = 0;
+                } else {
+                    mutetime = Long.parseLong(timestring);
+                }
+                Calendar cl = Calendar.getInstance();
+                Calendar now = Calendar.getInstance();
+                now.setTime(new Date());
+                cl.setTimeInMillis(mutetime);
+                long timeleft = mutetime - now.getTimeInMillis();
+                if (timeleft > 0) {
+                    LocalDateTime ldt = LocalDateTime.ofInstant(cl.toInstant(), cl.getTimeZone().toZoneId());
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+                    String unmutedate = ldt.format(dtf);
+
+                    String mutemsg = MXE.getCustomConfig().getString("messages.custom.mute.muted-chat.temporary");
+                    if (mutemsg == null) {
+                        func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.join)", 2);
+                    } else {
+                        mutemsg = func.colCodes(mutemsg);
+                        mutemsg = mutemsg.replaceAll("%d", unmutedate);
+                        p.sendMessage(mutemsg);
+                    }
+                } else {
+                    DB.setDBPlayerMute(false, false, null, p.getUniqueId());
+                }
+            } else {
+                String mutemsg = MXE.getCustomConfig().getString("messages.custom.mute.muted-chat.permanent");
+                if (mutemsg == null) {
+                    func.cMSG(ChatColor.YELLOW + "[MXE]: Warn: Configuration misconfigured! (messages.custom.join)", 2);
+                } else {
+                    mutemsg = func.colCodes(mutemsg);
+                    p.sendMessage(mutemsg);
+                }
+            }
+            return true;
+        } else {
+            return false;
         }
     }
 }
