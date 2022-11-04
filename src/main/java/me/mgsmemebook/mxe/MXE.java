@@ -128,7 +128,12 @@ public final class MXE extends JavaPlugin {
         } if(disabledCommands == null || !disabledCommands.contains("ban")) {
             Objects.requireNonNull(getCommand("ban")).setExecutor(new ban());
             Objects.requireNonNull(getCommand("ban")).setTabCompleter(new TabCompletion());
-        } if(disabledCommands == null || !disabledCommands.contains("fly")) {
+        }
+        if(disabledCommands == null || !disabledCommands.contains("enderchest")) {
+            Objects.requireNonNull(getCommand("enderchest")).setExecutor(new enderchest());
+            Objects.requireNonNull(getCommand("enderchest")).setTabCompleter(new TabCompletion());
+        }
+        if(disabledCommands == null || !disabledCommands.contains("fly")) {
             Objects.requireNonNull(getCommand("fly")).setExecutor(new fly());
             Objects.requireNonNull(getCommand("fly")).setTabCompleter(new TabCompletion());
         } if(disabledCommands == null || !disabledCommands.contains("back")) {

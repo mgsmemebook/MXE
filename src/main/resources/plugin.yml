@@ -17,6 +17,11 @@ commands:
     description: Ban a player.
     usage: /help <command>
 
+  enderchest:
+    description: Open your enderchest.
+    usage: /help <command>
+    aliases: [ ec, echest ]
+
   fly:
     description: Become an AH-64 Apache Attack Helicopter.
     usage: /help <command>
@@ -104,6 +109,7 @@ permissions:
     children:
       mxe.back: true
       mxe.ban: true
+      mxe.enderchest: true
       mxe.fly: true
       mxe.gm: true
       mxe.god: true
@@ -127,6 +133,9 @@ permissions:
 
   mxe.ban:
     default: false
+
+  mxe.enderchest:
+    default: true
 
   mxe.fly:
     default: false
