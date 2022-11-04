@@ -152,6 +152,34 @@ public class TabCompletion implements TabCompleter {
                     return options;
                 }
 
+            case "pm":
+                if(args.length == 1) {
+                    return playerNames;
+                } else if(args.length == 2) {
+                    options = new ArrayList<>();
+                    switch (lang) {
+                        case "de":
+                            options.add("Nachricht");
+                            break;
+                        default:
+                            options.add("Message");
+                    }
+                    return options;
+                }
+
+            case "reply":
+                if(args.length == 1) {
+                    options = new ArrayList<>();
+                    switch (lang) {
+                        case "de":
+                            options.add("Nachricht");
+                            break;
+                        default:
+                            options.add("Message");
+                    }
+                    return options;
+                }
+
             case "setrank":
                 if(args.length == 1) {
                     return playerNames;

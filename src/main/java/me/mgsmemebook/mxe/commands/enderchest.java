@@ -24,7 +24,7 @@ public class enderchest implements CommandExecutor {
         String lang = MXE.getCustomConfig().getString("messages.language");
         if(othererror == null || lang == null || permerror == null) {
             func.cMSG(ChatColor.RED + "[MXE]: Error: Config misconfigured! Commands won't work!", 1);
-            return false;
+            return true;
 
         }
         if(sender instanceof Player) {
@@ -41,12 +41,12 @@ public class enderchest implements CommandExecutor {
                     User user = lp.getUserManager().getUser(p.getUniqueId());
                     if(!user.getCachedData().getPermissionData().checkPermission("mxe.enderchest").asBoolean()) {
                         p.sendMessage(permerror);
-                        return false;
+                        return true;
                     }
                 } else {
                     if(!p.hasPermission("mxe.enderchest")) {
                         p.sendMessage(permerror);
-                        return false;
+                        return true;
 
                     }
 
@@ -57,8 +57,8 @@ public class enderchest implements CommandExecutor {
                 case "de":
                     p.sendMessage(ChatColor.AQUA+""+ChatColor.BOLD+"[Server]: "+ChatColor.RESET+ChatColor.AQUA+"Enderchest geöffnet");
                     break;
-                default:p.sendMessage(ChatColor.AQUA+""+ChatColor.BOLD+"[Server]: "+ChatColor.RESET+ChatColor.AQUA+"Enderchest opened");
-
+                default:
+                    p.sendMessage(ChatColor.AQUA+""+ChatColor.BOLD+"[Server]: "+ChatColor.RESET+ChatColor.AQUA+"Enderchest opened");
             }
         } else {
             error = ChatColor.DARK_RED + "[MXE] You can't perform this command while in console!";
@@ -66,7 +66,7 @@ public class enderchest implements CommandExecutor {
 
         }
 
-        return false;
+        return true;
     }
 
 }

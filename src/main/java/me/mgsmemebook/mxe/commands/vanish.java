@@ -38,6 +38,7 @@ public class vanish implements CommandExecutor {
                 func.cMSG(error, 2);
                 return true;
             }
+            boolean sendmsg = MXE.getCustomConfig().getBoolean("commands.vanish.fake-join-leave");
             boolean vanish = DB.getVanish(p.getUniqueId());
             if(MXE.lpLoaded) {
                 LuckPerms lp = LuckPermsProvider.get();
@@ -105,7 +106,7 @@ public class vanish implements CommandExecutor {
                         p.sendMessage(msg);
                 }
                 p.removePotionEffect(PotionEffectType.INVISIBILITY);
-                if (joinmsg != null) {
+                if (joinmsg != null && sendmsg) {
                     Bukkit.broadcastMessage(joinmsg);
                 }
             } else {
@@ -120,7 +121,7 @@ public class vanish implements CommandExecutor {
                         p.sendMessage(msg);
                 }
                 p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999999, 2, true, true));
-                if (quitmsg != null) {
+                if (quitmsg != null && sendmsg) {
                     Bukkit.broadcastMessage(quitmsg);
                 }
             }

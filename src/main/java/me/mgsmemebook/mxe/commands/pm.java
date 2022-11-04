@@ -31,7 +31,7 @@ public class pm implements CommandExecutor {
             func.cMSG(ChatColor.RED + "[MXE]: Error: Config misconfigured! Commands won't work!", 1);
             return false;
         }
-        if(args.length < 2) {
+        if(args.length <= 1) {
             switch (lang) {
                 case "de":
                     syntaxerror = syntaxerror.replaceAll("%s","/pm [Spieler] [Nachricht]");
@@ -54,7 +54,19 @@ public class pm implements CommandExecutor {
                 func.cMSG(error, 2);
                 return true;
             }
-            if(!func.playerMuteCheck(p)) return true;
+            if(func.playerMuteCheck(p)) return true;
+            if(p.getUniqueId() == t.getUniqueId()) {
+                String msg;
+                switch (lang) {
+                    case "de":
+                        msg = ChatColor.RED +""+ ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.RED + "Du kannst dir selbst keine Nachrichten senden!";
+                        break;
+                    default:
+                        msg = ChatColor.RED +""+ ChatColor.BOLD + "[Server]: " + ChatColor.RESET + ChatColor.RED + "You cannot send messages to yourself!";
+                }
+                p.sendMessage(msg);
+                return true;
+            }
 
             name = MXE.getPlayerPrefix(p) + p.getDisplayName();
             if(!p.isOp()) {

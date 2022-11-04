@@ -15,7 +15,13 @@ public class reply implements CommandExecutor {
             if(p == null) return true;
             String lastpm = DB.getLastPm(p.getUniqueId());
             if(lastpm == null) return true;
-            p.performCommand("pm "+lastpm);
+            if(args.length > 1) {
+                StringBuilder msg = new StringBuilder(args[0]);
+                for (int i = 1; i < args.length; i++) {
+                    msg.append(" ").append(args[i]);
+                }
+                p.performCommand("pm " + lastpm + " " + msg);
+            }
         }
         return true;
     }
