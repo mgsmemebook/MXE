@@ -33,9 +33,9 @@ commands:
     description: This command.
     usage: /help
 
-  mxe help:
+  mxe:
     description: This command.
-    usage: /mxe help
+    usage: /mxe
 
   home:
     description: Configure your homes.
