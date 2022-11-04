@@ -6,7 +6,7 @@ Older versions are most likely not usable so don't bother trying them out.
 
 
 ### Features
-- **21 commands**
+- **24 commands**
 - Custom **player join/leave/chat messages** and more
 - **Chat coloring** using &-Color-Codes ([Color Codes](https://camo.skyblock.net/4898234defc4ebd6680475bc7729223d3ba78577?url=https:%2F%2Fi.imgur.com%2FxkgOs7u.jpg))
 - Uses SQLite Database
@@ -18,6 +18,8 @@ Older versions are most likely not usable so don't bother trying them out.
 - **/vanish command**
 - Configurable amount of **homes** for each player
 - **/back command** for when a player dies
+- **/enderchest command**
+- /pm system
 - Adds configurable header and footer to tablist 
 - Currently supports two languages: English and German
 
@@ -83,12 +85,12 @@ If you need help you can always contact me on Discord *(mgsmemebook#2636)*. Have
 
 ##### Commands
 ```
-/back /ban /fly /gm /god /help /home /kick /kill
-/mute /nick /setrank /tpa /tpaccept /tpahere /tpall
-/tpdeny /tphere /unban /unmute /vanish
+/back /ban /enderchest /fly /gm /god /help /home /kick  
+/kill /mute /nick /pm /reply /setrank /tpa /tpaccept 
+/tpahere /tpall /tpdeny /tphere /unban /unmute /vanish 
 ```
 
-#### Known Issues on V.1.3.3
+#### Known Issues on V.1.3.4
 - When players don't see you /nick doesn't work
 - /back sometimes works sometimes not
 - Still sends quit messages on /nick while vanished 
