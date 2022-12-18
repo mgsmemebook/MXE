@@ -4,6 +4,7 @@ MXE is a Minecraft 1.19.2 Spigot Essentials Plugin developed by me in my free ti
 This plugin is most likely very buggy and not intended for public use.
 Older versions are most likely not usable so don't bother trying them out.
 
+Currently not in development
 
 ### Features
 - **24 commands**
